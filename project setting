@@ -1,2 +1,6 @@
 Project setting:
 
+AWS Server IP: 18.222.203.101
+key file: was.pem
+
+Login: ssh -i was.pem ec2-user@18.222.203.101. (on the was.pem directory)
