@@ -23,6 +23,7 @@
     "passport-linkedin-oauth2": "^1.5.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
-    "pdfkit": "^0.8.3"
+    "pdfkit": "^0.8.3",
+    "setprototypeof": "^1.1.0"
   }
 }
