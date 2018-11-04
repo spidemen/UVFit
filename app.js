@@ -1,41 +1,74 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
+const flash = require('connect-flash');
+const mongoose = require('mongoose');
+const passport = require("passport");
+const session = require('express-session');
+const LocalStrategy = require('passport-local').Strategy;
+const expressValidator = require('express-validator');
+const home = require("./controllers/HomeController.js");
 
-var app = express();
+const pdf=require("./controllers/index.js");
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//The order of these middleware matters
+//flash message - flash message before validation
+app.use(flash());
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//DB
+//mongoose.connect("mongodb://localhost/affine");
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+//server setup
+app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
+app.use(bodyParser.urlencoded({extended:true}));
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+//session
+app.use(session({
+  secret: "wasssuppman",
+  resave:true,
+  saveUninitialized:true
+}))
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+//passport stuffs
+app.use(passport.initialize());
+app.use(passport.session());
 
-module.exports = app;
+//express validator
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+    var namespace = param.split('.'),
+        root      = namespace.shift(),
+        formParam = root;
+    while(namespace.length) {
+        formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+        param : formParam,
+        msg   : msg,
+        value : value
+    };
+  }
+}));
+
+
+//global variable setup in html
+app.use(function(req, res, next){
+
+  res.locals.success = req.flash("success");
+  //for passport
+  res.locals.error = req.flash("error");
+  res.locals.user = req.user || null;
+  console.log(`This is the global user: ${req.user} and the session is ${JSON.stringify(req.session, undefined, 2)}`); //this will be important
+  next();
+})
+
+//routes
+app.use(home);
+app.use(pdf);
+//Server
+app.listen(process.env.PORT || 3000, process.env, function() {
+  console.log("Server started..")
+})

@@ -1,0 +1,51 @@
+
+body {
+    height:100%;
+    padding-top:35px;
+    font-family: oswald-medium,oswald,sans-serif;
+    background-color: white;/*#35BAE8*/
+
+}
+
+a.nav-link {
+    font-weight:bold;
+    font-size:30px;
+}
+
+#affineLogo {
+    margin-top: -4.5em;
+    margin-left: 1em;
+}
+
+.jumbotron{
+    width:100%;
+    background-image: url("/pic/para.jpg");
+    min-height: 400px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#headline{
+    margin-left: 1.5em;
+    font-size: 80px;
+}
+
+.container {
+padding: 16px;
+}
+
+#copyright {
+    font-size: 15px;
+    margin-left: 38em;
+}
+
+
+button:focus {
+    outline: 0;
+}
+
+.navbar .dropdown-menu .form-control {
+    width: 200px;
+}

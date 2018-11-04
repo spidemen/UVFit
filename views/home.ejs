@@ -1,0 +1,92 @@
+<% include partials/header %>
+
+<link rel="stylesheet" href="/css/home.css">
+
+
+<div class="jumbotron">
+ <h1 class="display-4" id="headline">Affine Talent</h1>
+</div>
+
+
+<div class="container">
+  <div class="flex-center">
+  
+    <div class="container" style="width:40%">
+    <% if(error && error.length > 0) { %> <!--Displays only if the error exists AND its length is greater than 0-->
+    <div class="alert alert-danger" role="alert"><%=error%></div>
+    <%}%>
+    </div>
+    <div class="container" style="width:40%">
+      <% if(success && success.length > 0) { %>
+    <div class="alert alert-success" role="alert"><%=success%></div>
+    <% } %>
+    </div>
+
+    <hr class="my-4">
+   
+  <hr class="my-4">
+      <div class="modal-enable-btn">
+    <button  onclick="document.getElementById('candidateInfo').style.display='block'" class="btn btn-primary" id="takeExam">Confirm Your Info</button>
+      </div><!--end of exam class-->
+  </div>
+
+  <h5 style="font-size:13px">Affine Finance Corporation © 2018</h5>
+
+</div><!--End of container-->
+
+  <div class="modal" id="candidateInfo">
+
+        <div class="imgcontainer">
+          <span onclick="document.getElementById('candidateInfo').style.display='none'" class="close" title="close modal">&times;</span>
+          <img src="/pic/uren.png" class="avatar" />
+                    <h2 class="new" style="text-align:center">Welcome to Affine Talent</h2>
+        </div>
+
+<!--Social Form-->
+      <div class="social-container">
+        <div class="row">
+
+            <div class="vl">
+              <span class="vl-innertext">or</span>
+        </div>
+
+        <div class="col">
+          <!-- <a href="/auth/linkedin" class="fb btn"> -->
+            <form class="modal-content animate" action="/auth/linkedin" method="GET">
+            <button class="btn btn-primary" style="margin-top:40px"><i class="fa fa-linkedin-square"></i> Login with Linkedin</button>
+          </form>
+          <!-- </a> -->
+        </div>
+
+        <div class="col">
+          <div class="hide-md-lg" />
+        </div>
+        <form class="modal-content animate" action="/" method="POST">
+        <input type="text" name="email" placeholder="Email" >
+        <input type="text" name="visitor" placeholder="Your Name" >
+        <input type="password" name="password" placeholder="Password" require>
+        <input type="password" name="password2" placeholder="Retype password" require>
+        <button type="submit" class="btn btn-primary" id="loginbtn">Register</button>
+        </form>
+      </div><!--end of social login form-->
+    </div>
+
+        <div class="bottom-container" style="background-color:#666">
+          <button type="button" onclick="document.getElementById('candidateInfo').style.display='none'" class="btn" style="background-color:#666">Cancel</button>
+        </div>
+
+
+  </div>
+
+<script>
+const modal = document.getElementById("candidateInfo");
+
+window.onclick = function(e) {
+  if(e.target == modal){
+    modal.style.display="none";
+  }
+}
+</script>
+
+
+<% include partials/footer %>
