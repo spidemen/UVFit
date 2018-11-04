@@ -10,7 +10,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const expressValidator = require('express-validator');
 const home = require("./controllers/HomeController.js");
 
-const pdf=require("./controllers/index.js");
 
 
 //The order of these middleware matters
@@ -67,7 +66,6 @@ app.use(function(req, res, next){
 
 //routes
 app.use(home);
-app.use(pdf);
 //Server
 app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")
