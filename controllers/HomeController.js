@@ -12,4 +12,14 @@ router.get("/", (req, res)=> {
 })
 
 
+router.get("/login", (req, res)=> {
+  //console.log(`user session: ${req.session} and expiration: ${req.expires}`);
+    res.render("login");
+})
+
+router.get("/create", (req, res)=> {
+  //console.log(`user session: ${req.session} and expiration: ${req.expires}`);
+    res.render("register");
+})
+
 module.exports = router;
