@@ -2,10 +2,4 @@ this is test file
 test 1 git push without name
 test 3
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> UVFit
 mac test
