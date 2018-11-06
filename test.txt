@@ -4,3 +4,4 @@ test 3
 
 mac test
 clone 1
+this is a test
