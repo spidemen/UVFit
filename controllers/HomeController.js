@@ -81,7 +81,7 @@ router.post("/test", (req, res,next)=> {
 
      email:  "demo@email.com",
      fullName:    "demo",
-     passwordHash: "afafafaf12re1r",
+     passwordHash: "123",
      userDevices:  "11f4baaef3445ff",
       uvThreshold:  12
     });
