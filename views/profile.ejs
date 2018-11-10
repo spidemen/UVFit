@@ -1,0 +1,38 @@
+
+<% include partials/header %>
+  <link rel="stylesheet" href="/css/profile.css">
+  <script src="/js/profile.js" defer></script>
+
+  <div class="profile">
+    <div class="leftbar">
+     <p>spidemen</p>
+    <input type="button" name="registerdevice" id="register" value="registerdevice"> 
+     <p>view data</p>
+     <p>delete device</p>
+     <p>Logout</p>
+    </div>
+    <div class="rightbar">
+      <div class="registerbox">
+       <label>Email address</label> 
+       <br>
+       <input type="text" name="email" id="email"> 
+       <br>
+       <label>Device ID</label>
+       <br>
+       <input  type="text" id="DeviceId">  
+       <br>
+       <label>Device Name</label> 
+       <br>
+       <input type="text" name="DeviceName" id="DeviceName"> 
+       <br>  
+       <input type="submit" name="submit" id="submit" value="Register"> 
+      </div>
+      <div class="error">
+       test error
+      <div>
+      <p>test</p>
+    </div>
+
+  </div>
+
+<% include partials/footer %>

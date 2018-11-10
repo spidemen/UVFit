@@ -17,13 +17,14 @@ const home = require("./controllers/HomeController.js");
 app.use(flash());
 
 //DB
-//mongoose.connect("mongodb://localhost/affine");
+//mongoose.connect("mongodb://localhost/UVFit");
+mongoose.connect("mongodb://localhost/UVFit");
 
 //server setup
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended:true}));
-
+app.use(bodyParser.json())
 //session
 app.use(session({
   secret: "wasssuppman",
@@ -32,8 +33,8 @@ app.use(session({
 }))
 
 //passport stuffs
-app.use(passport.initialize());
-app.use(passport.session());
+//app.use(passport.initialize());
+//app.use(passport.session());
 
 //express validator
 app.use(expressValidator({
