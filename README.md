@@ -6,6 +6,7 @@ key file: was.pem
 
 Login: ssh -i was.pem ec2-user@18.222.203.101. (on the was.pem directory)
 
+start db: ./mongod
 node version: v10.12.0 above 10 is fine
 npm: 6.4.1
 
