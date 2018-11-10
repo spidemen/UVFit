@@ -6,8 +6,11 @@
   <div class="profile">
     <div class="leftbar">
      <p>spidemen</p>
-    <input type="button" name="registerdevice" id="register" value="registerdevice"> 
-     <p>view data</p>
+     <input type="button" name="registerdevice" id="register" value="registerdevice"> 
+     <br><br>
+     <input type="button" name="viewData" id="viewData" value="viewData"> 
+     <br><br>
+     <input type="button" name="storeData" id="storeData" value="storeData"> 
      <p>delete device</p>
      <p>Logout</p>
     </div>
@@ -27,6 +30,31 @@
        <br>  
        <input type="submit" name="submit" id="submit" value="Register"> 
       </div>
+
+       <div class="view">
+        <div class="viewData"  id="type">   
+          Activies Type:
+           <p>1</p>
+           <p>2</p>
+         </div>
+         <div class="viewData"  id="Date">   
+          Date:
+            <p>3</p>
+           <p>4</p>
+         </div>
+          <div class="viewData"  id="GPS">   
+          GPS location: 
+            <p>5  6</p>
+            <p>15  16</p>
+            
+          </div>
+          <div class="viewData"  id="UV">   
+            UV data:  
+            <p>7</p>
+            <p>8</p>
+         </div>
+         <input type="submit" name="viewbutton" id="viewbutton" value="view"> 
+       </div>
       <div class="error">
        test error
       <div>
@@ -34,5 +62,7 @@
     </div>
 
   </div>
+
+  <br>
 
 <% include partials/footer %>

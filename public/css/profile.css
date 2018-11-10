@@ -4,6 +4,7 @@
 	margin-top: 100px;
 	margin-left: 150px;
 	margin-bottom: 400px;
+	float: none;
 }
 .leftbar{
 
@@ -35,6 +36,16 @@
 	display: none;
 
 }
+.view{
+  display: none;
+
+}
+.viewData{
+   display: inline-block;
+   width: 150px;
+   float: left;
+}
+
 .error{
 display: none;
 }
