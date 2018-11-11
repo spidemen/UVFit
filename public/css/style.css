@@ -43,8 +43,9 @@ input[type=text].error {
 .form{
 
 	 width: 670px;
-   margin-top: 100px;
-  margin-left:600px; 
+
+  margin-top: 100px;
+  margin-left:400px; 
    font: 10pt Arial;
   background-color: #eee;
 	padding-left: 12pt;	

@@ -55,7 +55,7 @@ function RegisterRespon(){
 	if (this.status === 201) {
     if (this.response.registered) {
       responseHTML = "<span>";
-      responseHTML += "Success register: deviceId "+ this.response.deviceId;
+      responseHTML += "Success register:  "+ this.response.message;
       responseHTML += "</span>"	
      // Change current location to the signin page.
      //  window.location = "index.html";
@@ -98,7 +98,7 @@ function  sendReqViewData(){
   var xhr = new XMLHttpRequest();
   xhr.addEventListener("load", ViewDataRespon);
   xhr.responseType = "json";
-  xhr.open("GET", '/activities/user');
+  xhr.open("POST", '/activities/user');
   xhr.setRequestHeader("Content-type", "application/json");
   console.log(email);
   xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
@@ -113,21 +113,28 @@ function ViewDataRespon(){
     if(this.status === 200||this.status==201)
     {
       var responseHTMLType="Activies Type:";
-      var responseHTMLDate="Date:";
-      var responseHTMLGPS="GPS location::";
-      var responseHTMLUV="UV data::";
+      var responseHTMLDate="";
+      var responseHTMLGPS="GPS location:";
+      var responseHTMLUV="UV data:";
+      var responseHTMLspeed="Speed:";
       for(var  data of this.response.activities)
       {
+          for(var i=0;i<data.lons.length;i++)
+          {
           responseHTMLType+="<p>"+data.type+"</p>";
           responseHTMLDate+="<p>"+data.date+"</p>";
-          responseHTMLGPS+="<p>  "+data.lons+"  "+data.lats+" </p>";
-          responseHTMLUV+="<p>"+data.uv+"</p>"
+          responseHTMLGPS+="<p>  "+data.lons[i]+"  "+data.lats[i]+" </p>";
+          responseHTMLUV+="<p>"+data.uv[i]+"</p>";
+          responseHTMLspeed+="<p>"+data.speed[i]+"</p>";
+
+         }
       }
 
       $("#type").html(responseHTMLType);
-      $("#Date").html(responseHTMLDate);
+      $("#Date1").html(responseHTMLDate);
       $("#GPS").html(responseHTMLGPS);
       $("#UV").html(responseHTMLUV);
+      $("#speed").html(responseHTMLspeed);
       console.log("view data");
 
     }

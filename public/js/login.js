@@ -28,7 +28,7 @@
      }
  };
 
-$("#submit").click(function(){
+$("#login").click(function(){
   
        sendReqLogin();
 

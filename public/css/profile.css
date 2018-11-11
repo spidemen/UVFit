@@ -22,7 +22,7 @@
 .rightbar{
 
 	display: inline-block;
-	width: 800px;
+	width: 900px;
 	margin: 4px;
 	margin-left: 50px;
 	text-align: center;
@@ -44,6 +44,13 @@
    display: inline-block;
    width: 150px;
    float: left;
+}
+
+.viewDate{
+   display: inline-block;
+   width: 150px;
+   float: left;
+   font-size: 10px;
 }
 
 .error{
