@@ -58,7 +58,7 @@ router.post('/activities/datapoint', function(req, res, next) {
                   lats: req.body.latitude,
                   lons: req.body.longitude,
                   speeds: req.body.speed,
-                  uvIndices: req.body.uvIntensity
+                  uvIndices: req.body.uvIntensity,
                   deviceId: req.body.deviceId
                });
 
