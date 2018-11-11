@@ -71,7 +71,7 @@ router.post('/activities/datapoint', function(req, res, next) {
                  }
                  else {
                    responseJson.status = "OK";
-                   responseJson.message = "Data saved in db with object ID " + newHwData._id + ".";
+                   responseJson.message = "Data saved in db with object ID " + newActivity._id + ".";
                    return res.status(201).send(JSON.stringify(responseJson));
                  }
                });
