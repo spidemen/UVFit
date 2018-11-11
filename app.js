@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const home = require("./controllers/HomeController.js");
-var photonRouter = require('./controllers/photon');
+var photonRouter = require('./controllers/photon.js');
 
 
 
@@ -45,7 +45,7 @@ app.use(function(req, res, next){
 
 //routes
 app.use(home);
-app.use('/photon', photonRouter);
+app.use(photonRouter);
 //Server
 app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")
