@@ -1,10 +1,24 @@
-﻿
 
 
 AWS Server IP: 18.222.203.101
 key file: was.pem
 
 Login: ssh -i was.pem ec2-user@18.222.203.101. (on the was.pem directory)
+
+start data: ./mongod
+Data Directory :  ../data
+
+look up data: mongon
+
+some command: show dbs;  show collections; db.$collections.find();
+
+How to start server???
+1. after log in AWS linux: install node 10
+nvm install node 10
+2. start db: ./mongod
+3. start node: nodemon
+
+
 
 node version: v10.12.0 above 10 is fine
 npm: 6.4.1
