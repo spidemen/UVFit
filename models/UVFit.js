@@ -34,6 +34,7 @@ var activitySchema =new db.Schema({
      timePublished:{ type: Date, default: Date.now }
 });
 
+//this should be changed to Activity
 const Activities=db.model('Activities', activitySchema);
 module.exports.Activities= Activities;
 

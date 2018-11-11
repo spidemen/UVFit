@@ -6,7 +6,8 @@ var Activity = require("../models/UVFit").Activities;
 /* POST: Register new device. */
 router.post('/activities/datapoint', function(req, res, next) {
     
-    console.log("Storing Published Data");
+    console.log("Publish Request Received with Data:");
+    console.log(req.body);
 
     var responseJson = { 
        status : "",
@@ -53,15 +54,16 @@ router.post('/activities/datapoint', function(req, res, next) {
                return res.status(201).send(JSON.stringify(responseJson));
            }
            else {
-               // Create a new hw data with user email time stamp 
+               console.log("Device Found, apikey matches");
+               // Create a new activity with device data and device ID
                var newActivity = new Activity({
-                  lats: req.body.latitude,
-                  lons: req.body.longitude,
-                  speeds: req.body.speed,
-                  uvIndices: req.body.uvIntensity,
-                  deviceId: req.body.deviceId
+                  lats:      [ req.body.latitude ],
+                  lons:      [ req.body.longitude ],
+                  speeds:    [ req.body.speed ],
+                  uvIndices: [ req.body.uvIntensity ],
+                  deviceId:  req.body.deviceId
                });
-
+               console.log(newActivity);
                // Save device. If successful, return success. If not, return error message.                                                        
                newActivity.save(function(err, newActivity) {
                  if (err) {
@@ -71,7 +73,7 @@ router.post('/activities/datapoint', function(req, res, next) {
                  }
                  else {
                    responseJson.status = "OK";
-                   responseJson.message = "Data saved in db with object ID " + newHwData._id + ".";
+                   responseJson.message = "Data saved in db with object ID " + newActivity._id + ".";
                    return res.status(201).send(JSON.stringify(responseJson));
                  }
                });
