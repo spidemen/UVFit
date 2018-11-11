@@ -55,11 +55,11 @@ router.post('/activities/datapoint', function(req, res, next) {
            else {
                // Create a new activity with device data and device ID
                var newActivity = new Activity({
-                  lats: req.body.latitude,
-                  lons: req.body.longitude,
-                  speeds: req.body.speed,
-                  uvIndices: req.body.uvIntensity,
-                  deviceId: req.body.deviceId
+                  lats:      [req.body.latitude],
+                  lons:      [req.body.longitude],
+                  speeds:    [req.body.speed],
+                  uvIndices: [req.body.uvIntensity],
+                  deviceId:  req.body.deviceId
                });
 
                // Save device. If successful, return success. If not, return error message.                                                        
