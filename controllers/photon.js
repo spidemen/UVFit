@@ -63,7 +63,7 @@ router.post('/activities/datapoint', function(req, res, next) {
                   uvIndices: [ req.body.uvIntensity ],
                   deviceId:  req.body.deviceId
                });
-               console.log(newActivity);
+               //console.log(newActivity);
                // Save device. If successful, return success. If not, return error message.                                                        
                newActivity.save(function(err, newActivity) {
                  if (err) {
