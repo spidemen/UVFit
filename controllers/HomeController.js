@@ -30,7 +30,7 @@ router.post("/account/login", (req, res)=> {
           if(err)
           {
                 
-            res.status(400).json({create:false,message:err.errmsg+" db error"});
+            res.status(400).json({create:false,message:err+" db error"});
 
           }
           else
@@ -133,19 +133,28 @@ router.post("/devices/register", (req, res,next)=> {
                   if (err) {
                   //  console.error(err);
                   console.log("Fail store");
-                   res.status(400).json( {registered: false, message: err.errmsg+" db error fail create"});
+                   res.status(400).json( {registered: false, message: err+" db error fail create"});
                
                  }
                  else {
-                 console.log("success store");
-                 res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered."})     
+                         console.log("success store");
+
+                         User.update({email:req.body.email},{$push:{userDevices:req.body.deviceId}},function(err,user){
+                             if(err)
+                              console.log(err);
+                            else
+                            {
+                              console.log("success update user ");
+                               res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered."}) 
+                            }
+                         });
                }
                });
           }
         }
         else
         {       
-            res.status(400).json( {registered: false, message: err.errmsg+" db error "});
+            res.status(400).json( {registered: false, message: err+" db error "});
          
          }
       });
@@ -161,7 +170,7 @@ router.post("/activities/user", (req, res,next)=> {
                         {type: "",
                          lons: [],
                          lats:[],
-                       
+                         speed:[],
                          uv:[],
                          date:[]
                        }
@@ -204,12 +213,12 @@ router.post("/activities/user", (req, res,next)=> {
                       "type": act.activityType,
                        "lons":act.lons,
                        "lats":act.lats,
-              
+                        "speed":act.speeds,
                         "uv":act.uvIndices,
                        "date":act.timePublished
                   });
                 }
-                 console.log(responseJson);
+               //  console.log(responseJson);
                 res.status(201).json(responseJson);
             }
           });

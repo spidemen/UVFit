@@ -55,7 +55,7 @@ function RegisterRespon(){
 	if (this.status === 201) {
     if (this.response.registered) {
       responseHTML = "<span>";
-      responseHTML += "Success register: deviceId "+ this.response.deviceId;
+      responseHTML += "Success register:  "+ this.response.message;
       responseHTML += "</span>"	
      // Change current location to the signin page.
      //  window.location = "index.html";
@@ -114,8 +114,14 @@ function ViewDataRespon(){
     {
       var responseHTMLType="Activies Type:";
       var responseHTMLDate="";
+<<<<<<< HEAD
+      var responseHTMLGPS="GPS location:";
+      var responseHTMLUV="UV data:";
+      var responseHTMLspeed="Speed:";
+=======
       var responseHTMLGPS="GPS location::";
       var responseHTMLUV="UV data::";
+>>>>>>> ea997c5249d3dd39219a1eeafcf7ee67c30cb470
       for(var  data of this.response.activities)
       {
           for(var i=0;i<data.lons.length;i++)
@@ -123,7 +129,13 @@ function ViewDataRespon(){
           responseHTMLType+="<p>"+data.type+"</p>";
           responseHTMLDate+="<p>"+data.date+"</p>";
           responseHTMLGPS+="<p>  "+data.lons[i]+"  "+data.lats[i]+" </p>";
+<<<<<<< HEAD
+          responseHTMLUV+="<p>"+data.uv[i]+"</p>";
+          responseHTMLspeed+="<p>"+data.speed[i]+"</p>";
+
+=======
           responseHTMLUV+="<p>"+data.uv[i]+"</p>"
+>>>>>>> ea997c5249d3dd39219a1eeafcf7ee67c30cb470
          }
       }
 
@@ -131,6 +143,7 @@ function ViewDataRespon(){
       $("#Date1").html(responseHTMLDate);
       $("#GPS").html(responseHTMLGPS);
       $("#UV").html(responseHTMLUV);
+      $("#speed").html(responseHTMLspeed);
       console.log("view data");
 
     }
