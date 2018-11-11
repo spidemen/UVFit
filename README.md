@@ -29,5 +29,21 @@ public: store js , css and picture etc, which is needed by HTML file.
 views:  purge ejs(the same as html) file, just only just show webpage outlook.
 Models: database scheme define and other database related function
 
- 
- 
+
+//clones entire github ece513 repository
+git clone <url>
+
+//updates your local copy
+git pull
+
+//adds files to git staging area
+git add <files>
+
+//commits changes to your local checkout
+git commit -m "my message"
+
+//pushes to the cloud repository
+git push
+
+//git cheat sheet for anything else
+https://www.git-tower.com/blog/git-cheat-sheet
