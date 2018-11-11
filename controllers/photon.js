@@ -53,7 +53,7 @@ router.post('/activities/datapoint', function(req, res, next) {
                return res.status(201).send(JSON.stringify(responseJson));
            }
            else {
-               // Create a new hw data with user email time stamp 
+               // Create a new activity with device data and device ID
                var newActivity = new Activity({
                   lats: req.body.latitude,
                   lons: req.body.longitude,
