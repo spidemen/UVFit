@@ -21,28 +21,36 @@ router.get("/login", (req, res)=> {
     res.render("login");
 })
 
-
 router.post("/account/login", (req, res)=> {
     
     
-    console.log(req.body.email+"   "+req.body.password);
+  //  console.log(req.body.email+"   "+req.body.password);
     User.findOne({email:req.body.email},function(err,user)
       {
           if(err)
           {
-                 console.log("can not find users");
-                 res.status(400).json({create:false,message:"Canot find users"});
+                
+            res.status(400).json({create:false,message:err.errmsg+" db error"});
 
           }
           else
           {
-              console.log("user email: "+user.email);
-              if(req.body.password==user.passwordHash)
+
+              if(user!=null)
               {
+               console.log("user email: "+user.email);
+               if(req.body.password==user.passwordHash)
+               {
                console.log("Success find user");
                res.status(201).json({create:true,message:"sucess find"});
-             }else
+              }
+              else
               res.status(400).json({create:false,message:"username and password do not match"});
+            }
+            else
+            {
+                 res.status(400).json({create:false,message:"No any record find, please do create."});
+            }
           }
 
       });
@@ -105,39 +113,48 @@ router.post("/devices/register", (req, res,next)=> {
 
   
    // check device ID already register
-    Device.findOne({email:req.body.deviceId}, function(err, device) {
+    Device.findOne({deviceId:req.body.deviceId}, function(err, device) {
         if(!err)
         {
-            console.log("Already registered");
-            res.status(201).json( {registered: false, message: "Device ID="+req.body.deviceId+" already registered"});
+            if(device!=null)
+            {
+             console.log("Already registered ");
+             res.status(201).json( {registered: false, message: "Device ID="+req.body.deviceId+" already registered"});
+            }
+            else
+            {
+              console.log("Register a new device"+req.body.deviceId);
+               var NewDevice = new Device({
+               userEmail: req.body.email,
+               deviceId:req.body.deviceId,
+                deviceName: req.body.deviceName
+                }); 
+                 NewDevice.save( function(err, device) {
+                  if (err) {
+                  //  console.error(err);
+                  console.log("Fail store");
+                   res.status(400).json( {registered: false, message: err.errmsg+" db error fail create"});
+               
+                 }
+                 else {
+                 console.log("success store");
+                 res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered."})     
+               }
+               });
+          }
         }
         else
-          {
-          var NewDevice = new Device({
-           userEmail: req.body.email,
-           deviceId:req.body.deviceId,
-           deviceName: req.body.deviceName
-           }); 
-            NewDevice.save( function(err, device) {
-           if (err) {
-            // 	console.error(err);
-               console.log("Fail store");
-              res.status(400).json( {registered: false, message: err.errmsg});
-               
-           }
-           else {
-           	  console.log("success store");
-              res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered."})     
-           }
-        });
-      }
+        {       
+            res.status(400).json( {registered: false, message: err.errmsg+" db error "});
+         
+         }
       });
 
 
 })
 
 // view data
-router.get("/activities/user", (req, res,next)=> {
+router.post("/activities/user", (req, res,next)=> {
    
     var responseJson = { found:false,
                         activities:[
@@ -157,19 +174,24 @@ router.get("/activities/user", (req, res,next)=> {
 */
     
     console.log(req.body.email+"   "+req.body.deviceId);
-    User.findOne({email:"demo@email.com"}, function(err,user){
+ //   var Email="demo@email.com";
+    var Email=req.body.email;
+    User.findOne({email:Email}, function(err,user){
         if(err)
         {
-             res.status(400).json( {found: false, message: err.errmsg+"  user email do not exit, please create account first"});
+            res.status(400).json( {found: false, message: err+"  db error find user"});
         }
        else
        {
+
+        if(user!=null)
+        {
          console.log(user.userDevices);
          Activities.find({deviceId:user.userDevices[0]},function(err,activities)
           {
             if(err)
             {
-                res.status(400).json( {found: false, message: err.errmsg+" can not find any activities record"});
+                res.status(400).json( {found: false, message: err+" can not find any activities record"});
             }
             else
             {
@@ -192,7 +214,14 @@ router.get("/activities/user", (req, res,next)=> {
             }
           });
 
-       }
+        }
+        else
+        {
+           res.status(400).json( {found: false, message: err+"  user email do not exit, please create account first"});
+        }
+
+      }
+
     });
    // res.render("profile");
 })

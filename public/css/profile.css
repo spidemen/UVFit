@@ -46,6 +46,13 @@
    float: left;
 }
 
+.viewDate{
+   display: inline-block;
+   width: 150px;
+   float: left;
+   font-size: 10px;
+}
+
 .error{
 display: none;
 }
