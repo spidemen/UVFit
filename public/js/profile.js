@@ -112,16 +112,16 @@ function ViewDataRespon(){
     
     if(this.status === 200||this.status==201)
     {
-      var responseHTMLType="Activies Type:";
+  //      var responseHTMLType="Activies Type:";
       var responseHTMLDate="";
-      var responseHTMLGPS="GPS location:";
+      var responseHTMLGPS="GPS location(lon,lat):";
       var responseHTMLUV="UV data:";
       var responseHTMLspeed="Speed:";
       for(var  data of this.response.activities)
       {
           for(var i=0;i<data.lons.length;i++)
           {
-          responseHTMLType+="<p>"+data.type+"</p>";
+    //      responseHTMLType+="<p>"+data.type+"</p>";
           responseHTMLDate+="<p>"+data.date+"</p>";
           responseHTMLGPS+="<p>  "+data.lons[i]+"  "+data.lats[i]+" </p>";
           responseHTMLUV+="<p>"+data.uv[i]+"</p>";
@@ -130,7 +130,7 @@ function ViewDataRespon(){
          }
       }
 
-      $("#type").html(responseHTMLType);
+   //   $("#type").html(responseHTMLType);
       $("#Date1").html(responseHTMLDate);
       $("#GPS").html(responseHTMLGPS);
       $("#UV").html(responseHTMLUV);
