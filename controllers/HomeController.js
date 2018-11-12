@@ -21,6 +21,52 @@ router.get("/login", (req, res)=> {
     res.render("login");
 })
 
+router.post("/account/create", (req, res)=> {
+      
+    console.log(req.body.email+"   "+req.body.fullname+"  "+req.body.password);
+    User.findOne({email:req.body.email},function(err,user)
+      {
+          if(err)
+          {
+                
+            res.status(400).json({create:false,message:err+" db error"});
+
+          }
+          else
+          {
+            if(user==null)
+            {
+              
+               var newuser=new User({
+                 email: req.body.email,
+                 fullName:  req.body.fullname,
+                 passwordHash: req.body.password
+                 });
+          newuser.save( function(err, user) {
+            if (err) {
+            //  console.error(err);
+               console.log("Fail store create user  db error");   
+               res.status(400).json({create:false,message:err+" db error"});  
+               
+              }
+             else 
+             {
+
+              console.log("success create a user");
+              res.status(201).json({create:true,message:"Success create a user"});   
+             }
+          }); 
+            }
+            else
+            {
+                 res.status(400).json({create:false,message:"User  already exit, please choose another email"});
+            }
+
+          } 
+
+      });
+
+});
 router.post("/account/login", (req, res)=> {
     
     
