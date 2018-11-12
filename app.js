@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const home = require("./controllers/HomeController.js");
-const createAccount = require("./controllers/create_account.js");
 var photonRouter = require('./controllers/photon.js');
 
 
@@ -47,7 +46,6 @@ app.use(function(req, res, next){
 //routes
 app.use(home);
 app.use(photonRouter);
-app.use(createAccount);
 //Server
 app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")
