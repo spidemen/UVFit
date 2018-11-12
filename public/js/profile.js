@@ -1,4 +1,12 @@
 
+
+$("#viewData").click(function(){
+     console.log("click view data button"); 
+     $(".registerbox").css('display',"none");
+       $(".view").css('display',"none");
+       $(".error").css('display',"none");
+});
+
 $("#register").click(function(){
 	  console.log("click button update ");
       $(".registerbox").css('display',"block");
@@ -105,7 +113,8 @@ function  sendReqViewData(){
 
 };
 $("#viewbutton").click(function(){
-       sendReqViewData();
+    
+      sendReqViewData();
 });
 
 function ViewDataRespon(){
