@@ -24,24 +24,20 @@ router.get("/login", (req, res)=> {
 router.post("/account/create", (req, res)=> {
       
     console.log(req.body.email+"   "+req.body.fullname+"  "+req.body.password);
-    User.findOne({email:req.body.email},function(err,user)
-      {
+    User.findOne({email:req.body.email},function(err,user) {
           if(err)
           {
-                
             res.status(400).json({create:false,message:err+" db error"});
-
           }
           else
           {
             if(user==null)
             {
-              
                var newuser=new User({
                  email: req.body.email,
                  fullName:  req.body.fullname,
                  passwordHash: req.body.password
-                 });
+               });
           newuser.save( function(err, user) {
             if (err) {
             //  console.error(err);
@@ -75,24 +71,21 @@ router.post("/account/login", (req, res)=> {
       {
           if(err)
           {
-                
             res.status(400).json({create:false,message:err+" db error"});
-
           }
           else
           {
-
               if(user!=null)
               {
-               console.log("user email: "+user.email);
-               if(req.body.password==user.passwordHash)
-               {
-               console.log("Success find user");
-               res.status(201).json({create:true,message:"sucess find"});
-              }
+               	 console.log("user email: "+user.email);
+              	 if(req.body.password==user.passwordHash)
+               	{
+              	 console.log("Success find user");
+              	 res.status(201).json({create:true,message:"sucess find"});
+             	 }
               else
-              res.status(400).json({create:false,message:"username and password do not match"});
-            }
+                  res.status(400).json({create:false,message:"username and password do not match"});
+              }
             else
             {
                  res.status(400).json({create:false,message:"No any record find, please do create."});
