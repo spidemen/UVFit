@@ -120,14 +120,14 @@ router.post("/test", (req, res,next)=> {
     });
 });
 
-// register device
+//register device
 router.post("/devices/register", (req, res,next)=> {
     //check device ID already register
     Device.findOne({deviceId:req.body.deviceId}, function(err, device) {
         if(!err) {
             if(device!=null) {
                 console.log("Already registered ");
-                res.status(201).json( {registered: false, message: "Device ID="+req.body.deviceId+" already registered"});
+                res.status(201).json( {registered: false, message: "Device ID= " + req.body.deviceId + " already registered"});
             }
             else {
                 console.log("Register a new device"+req.body.deviceId);
@@ -139,8 +139,8 @@ router.post("/devices/register", (req, res,next)=> {
                 NewDevice.save( function(err, device) {
                     if (err) {
                         //console.error(err);
-                        console.log("Fail store");
-                        res.status(400).json( {registered: false, message: err+" db error fail create"});
+                        //console.log(err);
+                        res.status(400).json( {registered: false, message: "There was an issue registering the device."});
                     }
                     else {
                         console.log("success store");
@@ -148,10 +148,11 @@ router.post("/devices/register", (req, res,next)=> {
                         User.update({email:req.body.email},{$push:{userDevices:req.body.deviceId}},function(err,user){
                             if(err) {
                                 console.log(err);
+                                res.status(400).json( {registered: false, message: "There was an issue registering the device."});
                             }
                             else {
                                 console.log("success update user ");
-                                res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered."}) 
+                                res.status(201).json( {registered: true, message: "Device ID: " + req.body.deviceId + " was registered."}) 
                             }
                         });
                     }
@@ -159,7 +160,7 @@ router.post("/devices/register", (req, res,next)=> {
             }
         }
         else {       
-            res.status(400).json( {registered: false, message: err+" db error "});
+            res.status(400).json( {registered: false, message: "There was an issue registering the device."});
         }
     });
 })
