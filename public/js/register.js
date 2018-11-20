@@ -3,6 +3,7 @@
 var savetable=document.getElementById("formErrors");
 function  CheckInput() {
 
+   
     var fullname=document.getElementById("fullName");
     var email=document.getElementById("email");
     var password=document.getElementById("password");
@@ -94,7 +95,7 @@ function  CheckInput() {
      if(!flag)
      {
 
-       var email = document.getElementById("email").value;
+      var email = document.getElementById("email").value;
       var fullname = document.getElementById("fullName").value;
       var password = document.getElementById("password").value;
       var xhr = new XMLHttpRequest();
@@ -116,6 +117,7 @@ function AccountRespon()
      if (this.status === 201) 
      {
         alert("Success create account");
+     
         window.location = "profile";
      }
      else

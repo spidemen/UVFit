@@ -21,6 +21,24 @@ $("#viewData").click(function(){
 
 });
 
+$("table").on('click', 'tr', onCellClick);
+
+function onCellClick() {
+
+    let row = $(this); //get the jquery Object for the row
+    var date; //An empty object to hold your data
+    let temp;
+    row.find('td').each(function(item) {
+      temp = $(this);
+      if(item==0)
+      date = temp.text();
+    });
+   console.log(date);
+   window.open("login", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+
+}
+
+
 function sendReqStore()
 {
 
@@ -122,29 +140,30 @@ function ViewDataRespon(){
     if(this.status === 200||this.status==201)
     {
   //      var responseHTMLType="Activies Type:";
-      var responseHTMLDate="";
-      var responseHTMLGPS="GPS location(lon,lat):";
-      var responseHTMLUV="UV data:";
-      var responseHTMLspeed="Speed:";
+      // var responseHTMLDate="";
+      // var responseHTMDuration="Activity Duration:";
+      // var responseHTMLUV="UV Exposure:";
+      // var responseHTMLCalories=" Calories Burned:";
+       var responseHTML="";
+       responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
       for(var  data of this.response.activities)
       {
-          for(var i=0;i<data.lons.length;i++)
-          {
-    //      responseHTMLType+="<p>"+data.type+"</p>";
-          responseHTMLDate+="<p>"+data.date+"</p>";
-          responseHTMLGPS+="<p>  "+data.lons[i]+"  "+data.lats[i]+" </p>";
-          responseHTMLUV+="<p>"+data.uv[i]+"</p>";
-          responseHTMLspeed+="<p>"+data.speed[i]+"</p>";
-
-         }
+           responseHTML+="<tr> ";
+          responseHTML+="<td>"+data.date+"</td>";
+          responseHTML+="<td>  "+data.duration+" </td>";
+          responseHTML+="<td>"+data.uvExposure+"</td>";
+          responseHTML+="<td>"+data.calories+"</td>";
+           responseHTML+="</tr>"
       }
-
-   //   $("#type").html(responseHTMLType);
-      $("#Date1").html(responseHTMLDate);
-      $("#GPS").html(responseHTMLGPS);
-      $("#UV").html(responseHTMLUV);
-      $("#speed").html(responseHTMLspeed);
-      console.log("view data");
+     
+      // console.log(this.response.activities);
+      $("table").html(responseHTML)
+   // //   $("#type").html(responseHTMLType);
+   //    $("#Date1").html(responseHTMLDate);
+   //    $("#GPS").html(responseHTMDuration);
+   //    $("#UV").html(responseHTMLUV);
+   //    $("#speed").html(responseHTMLCalories);
+      // console.log(responseHTML);
 
     }
     else
