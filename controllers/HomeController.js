@@ -58,8 +58,8 @@ router.post("/account/create", (req, res)=> {
              else{
                         //  // Send the email
                   var token = crypto.randomBytes(16).toString('hex');
-                 var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: 'hamiltonbill2018@gmail.com', pass: '******' } });
-                 var mailOptions = { from: 'hamiltonbill2018@gmail.com', to: req.body.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + "/confirmation?id=" +token};
+                 var transporter = nodemailer.createTransport({ service: 'Gmail', auth: { user: 'uvfit2018@gmail.com', pass: 'UVFit2018@AZ&' } });
+                 var mailOptions = { from: 'uvfit2018@gmail.com', to: req.body.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + "/confirmation?id=" +token};
                 transporter.sendMail(mailOptions, function (err) {
                 if (err) {    console.log(err);  return res.status(400).json({create:false,message:"Error: send user email"});; }
                   res.status(200).json({create:false,message:'A verification email has been sent to ' + user.email + '.'});
