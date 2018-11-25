@@ -32,6 +32,66 @@ router.get("/singleview", (req, res)=> {
     res.render("singleview");
 });
 
+// Function to generate a random apikey consisting of 32 characters
+function getNewApikey() {
+    var newApikey = "";
+    var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    
+    for (var i = 0; i < 32; i++) {
+       newApikey += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+    }
+
+    return newApikey;
+}
+
+
+router.get("/account/user", (req, res)=> {
+
+    console.log("enter ajax accout get user infor");
+      // Check for authentication token in x-auth header
+  if (!req.headers["x-auth"]) {
+      return res.status(401).json({success: false, message: "No authentication token"});
+   }
+   
+   var authToken = req.headers["x-auth"];
+   try {
+      var decodedToken = jwt.decode(authToken, secret);
+      var userStatus = {};
+       User.findOne({email: decodedToken.email}, function(err, user) {
+         if(err) {
+            return res.status(200).json({success: false, message: "User does not exist."});
+         }
+         else {
+            userStatus['success'] = true;
+            userStatus['email'] = user.email;
+            userStatus['fullName'] = user.fullName;
+            userStatus['lastAccess'] = user.lastAccess;
+            
+            // Find devices based on decoded token
+          Device.find({ userEmail : decodedToken.email}, function(err, devices) {
+            if (!err) {
+               // Construct device list
+               var deviceList = []; 
+               for (device of devices) {
+                 deviceList.push({ 
+                       deviceId: device.deviceId,
+                       apikey: device.apikey,
+                 });
+               }
+               userStatus['devices'] = deviceList;
+            }
+            
+               return res.status(200).json(userStatus);            
+          });
+         }
+      });
+   }
+   catch (ex) {
+      return res.status(401).json({success: false, message: "Invalid authentication token."});
+   }
+});
+
+
 router.post("/account/create", (req, res)=> {
       
     console.log(req.body.email+"   "+req.body.fullname+"  "+req.body.password);
@@ -42,6 +102,7 @@ router.post("/account/create", (req, res)=> {
                   res.status(400).json({create:false,message:err+" db error"});
                }
              else {
+
                 if(user==null){
                    var newuser=new User({
                   email: req.body.email,
@@ -287,11 +348,14 @@ router.post("/devices/register", (req, res,next)=> {
             }
             else
             {
+              // Get a new apikey
+              var  deviceApikey = getNewApikey();
               console.log("Register a new device"+req.body.deviceId);
                var NewDevice = new Device({
                userEmail: req.body.email,
                deviceId:req.body.deviceId,
-                deviceName: req.body.deviceName
+                deviceName: req.body.deviceName,
+                 apikey:  deviceApikey   
                 }); 
                  NewDevice.save( function(err, device) {
                   if (err) {

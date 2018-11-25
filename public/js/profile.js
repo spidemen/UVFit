@@ -1,5 +1,18 @@
 
-
+$(window).on("load", function () {
+  console.log("send requst");
+  $.ajax({
+   url:'/account/user',
+   type:'GET',
+   headers: { 'x-auth': window.localStorage.getItem("authToken") },
+   responseType: 'json',
+   success: function(data){
+         var username=data.fullName;
+        $("#user").html(username);
+        console.log("get date from page profile date="+data.email);
+      }
+   });
+});
 $("#viewData").click(function(){
      console.log("click view data button"); 
      $(".registerbox").css('display',"none");
@@ -20,6 +33,7 @@ $("#viewData").click(function(){
 
 
 });
+
 
 $("table").on('click', 'tr', onCellClick);
 
@@ -114,8 +128,6 @@ $("#submit").click(function(){
        sendReqRegister();
 
 });
-
-
 
 
 
