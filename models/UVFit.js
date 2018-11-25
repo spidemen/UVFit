@@ -30,6 +30,7 @@ var activitySchema =new db.Schema({
      lons:         [ Number ],
      speeds:       [ Number ],
      uvIndices:    [ Number ],
+     timestamps:   [ Number ],
      deviceId:      String,
      timePublished:{ type: Date, default: Date.now }
 });
