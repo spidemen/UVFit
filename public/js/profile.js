@@ -34,8 +34,10 @@ function onCellClick() {
       date = temp.text();
     });
    console.log(date);
-   window.open("login", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+   $(".RowDate").html(date);
 
+   window.open("singleview?id="+date+"&deviceid=11f4baaef3445ff", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+   
 }
 
 

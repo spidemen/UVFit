@@ -116,9 +116,8 @@ function AccountRespon()
       console.log("status="+this.status);
      if (this.status === 201) 
      {
-        alert("Success create account");
-     
-        window.location = "profile";
+        alert("Success create account, please verificated your email address within 1 hours");
+        window.location = "login";
      }
      else
      {

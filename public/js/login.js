@@ -24,14 +24,48 @@
      }
      else
      {
+     	if(this.status==401){
+     		$("#login").css('display',"none");
+     		$("#verificate").css('display',"block");
+     	}
      	console.log(this.response.message);
         alert("Fail "+this.response.message);
      }
  };
 
 $("#login").click(function(){
-  
        sendReqLogin();
 
 });
+
+function sendReqVerifty() {
+    var email = document.getElementById("email").value;
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", VeriftyRes);
+    xhr.responseType = "json";
+    xhr.open("POST", '/account/resend');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify({email:email}));
+};
+function VeriftyRes(){
+    
+    console.log(this.status);
+	if(this.status==200){
+		alert("Success send your email, please verifty");
+	   $("#login").css('display',"block");
+       $("#verificate").css('display',"none");
+	}
+	else{
+	   alert("Fail "+this.response.message);
+	}
+
+}
+
+$("#verificate").click(function(){
+  
+       sendReqVerifty();
+
+});
+
+
 

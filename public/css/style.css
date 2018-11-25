@@ -37,6 +37,20 @@ input[type=submit] {
 input[type=submit]:hover {
    background-color: #07d;
 }
+input[type=verificate] {
+   
+    display: none;
+   background-color: #09f;
+   color: white;
+   padding: 15px;
+   margin: 10px 0;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+}
+input[type=verificate]:hover {
+   background-color: #07d;
+}
 input[type=text].error {
     border: 2px solid red;
 }
