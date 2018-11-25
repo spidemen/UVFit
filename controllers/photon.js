@@ -65,12 +65,16 @@ router.post('/activities/datapoints', function(req, res, next) {
                 Activity.findOne($and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: req.body.timestamps[0]-1 } }], function(err, activity) {
                     if (activity === null) {
                         // Create a new activity with device data and device ID
+                        var dates;
+                        for (t in req.body.timestamps) {
+                            dates += new Date(t*1000);
+                        }
                         var newActivity = new Activity({
                           lats:       req.body.latitudes,
                           lons:       req.body.longitudes,
                           speeds:     req.body.speeds,
                           uvIndices:  req.body.uvIntensities,
-                          timestamps: req.body.timestamps,
+                          timestamps: dates,
                           deviceId:  req.body.deviceId
                         });
                         //console.log(newActivity);
