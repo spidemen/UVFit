@@ -56,7 +56,17 @@
 .error{
 display: none;
 }
-
+tr td:first-child {
+ width: 200px;	
+}
+td{ 
+   width: 150px;
+}
+table{
+	margin-left: 20px;
+   display: inline-block;
+   float: left;
+}
 input[type=text]{
    padding: 8px;
    margin-top: 4px;

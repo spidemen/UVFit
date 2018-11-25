@@ -13,12 +13,13 @@
    };
 
  function RegisterResLogin(){
-
-     console.log("status=");
+ 	
      console.log("status="+this.status);
      if (this.status === 201) 
      {
      	alert("Success login");
+       window.localStorage.setItem("authToken", this.response.token);
+      // console.log("toke "+this.response.token);
         window.location = "profile";
      }
      else

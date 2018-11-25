@@ -4,8 +4,9 @@ var db = require("../db");
 var userSchema = new db.Schema({
   email:        { type: String, required: true, unique: true },
   fullName:     { type: String, required: true },
-  passwordHash: String,
-  lastAccess:   { type: Date, default: Date.now },
+  isVerified: { type: Boolean, default: false },
+   passwordHash: String,
+   lastAccess:   { type: Date, default: Date.now },
   userDevices:  [ String ],
   uvThreshold:  Number
 });
@@ -30,7 +31,10 @@ var activitySchema =new db.Schema({
      lons:         [ Number ],
      speeds:       [ Number ],
      uvIndices:    [ Number ],
-     timestamps:   [ Number ],
+     timestamps:   [ Date ],
+     duration:     Number,
+     calories:     Number, 
+     uvExposure:    Number,
      deviceId:      String,
      timePublished:{ type: Date, default: Date.now }
 });
@@ -39,5 +43,12 @@ var activitySchema =new db.Schema({
 const Activities=db.model('Activities', activitySchema);
 module.exports.Activities= Activities;
 
+var tokenSchema = new db.Schema({
+    _userId: { type: db.Schema.Types.ObjectId, required: true, ref: 'User' },
+    token: { type: String, required: true },
+    createdAt: { type: Date, required: true, default: Date.now, expires: 86200 }
+});
+
+module.exports.token= tokenSchema;
 
 
