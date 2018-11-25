@@ -60,15 +60,27 @@ router.post('/activities/datapoints', function(req, res, next) {
                return res.status(201).send(JSON.stringify(responseJson));
             }
             else {
-                console.log("Device Found, apikey matches");
+                console.log("Device Found: " + req.body.deviceId + ", apikey matches");
                 var dates;
                 for (t in req.body.timestamps) {
                     dates += new Date(t*1000);
                 }
-                // Find the device and verify the apikey
+                // Find activity to append to or make a new one
                 Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
                     console.log(activity);
-                    if (activity === null) {
+                    if (activity !== null) {
+                        Activity.findbyIdAndUpdate( activity._id,
+                            { $push: {
+                                    lats: { $each: req.body.latitudes } ,
+                                    lons: { $each: req.body.longitudes },
+                                    speeds : { $each: req.body.speeds },
+                                    uvIndices : { $each: req.body.uvIntensities },
+                                    timestamps : { $each: dates }
+                                }
+                            }
+                        );
+                    }
+                    else {
                         // Create a new activity with device data and device ID
                         var newActivity = new Activity({
                           lats:       req.body.latitudes,
@@ -91,18 +103,6 @@ router.post('/activities/datapoints', function(req, res, next) {
                                return res.status(201).send(JSON.stringify(responseJson));
                             }
                         });
-                    }
-                    else {
-                        Activity.findbyIdAndUpdate( activity._id,
-                            { $push: {
-                                    lats: { $each: req.body.latitudes } ,
-                                    lons: { $each: req.body.longitudes },
-                                    speeds : { $each: req.body.speeds },
-                                    uvIndices : { $each: req.body.uvIntensities },
-                                    timestamps : { $each: dates }
-                                }
-                            }
-                        );
                     }
                 });
             }
