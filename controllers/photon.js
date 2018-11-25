@@ -97,7 +97,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                         for (t in req.body.timestamps) {
                             dates += new Date(t*1000);
                         }
-                        Activity.findbyIdAndUpdate( activity._id,
+                        /*Activity.findbyIdAndUpdate( activity._id,
                             { $push: {
                                     lats: { $each: req.body.latitudes } ,
                                     lons: { $each: req.body.longitudes },
@@ -106,7 +106,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                                     timestamps : { $each: dates }
                                 }
                             }
-                        );
+                        );*/
                     }
                 });
             }
