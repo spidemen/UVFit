@@ -103,7 +103,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                             }
                         )
                     }
-                }
+                });
             }
         }
         else {
