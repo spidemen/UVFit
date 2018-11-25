@@ -63,6 +63,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                 console.log("Device Found, apikey matches");
                 // Find the device and verify the apikey
                 Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: req.body.timestamps[0]-1 } }]}, function(err, activity) {
+                    console.log(activity);
                     if (activity === null) {
                         // Create a new activity with device data and device ID
                         var dates;
