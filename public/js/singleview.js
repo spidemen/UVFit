@@ -20,8 +20,6 @@ $(window).on("load", function () {
 
 function SingleViewRespon(){
 
-     
-
        $("#formErrors").css('display',"block");
        $("#formErrors").html(date+id);
 }
