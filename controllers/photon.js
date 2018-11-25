@@ -3,7 +3,7 @@ var router = express.Router();
 var Device = require("../models/UVFit").Device;
 var Activity = require("../models/UVFit").Activities;
 
-/* POST: Register new device. */
+/* POST: Activity Datapoints. */
 router.post('/activities/datapoints', function(req, res, next) {
     
     console.log("Publish Request Received with Data:");
@@ -61,15 +61,15 @@ router.post('/activities/datapoints', function(req, res, next) {
             }
             else {
                 console.log("Device Found, apikey matches");
+                var dates;
+                for (t in req.body.timestamps) {
+                    dates += new Date(t*1000);
+                }
                 // Find the device and verify the apikey
-                Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: req.body.timestamps[0]-1 } }]}, function(err, activity) {
+                Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
                     console.log(activity);
                     if (activity === null) {
                         // Create a new activity with device data and device ID
-                        var dates;
-                        for (t in req.body.timestamps) {
-                            dates += new Date(t*1000);
-                        }
                         var newActivity = new Activity({
                           lats:       req.body.latitudes,
                           lons:       req.body.longitudes,
@@ -93,11 +93,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                         });
                     }
                     else {
-                        var dates;
-                        for (t in req.body.timestamps) {
-                            dates += new Date(t*1000);
-                        }
-                        /*Activity.findbyIdAndUpdate( activity._id,
+                        Activity.findbyIdAndUpdate( activity._id,
                             { $push: {
                                     lats: { $each: req.body.latitudes } ,
                                     lons: { $each: req.body.longitudes },
@@ -106,7 +102,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                                     timestamps : { $each: dates }
                                 }
                             }
-                        );*/
+                        );
                     }
                 });
             }
