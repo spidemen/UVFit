@@ -93,13 +93,17 @@ router.post('/activities/datapoints', function(req, res, next) {
                         });
                     }
                     else {
-                        Activity.update( activity._id,
+                        var dates;
+                        for (t in req.body.timestamps) {
+                            dates += new Date(t*1000);
+                        }
+                        Activity.findbyIdAndUpdate( activity._id,
                             { $push: {
                                     lats: { $each: req.body.latitudes } ,
                                     lons: { $each: req.body.longitudes },
                                     speeds : { $each: req.body.speeds },
                                     uvIndices : { $each: req.body.uvIntensities },
-                                    timestamps : { $each: req.body.timestamps }
+                                    timestamps : { $each: dates }
                                 }
                             }
                         );
