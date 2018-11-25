@@ -94,11 +94,11 @@ router.post('/activities/datapoints', function(req, res, next) {
                     else {
                         Activity.update( activity._id,
                             { $push: {
-                                    { lats: { $each: req.body.latitudes } },
-                                    { lons: { $each: req.body.longitudes } },
-                                    { speeds : { $each: req.body.speeds } },
-                                    { uvIndices : { $each: req.body.uvIntensities } },
-                                    { timestamps : { $each: req.body.timestamps } }
+                                    lats: { $each: req.body.latitudes } ,
+                                    lons: { $each: req.body.longitudes },
+                                    speeds : { $each: req.body.speeds },
+                                    uvIndices : { $each: req.body.uvIntensities },
+                                    timestamps : { $each: req.body.timestamps }
                                 }
                             }
                         );
