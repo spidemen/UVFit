@@ -66,7 +66,8 @@ router.post('/activities/datapoints', function(req, res, next) {
                     dates += new Date(t*1000);
                 }
                 // Find activity to append to or make a new one
-                Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
+                Activity.findOne( { deviceId: req.body.deviceId }, function(err, activity) {
+                //Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
                     console.log(activity);
                     if (activity !== null) {
                         Activity.findbyIdAndUpdate( activity._id,
