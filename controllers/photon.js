@@ -68,8 +68,6 @@ router.post('/activities/datapoints', function(req, res, next) {
                 console.log(dates);
                 // Find activity to append to or make a new one
                 Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
-                    console.log(err);
-                    console.log(activity.timestamps);
                     if (activity !== null) {
                         console.log("Updating Activity");
                         Activity.findbyIdAndUpdate( activity._id,
