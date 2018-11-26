@@ -63,7 +63,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                 console.log("Device Found: " + req.body.deviceId + ", apikey matches");
                 var dates = [];
                 for (t in req.body.timestamps) {
-                    dates.push(new Date(t*1000));
+                    dates.push(new Date(req.body.timestamps[t]*1000));
                 }
                 console.log(dates);
                 // Find activity to append to or make a new one
@@ -72,7 +72,12 @@ router.post('/activities/datapoints', function(req, res, next) {
                         { deviceId: req.body.deviceId },
                         { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }
                     ]}, function(err, activity) {
-                        if (activity !== null) {
+                        if (activity === undefined) {
+                            responseJson.status = "ERROR";
+                            responseJson.message = "Query not working";
+                            return res.status(201).send(JSON.stringify(responseJson));
+                        }
+                        else if (activity !== null) {
                             console.log("Updating Activity");
                             Activity.findByIdAndUpdate( activity._id,
                                 { $push: {
