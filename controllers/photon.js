@@ -67,7 +67,6 @@ router.post('/activities/datapoints', function(req, res, next) {
                 var speeds = req.body.speeds.split(",");
                 var uvIntensities = req.body.uvIntensities.split(",");
                 var timestamps = req.body.timestamps.split(",");
-                console.log(timestamps);
                 
                 var dates = [];
                 for (t in timestamps) {
@@ -100,16 +99,17 @@ router.post('/activities/datapoints', function(req, res, next) {
                         }
                         else {
                             console.log("Creating Activity");
+                            console.log(speeds);
                             // Create a new activity with device data and device ID
                             var newActivity = new Activity({
-                              lats:       req.body.latitudes,
-                              lons:       req.body.longitudes,
-                              speeds:     req.body.speeds,
-                              uvIndices:  req.body.uvIntensities,
+                              lats:       latitudes,
+                              lons:       longitudes,
+                              speeds:     speeds,
+                              uvIndices:  uvIntensities,
                               timestamps: dates,
                               deviceId:  req.body.deviceId
                             });
-                            console.log(newActivity.timestamps);
+                            console.log(newActivity.speeds);
                             newActivity.save(function(err, newActivity) {
                                 if (err) {
                                     responseJson.status = "ERROR";
