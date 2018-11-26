@@ -69,8 +69,9 @@ router.post('/activities/datapoints', function(req, res, next) {
                 // Find activity to append to or make a new one
                 Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
                     console.log(err);
-                    console.log(activity);
+                    console.log(activity.timestamps);
                     if (activity !== null) {
+                        console.log("Updating Activity");
                         Activity.findbyIdAndUpdate( activity._id,
                             { $push: {
                                     lats: { $each: req.body.latitudes } ,
@@ -83,6 +84,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                         );
                     }
                     else {
+                        console.log("Creating Activity");
                         // Create a new activity with device data and device ID
                         var newActivity = new Activity({
                           lats:       req.body.latitudes,
@@ -92,7 +94,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                           timestamps: dates,
                           deviceId:  req.body.deviceId
                         });
-                        console.log(newActivity);
+                        console.log(newActivity.timestamps);
                         newActivity.save(function(err, newActivity) {
                             if (err) {
                                 responseJson.status = "ERROR";
