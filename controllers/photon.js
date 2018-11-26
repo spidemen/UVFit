@@ -63,6 +63,8 @@ router.post('/activities/datapoints', function(req, res, next) {
                 console.log("Device Found: " + req.body.deviceId + ", apikey matches");
                 var dates = [];
                 for (t in req.body.timestamps) {
+                    console.log(t);
+                    console.log(req.body.timestamps[t]);
                     dates.push(new Date(req.body.timestamps[t]*1000));
                 }
                 console.log(dates);
