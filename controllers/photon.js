@@ -61,51 +61,55 @@ router.post('/activities/datapoints', function(req, res, next) {
             }
             else {
                 console.log("Device Found: " + req.body.deviceId + ", apikey matches");
-                var dates;
+                var dates = [];
                 for (t in req.body.timestamps) {
-                    dates += new Date(t*1000);
+                    dates.push(new Date(t*1000));
                 }
                 console.log(dates);
                 // Find activity to append to or make a new one
-                Activity.findOne( {$and: [{ deviceId: req.body.deviceId }, { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }]}, function(err, activity) {
-                    if (activity !== null) {
-                        console.log("Updating Activity");
-                        Activity.findbyIdAndUpdate( activity._id,
-                            { $push: {
-                                    lats: { $each: req.body.latitudes } ,
-                                    lons: { $each: req.body.longitudes },
-                                    speeds : { $each: req.body.speeds },
-                                    uvIndices : { $each: req.body.uvIntensities },
-                                    timestamps : { $each: dates }
+                Activity.findOne({
+                    $and: [
+                        { deviceId: req.body.deviceId },
+                        { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }
+                    ]}, function(err, activity) {
+                        if (activity !== null) {
+                            console.log("Updating Activity");
+                            Activity.findByIdAndUpdate( activity._id,
+                                { $push: {
+                                        lats: { $each: req.body.latitudes } ,
+                                        lons: { $each: req.body.longitudes },
+                                        speeds : { $each: req.body.speeds },
+                                        uvIndices : { $each: req.body.uvIntensities },
+                                        timestamps : { $each: dates }
+                                    }
                                 }
-                            }
-                        );
-                    }
-                    else {
-                        console.log("Creating Activity");
-                        // Create a new activity with device data and device ID
-                        var newActivity = new Activity({
-                          lats:       req.body.latitudes,
-                          lons:       req.body.longitudes,
-                          speeds:     req.body.speeds,
-                          uvIndices:  req.body.uvIntensities,
-                          timestamps: dates,
-                          deviceId:  req.body.deviceId
-                        });
-                        console.log(newActivity.timestamps);
-                        newActivity.save(function(err, newActivity) {
-                            if (err) {
-                                responseJson.status = "ERROR";
-                                responseJson.message = "Error saving data in db.";
-                                return res.status(201).send(JSON.stringify(responseJson));
-                            }
-                            else {
-                               responseJson.status = "OK";
-                               responseJson.message = "Data saved in db with object ID " + newActivity._id + ".";
-                               return res.status(201).send(JSON.stringify(responseJson));
-                            }
-                        });
-                    }
+                            );
+                        }
+                        else {
+                            console.log("Creating Activity");
+                            // Create a new activity with device data and device ID
+                            var newActivity = new Activity({
+                              lats:       req.body.latitudes,
+                              lons:       req.body.longitudes,
+                              speeds:     req.body.speeds,
+                              uvIndices:  req.body.uvIntensities,
+                              timestamps: dates,
+                              deviceId:  req.body.deviceId
+                            });
+                            console.log(newActivity.timestamps);
+                            newActivity.save(function(err, newActivity) {
+                                if (err) {
+                                    responseJson.status = "ERROR";
+                                    responseJson.message = "Error saving data in db.";
+                                    return res.status(201).send(JSON.stringify(responseJson));
+                                }
+                                else {
+                                   responseJson.status = "OK";
+                                   responseJson.message = "Data saved in db with object ID " + newActivity._id + ".";
+                                   return res.status(201).send(JSON.stringify(responseJson));
+                                }
+                            });
+                        }
                 });
             }
         }
