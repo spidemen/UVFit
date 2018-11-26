@@ -61,18 +61,19 @@ router.post('/activities/datapoints', function(req, res, next) {
             }
             else {
                 console.log("Device Found: " + req.body.deviceId + ", apikey matches");
+                var timestamps = req.body.timestamps.split(",");
+                console.log(timestamps);
+                
                 var dates = [];
-                for (t in req.body.timestamps) {
-                    console.log(t);
-                    console.log(req.body.timestamps[t]);
-                    dates.push(new Date(req.body.timestamps[t]*1000));
+                for (t in timestamps) {
+                    dates.push(new Date(timestamps[t]*1000));
                 }
                 console.log(dates);
                 // Find activity to append to or make a new one
                 Activity.findOne({
                     $and: [
                         { deviceId: req.body.deviceId },
-                        { timestamps: { $in: [ new Date((req.body.timestamps[0]-1)*1000) ] } }
+                        { timestamps: { $in: [ new Date((timestamps[0]-1)*1000) ] } }
                     ]}, function(err, activity) {
                         if (activity === undefined) {
                             responseJson.status = "ERROR";
