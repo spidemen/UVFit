@@ -61,6 +61,11 @@ router.post('/activities/datapoints', function(req, res, next) {
             }
             else {
                 console.log("Device Found: " + req.body.deviceId + ", apikey matches");
+                
+                var longitudes = req.body.longitudes.split(",");
+                var latitudes = req.body.latitudes.split(",");
+                var speeds = req.body.speeds.split(",");
+                var uvIntensities = req.body.uvIntensities.split(",");
                 var timestamps = req.body.timestamps.split(",");
                 console.log(timestamps);
                 
