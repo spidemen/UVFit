@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const home = require("./controllers/HomeController.js");
-var photonRouter = require('./controllers/photon.js');
+const photonRouter = require('./controllers/photon.js');
 
 
 
