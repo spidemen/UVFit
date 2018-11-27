@@ -68,62 +68,101 @@ router.post('/activities/datapoints', function(req, res, next) {
                 var uvIntensities = req.body.uvIntensities.split(",");
                 var timestamps = req.body.timestamps.split(",");
                 
-                var dates = [];
-                for (t in timestamps) {
-                    dates.push(new Date(timestamps[t]*1000));
-                }
-                console.log(dates);
-                // Find activity to append to or make a new one
-                Activity.findOne({
-                    $and: [
-                        { deviceId: req.body.deviceId },
-                        { timestamps: { $in: [ new Date((timestamps[0]-1)*1000) ] } }
-                    ]}, function(err, activity) {
-                        if (activity === undefined) {
+                if (timestamps == "begin") {
+                    //Create Activity
+                    console.log("Creating Activity");
+                    // Create a new activity with device data and device ID
+                    var newActivity = new Activity({
+                      publishing: true,
+                      deviceId:  req.body.deviceId
+                    });
+                    newActivity.save(function(err, newActivity) {
+                        if (err) {
                             responseJson.status = "ERROR";
-                            responseJson.message = "Query not working";
+                            responseJson.message = "Error Creating Activity";
                             return res.status(201).send(JSON.stringify(responseJson));
                         }
-                        else if (activity !== null) {
-                            console.log("Updating Activity");
-                            Activity.findByIdAndUpdate( activity._id,
-                                { $push: {
-                                        lats: { $each: req.body.latitudes } ,
-                                        lons: { $each: req.body.longitudes },
-                                        speeds : { $each: req.body.speeds },
-                                        uvIndices : { $each: req.body.uvIntensities },
-                                        timestamps : { $each: dates }
-                                    }
-                                }
-                            );
+                        else {
+                            console.log("Activity Created: " + newActivity._id)
+                            responseJson.status = "OK";
+                            responseJson.message = "Activity Created with ID: " + newActivity._id;
+                            return res.status(201).send(JSON.stringify(responseJson));
+                        }
+                    });
+                }
+                else if (timestamps == "end") {
+                    //Complete Activity
+                    Activity.findOne({
+                        $and: [
+                            { deviceId: req.body.deviceId },
+                            { publishing: true }
+                        ]
+                    }, function(err, activity) {
+                        if (err) {
+                            console.log("Error Finding Activity to Complete!");
+                            responseJson.status = "ERROR";
+                            responseJson.message = "Error Finding Activity to Complete!";
+                            return res.status(201).send(JSON.stringify(responseJson));
                         }
                         else {
-                            console.log("Creating Activity");
-                            console.log(speeds);
-                            // Create a new activity with device data and device ID
-                            var newActivity = new Activity({
-                              lats:       latitudes,
-                              lons:       longitudes,
-                              speeds:     speeds,
-                              uvIndices:  uvIntensities,
-                              timestamps: dates,
-                              deviceId:  req.body.deviceId
-                            });
-                            console.log(newActivity.speeds);
-                            newActivity.save(function(err, newActivity) {
-                                if (err) {
+                            console.log("Post Processing Activity: " + activity._id);
+                            
+                            activity.publishing = false;
+                            activity.duration = (activity.timestamps[activity.timestamps.length-1] - activity.timestamps[0])/1000 + 1;
+                            
+                            activity.save(function(err, activity) {
+                                if(err) {
                                     responseJson.status = "ERROR";
-                                    responseJson.message = "Error saving data in db.";
+                                    responseJson.message = "Error Completing Activity: " + activity._id;
                                     return res.status(201).send(JSON.stringify(responseJson));
                                 }
                                 else {
-                                   responseJson.status = "OK";
-                                   responseJson.message = "Data saved in db with object ID " + newActivity._id + ".";
-                                   return res.status(201).send(JSON.stringify(responseJson));
+                                    responseJson.status = "OK";
+                                    responseJson.message = "Completed Activity with ID: " + activity._id;
+                                    return res.status(201).send(JSON.stringify(responseJson));
                                 }
                             });
                         }
-                });
+                    });
+                }
+                else {
+                    //Update Activity
+                    var dates = [];
+                    for (t in timestamps) {
+                        dates.push(new Date(timestamps[t]*1000));
+                    }
+                    
+                    Activity.findOneAndUpdate(
+                        {
+                            $and: [
+                                { deviceId: req.body.deviceId },
+                                { publishing: true }
+                            ]
+                        }, 
+                        {
+                            $push: {
+                                lats: { $each: latitudes } ,
+                                lons: { $each: longitudes },
+                                speeds : { $each: speeds },
+                                uvIndices : { $each: uvIntensities },
+                                timestamps : { $each: dates }
+                            }
+                        }, function(err, activity) {
+                            if (err) {
+                                console.log("Error Finding Activity to Update!");
+                                responseJson.status = "ERROR";
+                                responseJson.message = "Error Updating Activity";
+                                return res.status(201).send(JSON.stringify(responseJson));
+                            }
+                            else {
+                                console.log("Activity Updated: " + activity._id);
+                                responseJson.status = "OK";
+                                responseJson.message = "Activity Updated";
+                                return res.status(201).send(JSON.stringify(responseJson));
+                            }
+                        }
+                    );
+                }
             }
         }
         else {

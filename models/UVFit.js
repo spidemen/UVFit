@@ -26,17 +26,18 @@ const Device=db.model('Device', deviceSchema);
 module.exports.Device = Device;
 
 var activitySchema =new db.Schema({
-     activityType: String,
-     lats:         [ Number ],
-     lons:         [ Number ],
-     speeds:       [ Number ],
-     uvIndices:    [ Number ],
-     timestamps:   [ Date ],
-     duration:     Number,
-     calories:     Number, 
-     uvExposure:    Number,
-     deviceId:      String,
-     timePublished:{ type: Date, default: Date.now }
+    activityType: String,
+    lats:         [ Number ],
+    lons:         [ Number ],
+    speeds:       [ Number ],
+    uvIndices:    [ Number ],
+    timestamps:   [ Date ],
+    duration:     Number,
+    calories:     Number, 
+    uvExposure:    Number,
+    deviceId:      String,
+    publishing:   Boolean,
+    timePublished:{ type: Date, default: Date.now }
 });
 
 //this should be changed to Activity
