@@ -497,7 +497,7 @@ router.post("/account/update", (req, res)=> {
 router.post("/account/update", (req, res)=> {
     console.log(/*req.body.email+"   "+*/req.body.fullName+"  "+req.body.password);
     
-    User.findOne({name:req.body.fullName},function(err,user) {
+    User.findOne({email:req.body.fullName},function(err,user) {
         if(err) {
             res.status(400).json({create:false,message:err+" db error"});
         }

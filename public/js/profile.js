@@ -307,7 +307,7 @@ function  CheckInput() {
 	if(!flag){
 
 		//var email = document.getElementById("email").value;
-		var fullname = document.getElementById("fullName").value;
+		var fullname = document.getElementById("email").value;
 		var newpassword = document.getElementById("newpassword").value;
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener("load", AccountRespon);
