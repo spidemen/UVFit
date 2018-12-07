@@ -16,10 +16,11 @@ $(window).on("load", function () {
         $("#user").html(username);
 		console.log("get date from page profile date="+data.email);
 		//to fill in form in update account
-		 var email=data.email;
-		$("div.form #email2").attr("value",email);
-		$("div.form #fullName").attr("value",username);
-      }
+		// var email=data.email;
+		console.log("on load email " + email + ", username " + username);
+		$("div.form #email2").attr("value",data.email);
+		$("div.form #fullName").attr("value",data.username);
+      
         console.log("get date from page profile deviceid="+deviceId+"  apikey="+apikey);
       },
     error: function(jqXHR, textStatus, errorThrown){
