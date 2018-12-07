@@ -62,7 +62,7 @@ function VeriftyRes(){
 }
 
 $("#verificate").click(function(){
-  
+  console.log("login submit");
        sendReqVerifty();
 
 });

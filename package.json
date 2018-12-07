@@ -19,6 +19,7 @@
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
     "jwt-simple": "^0.5.5",
+    "mongod": "^2.0.0",
     "mongoose": "^5.1.5",
     "nodemailer": "^4.7.0",
     "nodemon": "^1.18.6",
