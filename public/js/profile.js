@@ -1,13 +1,18 @@
-
+var username;
+var email;
+var deviceId;
+var apikey;
 $(window).on("load", function () {
-  console.log("send requst");
   $.ajax({
    url:'/account/user',
    type:'GET',
    headers: { 'x-auth': window.localStorage.getItem("authToken") },
    responseType: 'json',
    success: function(data){
-         var username=data.fullName;
+          username=data.fullName;
+          email=data.email;
+          deviceId=data.devices[0].deviceId;
+          apikey=data.devices[0].apikey;
         $("#user").html(username);
 		console.log("get date from page profile date="+data.email);
 		//to fill in form in update account
@@ -15,36 +20,66 @@ $(window).on("load", function () {
 		$("div.form #email2").attr("value",email);
 		$("div.form #fullName").attr("value",username);
       }
+        console.log("get date from page profile deviceid="+deviceId+"  apikey="+apikey);
+      },
+    error: function(jqXHR, textStatus, errorThrown){
+        var response = JSON.parse(jqXHR.responseText);
+       console.log("Fail get data "+response.message);
+    }
    });
-});
-$("#viewData").click(function(){
-     console.log("click view data button"); 
-     $(".registerbox").css('display',"none");
-       $(".view").css('display',"none");
-       $(".error").css('display',"none");
 });
 
 $("#register").click(function(){
-	  console.log("click button update ");
-      $(".registerbox").css('display',"block");
-       $(".view").css('display',"none");
+    $(".rightbar > div").css('display', "none");
+    $(".registerbox").css('display',"block");
 });
 
-$("#viewData").click(function(){
-     console.log("click button update ");
-      $(".view").css('display',"block");
-      $(".registerbox").css('display',"none");
+// $("#viewData").click(function(){
+//      console.log("click button update ");
+//       $(".view").css('display',"block");
+//       $(".registerbox").css('display',"none");
 
-
-});
+// });
 
 $("#updateAccount").click(function(){
-	console.log("click update account button"); 
+	$(".rightbar > div").css('display', "none");
 	$(".updateAccountForm").css('display', "inline-block");
-	$(".registerbox").css('display',"none");
-	$(".view").css('display',"none");
-	$(".error").css('display',"none");
 });
+
+/***************************** UV Threshold *****************************/
+$("#setUvThreshold").click(function(){
+    $(".rightbar > div").css('display', "none");
+    $(".thresholdForm").css('display',"block");
+});
+
+$("#submitThres").click(function(){
+    /*Validate Input*/
+    thresInput = parseInt($("#uvThres").val());
+    if (thresInput < 0) {
+        $("#thresholdFormMessage")
+            .html("Please input a positive integer!")
+            .css('display',"block")
+        return;
+    }
+    
+    /*PUT: update UV Threshold*/
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", uvThresholdResponseHandler);
+    xhr.responseType = "json";
+    xhr.open("PUT", '/uvThreshold');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify({email:email, uvThreshold:thresInput}));
+});
+
+function uvThresholdResponseHandler() {
+    if (this.status == 200) {
+        $("#thresholdFormMessage").html("Threshold Updated!");
+    }
+    else {
+        $("#thresholdFormMessage").html("UV Threshold Update Unsuccessful");
+    }
+}
+/************************************************************************/
 
 $("table").on('click', 'tr', onCellClick);
 
@@ -144,20 +179,23 @@ $("#submit").click(function(){
 
 function  sendReqViewData(){
 
-  var email = "demo@email.com";
-  var deviceId = "11f4baaef3445ff";
+ // var email = "demo@email.com";
+ //  var deviceId = "11f4baaef3445ff";
   var xhr = new XMLHttpRequest();
   xhr.addEventListener("load", ViewDataRespon);
   xhr.responseType = "json";
   xhr.open("POST", '/activities/user');
   xhr.setRequestHeader("Content-type", "application/json");
-  console.log(email);
+  console.log("send "+email);
   xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
 
 };
 $("#viewbutton").click(function(){
-    
-      sendReqViewData();
+    $(".rightbar > div").css('display', "none");
+    $(".view").css('display',"block");
+    // $("#table1").css('display', "inline-block");
+    // $("#table2").css('display',"none");
+    sendReqViewData();
 });
 
 function ViewDataRespon(){
@@ -169,8 +207,9 @@ function ViewDataRespon(){
       // var responseHTMDuration="Activity Duration:";
       // var responseHTMLUV="UV Exposure:";
       // var responseHTMLCalories=" Calories Burned:";
-       var responseHTML="";
-       responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+        var responseHTML="";
+       // responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+        responseHTML+="<tr> <td> Date: </td>  <td> Activity Duration:  </td>  <td>  Calories Burned:  </td>  <td>   UV exposure:   </td>  </tr>";
       for(var  data of this.response.activities)
       {
            responseHTML+="<tr> ";
@@ -197,6 +236,55 @@ function ViewDataRespon(){
     }
 
 }
+
+
+$("#summaryview").click(function(){
+    $(".rightbar > div").css('display', "none");
+    $(".view").css('display',"block");
+    // $("#table2").css('display', "inline-block");
+    // $("#table1").css('display',"none");
+    sendReqSummaryView();
+});
+
+function sendReqSummaryView(){
+
+  var xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", ViewSummaryDataRespon);
+  xhr.responseType = "json";
+  xhr.open("POST", '/activities/summary');
+  xhr.setRequestHeader("Content-type", "application/json");
+  console.log("send summary view"+email);
+  xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
+     
+}
+function ViewSummaryDataRespon(){
+
+     if(this.status === 200||this.status==201)
+    {
+  
+      var responseHTML=" <tr>  <td> Total  Duration:  </td>  <td>  Total Calories Burned:  </td>  <td>  Total  UV exposure:  </td> </tr>";
+    //   responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+         var data=this.response;
+      // for(var  data of this.response.activities;)
+      // {
+           responseHTML+="<tr> ";
+       //   responseHTML+="<td>"+data.date+"</td>";
+          responseHTML+="<td>  "+data.totalduration+" </td>";
+          responseHTML+="<td>"+data.totaluv+"</td>";
+          responseHTML+="<td>"+data.totalcalories+"</td>";
+           responseHTML+="</tr>"
+      // }
+     
+      $("table").html(responseHTML)
+ 
+    }
+    else
+    {
+      console.log("Error: view data "+this.status);
+    }
+}
+
+
 
 // Update Account
 var checksumbit=document.getElementById("submitUpdate");

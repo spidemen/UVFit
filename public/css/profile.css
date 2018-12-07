@@ -21,7 +21,7 @@
 
 .rightbar{
 
-	display: inline-block;
+	display: inline-block;;
 	width: 900px;
 	margin: 4px;
 	margin-left: 50px;
@@ -36,8 +36,12 @@
 	display: none;
 
 }
+.thresholdForm {
+    display: none;
+}
 .view{
   display: none;
+ 
 
 }
 .viewData{
@@ -59,13 +63,26 @@ display: none;
 tr td:first-child {
  width: 200px;	
 }
+table tr:first-child{
+   color:black;
+   text-decoration: none;
+}
 td{ 
    width: 150px;
 }
+tr {
+	color:blue;
+	text-decoration: underline;
+}
 table{
-	margin-left: 20px;
-   display: inline-block;
-   float: left;
+	/*margin:auto; */
+ text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+/*	margin-left: 20px;*/
+ /*  display: block;*/
+ /*  float: left;*/
 }
 input[type=text]{
    padding: 8px;
@@ -77,11 +94,13 @@ input[type=text]{
 	width: 450px;
 }
 input[type=submit] {
-  
+
    background-color: #09f;
    color: white;
    padding: 15px;
    margin: 10px 0;
+   width: 140px;
+   height: 50px;
    border: none;
    border-radius: 4px;
    cursor: pointer;
