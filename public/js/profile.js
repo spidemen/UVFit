@@ -1,10 +1,8 @@
-
 var username;
 var email;
 var deviceId;
 var apikey;
 $(window).on("load", function () {
-  console.log("send requst");
   $.ajax({
    url:'/account/user',
    type:'GET',
@@ -24,20 +22,10 @@ $(window).on("load", function () {
     }
    });
 });
-$("#viewData").click(function(){
-     console.log("click view data button"); 
-     $(".registerbox").css('display',"none");
-      $(".view").css('display',"block");
-      $(".error").css('display',"none");
-      $(".updateAccountForm").css('display', "none");
-});
 
 $("#register").click(function(){
-	  console.log("click button update ");
-      $(".registerbox").css('display',"block");
-      $(".view").css('display',"none");
-      $(".error").css('display',"none");
-      $(".updateAccountForm").css('display', "none");
+    $(".rightbar > div").css('display', "none");
+    $(".registerbox").css('display',"block");
 });
 
 // $("#viewData").click(function(){
@@ -48,11 +36,8 @@ $("#register").click(function(){
 // });
 
 $("#updateAccount").click(function(){
-	console.log("click update account button"); 
+	$(".rightbar > div").css('display', "none");
 	$(".updateAccountForm").css('display', "inline-block");
-	$(".registerbox").css('display',"none");
-	$(".view").css('display',"none");
-	$(".error").css('display',"none");
 });
 
 /***************************** UV Threshold *****************************/
@@ -200,13 +185,11 @@ function  sendReqViewData(){
 
 };
 $("#viewbutton").click(function(){
-      $(".registerbox").css('display',"none");
-      $(".view").css('display',"block");
-      $(".error").css('display',"none");
-      $(".updateAccountForm").css('display', "none");
+    $(".rightbar > div").css('display', "none");
+    $(".view").css('display',"block");
     // $("#table1").css('display', "inline-block");
     // $("#table2").css('display',"none");
-      sendReqViewData();
+    sendReqViewData();
 });
 
 function ViewDataRespon(){
@@ -250,14 +233,11 @@ function ViewDataRespon(){
 
 
 $("#summaryview").click(function(){
-    
-      $(".registerbox").css('display',"none");
-      $(".view").css('display',"block");
-      $(".error").css('display',"none");
-      $(".updateAccountForm").css('display', "none");
-      // $("#table2").css('display', "inline-block");
-      // $("#table1").css('display',"none");
-      sendReqSummaryView();
+    $(".rightbar > div").css('display', "none");
+    $(".view").css('display',"block");
+    // $("#table2").css('display', "inline-block");
+    // $("#table1").css('display',"none");
+    sendReqSummaryView();
 });
 
 function sendReqSummaryView(){
