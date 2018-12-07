@@ -122,12 +122,23 @@ input[type=text].error {
 	margin-top: 4px;
 	margin-bottom: 12px;
 	border: 1px solid #aaa;
-	border-radius: 4px;
+	border-radius: 4px
 	box-sizing: border-box;
 	width: 600px;
 	text-align: left;
 }
 
+.form input[type=password]{
+	display: block;
+	padding: 8px;
+	margin-top: 4px;
+	margin-bottom: 12px;
+	border: 1px solid #aaa;
+	border-radius: 4px
+	box-sizing: border-box;
+	width: 600px;
+	text-align: left;
+}
 .form label{
 	display: block;
 	font-color: bold;

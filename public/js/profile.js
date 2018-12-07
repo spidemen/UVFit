@@ -9,7 +9,11 @@ $(window).on("load", function () {
    success: function(data){
          var username=data.fullName;
         $("#user").html(username);
-        console.log("get date from page profile date="+data.email);
+		console.log("get date from page profile date="+data.email);
+		//to fill in form in update account
+		 var email=data.email;
+		$("div.form #email2").attr("value",email);
+		$("div.form #fullName").attr("value",username);
       }
    });
 });
@@ -201,7 +205,7 @@ var savetable=document.getElementById("formErrors");
 function  CheckInput() {
 
     var fullname=document.getElementById("fullName");
-    //var email=document.getElementById("email");
+    var email=document.getElementById("email2");
     var oldpassword=document.getElementById("oldpassword"); 
 	var newpassword=document.getElementById("newpassword");
    
@@ -238,11 +242,11 @@ function  CheckInput() {
 		tableHTML+="<li>Old password and new password must not match.</li>";
 	}
 	
-	if(oldpw.length<10||oldpw.length>20){
+	/* if(oldpw.length<10||oldpw.length>20){
 		flag=1;
 		savetable.style.display="block";
 		tableHTML+="<li>Old password must be between 10 and 20 characters.</li>";
-	}
+	} */
 	if(newpw.length<10||newpw.length>20){
 		flag=1;
 		savetable.style.display="block";
@@ -250,11 +254,11 @@ function  CheckInput() {
 	}
 
 	var relow=/[a-z]/;
-	if(!oldpw.match(relow)){
+	/* if(!oldpw.match(relow)){
 		flag=1;  
 		savetable.style.display="block";
 		tableHTML+="<li>Old password must contain at least one lowercase character.</li>";
-	}
+	} */
 	if(!newpw.match(relow)){
 		flag=1;  
 		savetable.style.display="block";
@@ -262,11 +266,11 @@ function  CheckInput() {
 	}
 
 	var reup=/[A-Z]/;
-	if(!oldpw.match(reup)){
+	/* if(!oldpw.match(reup)){
 		flag=1;  
 		savetable.style.display="block";
 		tableHTML+="<li>Old password must contain at least one uppercase character.</li>";
-	}
+	} */
 	if(!newpw.match(reup)){
 		flag=1;  
 		savetable.style.display="block";
@@ -274,11 +278,11 @@ function  CheckInput() {
 	}
 
 	var reN=/[0-9]/;
-	if(!oldpw.match(reN)){
+	/* if(!oldpw.match(reN)){
 		flag=1;  
 		savetable.style.display="block";
 		tableHTML+="<li>Old password must contain at least one digit.</li>";
-	}
+	} */
 	if(!newpw.match(reN)){
 		flag=1;  
 		savetable.style.display="block";
@@ -307,21 +311,27 @@ function  CheckInput() {
 	if(!flag){
 
 		//var email = document.getElementById("email").value;
-		var fullname = document.getElementById("email").value;
-		var newpassword = document.getElementById("newpassword").value;
+		//var fullname = document.getElementById("fullName").value;
+		//var newpassword = document.getElementById("newpassword").value;
 		var xhr = new XMLHttpRequest();
-		xhr.addEventListener("load", AccountRespon);
+		var token=window.localStorage.getItem("authToken");
+		xhr.addEventListener("load", UpdateAccountResponse);
 		xhr.responseType = "json";
 		xhr.open("POST", '/account/update');
 		xhr.setRequestHeader("Content-type", "application/json");
-		//console.log(email);
-		xhr.send(JSON.stringify({/*email:email,*/fullname:fullName, password:newpassword}));
+		console.log(JSON.stringify({email:email.value, name:fullname.value, newPasswordHash:newpassword.value, passwordHash:oldpassword.value, token:token}));
+		xhr.send(JSON.stringify({email:email.value, name:fullname.value, newPasswordHash:newpassword.value, passwordHash:oldpassword.value, token:token}));
 	}
 }
 
-function AccountRespon(){
-	console.log("status="+this.status);
-	if (this.status === 201){
+function UpdateAccountResponse(){
+	console.log("update account response complete");
+	//console.log("status="+this.status);
+	// Decode a JWT
+	/* var decoded = jwt.decode(token, secret);, 
+	console.log("Decoded payload: " + decoded.username); */
+
+/* 	if (this.status === 201){
 		alert("Success account updated");
 		window.location = "profile";
 	}
@@ -331,9 +341,9 @@ function AccountRespon(){
         var tableHTML = "<p>"+this.response.message+"</p>";
         savetable.innerHTML = tableHTML;
         //$("#formErrors").html(tableHTML);
-        console.log(this.response.message);
+        console.log(this.response.message); */
         
-    }  
+   // }  
 }
 
 checksumbit.addEventListener("click", CheckInput);

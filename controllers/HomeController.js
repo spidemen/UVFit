@@ -235,7 +235,7 @@ router.post("/account/resend", (req, res)=> {
 });
 router.post("/account/login", (req, res)=> {
     
-  //  console.log(req.body.email+"   "+req.body.password);
+  console.log(req.body.email+"   "+req.body.password);
     User.findOne({email:req.body.email},function(err,user)
       {
           if(err)
@@ -251,7 +251,8 @@ router.post("/account/login", (req, res)=> {
 
               bcrypt.compare(req.body.password, user.passwordHash, function(err, valid) {
                 if(err){
-                    res.status(400).json({create:false,message:"Error authenticating. Please contact support."}); 
+					 
+                    res.status(400).json({create:false,message:"Error authenticating. Please contact support.mmmmmm"}); 
                 }
                else{
                   if(valid){
@@ -458,18 +459,27 @@ router.post("/activities/user", (req, res,next)=> {
    // res.render("profile");
 })
 
+// Update Account
 router.post("/account/update", (req, res)=> {
-    console.log(/*req.body.email+"   "+*/req.body.fullName+"  "+req.body.password);
-    
-    User.findOne({name:req.body.fullName},function(err,user) {
-        if(err) {
-            res.status(400).json({create:false,message:err+" db error"});
+	console.log("update account server side");
+	res.send("update account reached");
+	
+    //console.log(req.body.email+"   "+req.body.name+"  "+req.body.passwordHash);
+    //res.status(201).json({message:"reached update account"});
+ /*    User.findOne({email:req.body.email},function(err,user) {
+		if (!req.headers["x-auth"]) {
+			return res.status(401).json({success: false, message: "No authentication token"});
+		}
+        else if(err) {
+            res.status(400).json({updated:false,message:err+" Invalid User Credentials. Account could not be updated."});
         }
-        else {
-			name: req.body.fullName;
-			oldPasswordHash: req.body.oldPassword
-			newPasswordHash: req.body.newPassword
-            /* if(user==null) {
+        else { */
+			/* user.email: req.body.email;
+			user.name: req.body.name;
+			user.passwordHash: req.body.oldPasswordHash
+			newPasswordHash: req.body.newPasswordHash */
+		//	res.status(201).json({updated:true, message:"Account successfully updated."});
+           /* if(user==null) {
                 var newuser=new User({
                     email: req.body.email,
                     fullName:  req.body.fullname,
@@ -490,44 +500,8 @@ router.post("/account/update", (req, res)=> {
             else{
                 res.status(400).json({create:false,message:"User  already exit, please choose another email"});
             } */
-        }
-    });
-});
-
-router.post("/account/update", (req, res)=> {
-    console.log(/*req.body.email+"   "+*/req.body.fullName+"  "+req.body.password);
-    
-    User.findOne({email:req.body.fullName},function(err,user) {
-        if(err) {
-            res.status(400).json({create:false,message:err+" db error"});
-        }
-        else {
-			name: req.body.fullName;
-			oldPasswordHash: req.body.oldPassword
-			newPasswordHash: req.body.newPassword
-            /* if(user==null) {
-                var newuser=new User({
-                    email: req.body.email,
-                    fullName:  req.body.fullname,
-                    passwordHash: req.body.password
-                });
-                newuser.save( function(err, user) {
-                    if (err) {
-                        console.error(err);
-                        console.log("Fail store create user  db error");   
-                        res.status(400).json({create:false,message:err+" db error"});  
-                    }
-                    else {
-                        console.log("success create a user");
-                        res.status(201).json({create:true,message:"Success create a user"});   
-                    }
-                }); 
-            }
-            else{
-                res.status(400).json({create:false,message:"User  already exit, please choose another email"});
-            } */
-        }
-    });
+       // }
+    //});
 });
 
 module.exports = router;
