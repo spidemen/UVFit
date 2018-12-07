@@ -19,7 +19,6 @@ $(window).on("load", function () {
 		 var email=data.email;
 		$("div.form #email2").attr("value",email);
 		$("div.form #fullName").attr("value",username);
-      }
         console.log("get date from page profile deviceid="+deviceId+"  apikey="+apikey);
       },
     error: function(jqXHR, textStatus, errorThrown){
