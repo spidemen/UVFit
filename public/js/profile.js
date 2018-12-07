@@ -11,14 +11,14 @@ $(window).on("load", function () {
    success: function(data){
           username=data.fullName;
           email=data.email;
-          deviceId=data.devices[0].deviceId;
+		$("div.form #email2").attr("value",email); //to auto-fill update account form
+		$("div.form #fullName").attr("value",username); //to auto-fill update account form
+          deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
           apikey=data.devices[0].apikey;
         $("#user").html(username);
 		console.log("get date from page profile date="+data.email);
-		//to fill in form in update account
-		 var email=data.email;
-		$("div.form #email2").attr("value",email);
-		$("div.form #fullName").attr("value",username);
+		
+
         console.log("get date from page profile deviceid="+deviceId+"  apikey="+apikey);
       },
     error: function(jqXHR, textStatus, errorThrown){
