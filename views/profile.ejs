@@ -6,18 +6,20 @@
   <div class="profile">
     <div class="leftbar">
 		<br>	
-     <p id="user">test</p>
+        <p id="user"></p>
 		<input type="button" name="registerdevice" id="register" value="Register Device"> 
 		<br><br>
 		<input type="button" name="updateAccount" id="updateAccount" value="Update Account"> 
 		<br><br>
+        <input type="button" name="setUvThreshold" id="setUvThreshold" value="Set UV Threshold"> 
+		<br><br>
 		<input type="button" name="viewData" id="viewData" value="View Demo Data"> 
-    <br>
-      <input type="submit" name="viewbutton" id="viewbutton" value="List view"> 
+        <br>
+        <input type="submit" name="viewbutton" id="viewbutton" value="List view"> 
 		<br>
-      <input type="submit" name="summaryview" id="summaryview" value="summary view"> 
-      <br>
-      <input type="submit" name="avgview" id="avgview" value="Average  view"> 
+        <input type="submit" name="summaryview" id="summaryview" value="summary view"> 
+        <br>
+        <input type="submit" name="avgview" id="avgview" value="Average  view"> 
     </div>
 	
     <div class="rightbar">
@@ -57,6 +59,15 @@
 		</div>
 	</div>
 
+        <div class="thresholdForm">
+            <label>UV Exposure Threshold</label>
+            <br>
+            <input type="text" id="uvThres">
+            <br>
+            <div id="thresholdFormMessage"></div>
+            <input type="submit" name="submitThres" id="submitThres" value="Submit">
+        </div>
+    
       <div class="view">
         <div id="summary"> 
           Following  is the last 7 day total activities summary

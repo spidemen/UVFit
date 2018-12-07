@@ -36,6 +36,9 @@
 	display: none;
 
 }
+.thresholdForm {
+    display: none;
+}
 .view{
   display: none;
  

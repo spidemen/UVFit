@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -6,9 +5,7 @@ const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const home = require("./controllers/HomeController.js");
 const photonRouter = require('./controllers/photon.js');
-
-
-
+const uvRouter = require('./controllers/uvThreshold.js');
 
 //DB
 //mongoose.connect("mongodb://localhost/UVFit");
@@ -46,6 +43,7 @@ app.use(function(req, res, next){
 //routes
 app.use(home);
 app.use(photonRouter);
+app.use(uvRouter);
 //Server
 app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")

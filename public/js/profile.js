@@ -55,6 +55,41 @@ $("#updateAccount").click(function(){
 	$(".error").css('display',"none");
 });
 
+/***************************** UV Threshold *****************************/
+$("#setUvThreshold").click(function(){
+    $(".rightbar > div").css('display', "none");
+    $(".thresholdForm").css('display',"block");
+});
+
+$("#submitThres").click(function(){
+    /*Validate Input*/
+    thresInput = parseInt($("#uvThres").val());
+    if (thresInput < 0) {
+        $("#thresholdFormMessage")
+            .html("Please input a positive integer!")
+            .css('display',"block")
+        return;
+    }
+    
+    /*PUT: update UV Threshold*/
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", uvThresholdResponseHandler);
+    xhr.responseType = "json";
+    xhr.open("PUT", '/uvThreshold');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify({email:email, uvThreshold:thresInput}));
+});
+
+function uvThresholdResponseHandler() {
+    if (this.status == 200) {
+        $("#thresholdFormMessage").html("Threshold Updated!");
+    }
+    else {
+        $("#thresholdFormMessage").html("UV Threshold Update Unsuccessful");
+    }
+}
+/************************************************************************/
+
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
