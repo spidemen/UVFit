@@ -12,7 +12,12 @@
 		<input type="button" name="updateAccount" id="updateAccount" value="Update Account"> 
 		<br><br>
 		<input type="button" name="viewData" id="viewData" value="View Demo Data"> 
-		<br><br>
+    <br>
+      <input type="submit" name="viewbutton" id="viewbutton" value="List view"> 
+		<br>
+      <input type="submit" name="summaryview" id="summaryview" value="summary view"> 
+      <br>
+      <input type="submit" name="avgview" id="avgview" value="Average  view"> 
     </div>
 	
     <div class="rightbar">
@@ -30,7 +35,7 @@
        <input type="text" name="DeviceName" id="DeviceName"> 
        <br>  
        <input type="submit" name="submit" id="submit" value="Register"> 
-	</div>
+	  </div>
 	  
 	<div class="updateAccountForm">
 		<div class="form">
@@ -52,8 +57,11 @@
 		</div>
 	</div>
 
-       <div class="view">
-     
+      <div class="view">
+        <div id="summary"> 
+          Following  is the last 7 day total activities summary
+        </div>
+
          <table>
            <tr>
              <td> Date: </td>
@@ -64,31 +72,16 @@
          </table>
          <div class="RowDate">
          </div>
-         <!--
-         <div class="viewData"  id="Date">   
-          Date:
-          <div class="viewDate"  id="Date1">
-           </div>
-         </div>
-         <div class="viewData"  id="GPS">   
-          Activity Duration:       
-          </div>
-          <div class="viewData"  id="speed">   
-          Calories Burned:      
-          </div>
-          <div class="viewData"  id="UV">   
-            UV exposure:  
-         </div>
-         -->
-         <input type="submit" name="viewbutton" id="viewbutton" value="view"> 
-       </div>
+       <!--   <input type="submit" name="viewbutton" id="viewbutton" value="List view"> 
+         <input type="submit" name="summaryview" id="summaryview" value="summary view">  -->
+      </div>
       <div class="error">
        test error
-      <div>
-      <p>test</p>
-    </div>
+      </div>
 
   </div>
+
+</div>
 
   <br>
 </body>
