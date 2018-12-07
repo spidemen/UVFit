@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 var fs = require('fs');
+var jwt = require("jwt-simple");
+var request = require("request");
 var User = require("../models/UVFit").User;
 
 var secret = fs.readFileSync(__dirname + '/../jwtkey').toString();

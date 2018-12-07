@@ -61,15 +61,16 @@ $("#submitThres").click(function(){
         return;
     }
     
-    /*PUT: push threshold to database and device*/
+    /*POST: push threshold to database and device*/
     $.ajax({
         url:'/uvThreshold',
         type:'POST',
         headers: { 'x-auth': window.localStorage.getItem("authToken") },
         data: {'deviceId':deviceId, 'uvThreshold':thresInput},
         responseType: 'json',
-        success: function(data){
-            $("#thresholdFormMessage").html("Threshold Updated!");
+        success: function(data, textStatus, jqXHR){
+            var response = JSON.parse(jqXHR.responseText);
+            $("#thresholdFormMessage").html(response.message);
         },
         error: function(jqXHR, textStatus, errorThrown){
             var response = JSON.parse(jqXHR.responseText);
