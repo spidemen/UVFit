@@ -8,10 +8,11 @@ var bcrypt = require("bcrypt-nodejs");
 var jwt = require("jwt-simple");
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
+var fs = require('fs');
 const router = express.Router();
 
-var secret ="klaglhjji34;wl5j35";
-var secret1 ="klaglsfsfhjji34;wl5j35";
+var secret = fs.readFileSync(__dirname + '/../jwtkey').toString(); //this is now saved in a file
+//var secret1 ="klaglsfsfhjji34;wl5j35"; //this is to remain unused
 //Main page
 router.get("/", (req, res)=> {
     res.render("home");

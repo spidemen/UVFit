@@ -56,23 +56,22 @@ $("#submitThres").click(function(){
         return;
     }
     
-    /*PUT: update UV Threshold*/
-    var xhr = new XMLHttpRequest();
-    xhr.addEventListener("load", uvThresholdResponseHandler);
-    xhr.responseType = "json";
-    xhr.open("PUT", '/uvThreshold');
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send(JSON.stringify({email:email, uvThreshold:thresInput}));
+    /*PUT: push threshold to database and device*/
+    $.ajax({
+        url:'/uvThreshold',
+        type:'POST',
+        headers: { 'x-auth': window.localStorage.getItem("authToken") },
+        data: {'deviceId':deviceId, 'uvThreshold':thresInput},
+        responseType: 'json',
+        success: function(data){
+            $("#thresholdFormMessage").html("Threshold Updated!");
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            var response = JSON.parse(jqXHR.responseText);
+            $("#thresholdFormMessage").html("Error: " + response.message);
+        }
+    });
 });
-
-function uvThresholdResponseHandler() {
-    if (this.status == 200) {
-        $("#thresholdFormMessage").html("Threshold Updated!");
-    }
-    else {
-        $("#thresholdFormMessage").html("UV Threshold Update Unsuccessful");
-    }
-}
 /************************************************************************/
 
 $("table").on('click', 'tr', onCellClick);
