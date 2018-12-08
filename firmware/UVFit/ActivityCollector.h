@@ -18,7 +18,7 @@ class ActivityCollector {
     enum State { S_Wait, S_Sample, S_Filter, S_WaitToSample, S_WaitUntilPublished };
     
 public:
-    ActivityCollector(AssetTracker &theTracker, Adafruit_VEML6070 &uvSensor, int samples);
+    ActivityCollector(AssetTracker &theTracker, Adafruit_VEML6070 &uvSensor, int samples, int uvThreshold);
     
     void popDatapoint();
     
@@ -30,7 +30,13 @@ public:
     
     void readdTempData(float tempLon, float tempLat, float tempSpeed, float tempUV, int tempTime);
     
-    int getSizeDatapoints() {return this->timestamps.size(); }
+    int getSizeDatapoints() { return this->timestamps.size(); }
+    
+    float evaluateSpeed(float sampSpeed);
+    void evaluateAutoPause(float currSpeed);
+    
+    void setUVThreshold(int uvThreshold);
+    void evalUVExposure();
     
     void setButtonPressed(bool buttonPressed, int duration);
     bool isCollected();
@@ -47,6 +53,12 @@ private:
     
     float avgSpeed;
     float avgUV;
+    float assignedSpeed;
+    
+    bool paused;
+    int uvThreshold;
+    
+    double uvExposure;
     
     deque<float> longitudes;
     deque<float> latitudes;
