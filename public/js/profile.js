@@ -192,8 +192,8 @@ function  sendReqViewData(){
 $("#viewbutton").click(function(){
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
-    // $("#table1").css('display', "inline-block");
-    // $("#table2").css('display',"none");
+  
+     $("#summary").css('display',"none");
     sendReqViewData();
 });
 
@@ -238,6 +238,8 @@ function ViewDataRespon(){
 
 
 $("#summaryview").click(function(){
+   $("#summary").css('display',"block");
+   $("#summary").html("Following  is the last 7 day total activities summary");
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
     // $("#table2").css('display', "inline-block");
@@ -256,6 +258,7 @@ function sendReqSummaryView(){
   xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
      
 }
+
 function ViewSummaryDataRespon(){
 
      if(this.status === 200||this.status==201)
@@ -282,6 +285,57 @@ function ViewSummaryDataRespon(){
       console.log("Error: view data "+this.status);
     }
 }
+
+
+$("#allUserView").click(function(){
+    $("#summary").css('display',"block");
+   $("#summary").html("In the last 7 day, user avg activities view blow:");
+    $(".rightbar > div").css('display', "none");
+    $(".view").css('display',"block");
+     sendReqAllUserView();
+});
+
+function sendReqAllUserView(){
+
+  var xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", ViewAllUserDataRespon);
+  xhr.responseType = "json";
+  xhr.open("GET", '/activities/all');
+  xhr.setRequestHeader("Content-type", "application/json");
+  console.log("send all user view"+email);
+  xhr.send();
+     
+}
+function ViewAllUserDataRespon(){
+
+    if(this.status === 200||this.status==201)
+    {
+  
+      var responseHTML=" <tr>  <td> UserName </td> <td> DeviceId </td>  <td> Avg  Duration:  </td>  <td>  Avg Calories Burned:  </td>  <td>  Avg  UV exposure:  </td> </tr>";
+    //   responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+         // var data=this.response;
+       for(var  data of this.response.user)
+       {
+           responseHTML+="<tr> ";
+       //   responseHTML+="<td>"+data.date+"</td>";
+          responseHTML+="<td>  "+data.userName+" </td>";
+           responseHTML+="<td>  "+data.deviceId+" </td>";
+          responseHTML+="<td>  "+data.totalduration+" </td>";
+          responseHTML+="<td>"+data.totaluv+"</td>";
+          responseHTML+="<td>"+data.totalcalories+"</td>";
+           responseHTML+="</tr>"
+       }
+     
+      $("table").html(responseHTML)
+      console.log(this.response.user);
+ 
+    }
+    else
+    {
+      console.log("Error: view data "+this.status);
+    }
+}
+
 
 
 
