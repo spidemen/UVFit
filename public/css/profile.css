@@ -39,6 +39,9 @@
 .thresholdForm {
     display: none;
 }
+.forecastForm {
+    display: none;
+}
 .view{
   display: none;
  

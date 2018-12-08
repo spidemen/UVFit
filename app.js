@@ -6,6 +6,7 @@ const expressValidator = require('express-validator');
 const home = require("./controllers/HomeController.js");
 const photonRouter = require('./controllers/photon.js');
 const uvRouter = require('./controllers/uvThreshold.js');
+const weatherRouter = require('./controllers/weather.js');
 
 //DB
 //mongoose.connect("mongodb://localhost/UVFit");
@@ -44,6 +45,7 @@ app.use(function(req, res, next){
 app.use(home);
 app.use(photonRouter);
 app.use(uvRouter);
+app.use(weatherRouter);
 //Server
 app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")

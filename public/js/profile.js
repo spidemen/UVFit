@@ -80,6 +80,39 @@ $("#submitThres").click(function(){
 });
 /************************************************************************/
 
+/*************************** Weather Forecast ***************************/
+$("#getForecast").click(function(){
+    $(".rightbar > div").css('display', "none");
+    
+    /*GET: User's lat/lon*/
+    $.ajax({
+        url:'/weather',
+        type:'GET',
+        headers: { 'x-auth': window.localStorage.getItem("authToken") },
+        responseType: 'json',
+        success: function(data, textStatus, jqXHR){
+            var response = JSON.parse(jqXHR.responseText);
+            $("#thresholdFormMessage").html(response.message);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            var response = JSON.parse(jqXHR.responseText);
+            $("#thresholdFormMessage").html("Error: " + response.message);
+        }
+    });
+
+    $(".forecastForm").css('display',"block");
+});
+
+function userLatLonHandler(){
+    if (this.status === 201) {
+        var lat = this.response.activities.lat[this.response.activities.lat.length-1];
+        var lon = this.response.activities.lon[this.response.activities.lon.length-1];
+        
+        
+    }
+}
+/************************************************************************/
+
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
