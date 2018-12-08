@@ -595,6 +595,7 @@ router.get("/activities/all", (req, res)=> {
                                                   var totalcalories=0;
                                                   var totaluv=0;
                                                   var  count=0;
+                                                  var totaldistance=0;
                                                   for( var oneActivity of activities){
                                                       totalduration+=oneActivity.duration;
                                                       totalcalories+=oneActivity.calories;
@@ -604,9 +605,10 @@ router.get("/activities/all", (req, res)=> {
                                                   responseJson.user.push({ 
                                                           "userName": userName,
                                                           "deviceId": deviceId,
-                                                          "totalduration": totalduration/count,
-                                                          "totalcalories":  totalcalories/count, 
-                                                          "totaluv":  totaluv/count,
+                                                          "avgduration": totalduration/count,
+                                                          "avgcalories":  totalcalories/count, 
+                                                          "avguv":  totaluv/count,
+                                                          "avgdistance": activities.avgSpeed*totalduration,
                                                           "totalactivities": count
                                                       });
                                                   // console.log("iteration i="+i);

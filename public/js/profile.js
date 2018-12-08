@@ -189,11 +189,11 @@ function  sendReqViewData(){
   xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
 
 };
-$("#viewbutton").click(function(){
+$("#listview").click(function(){
+    $("#summary").css('display',"block");
+   $("#summary").html("Following is the list view all the activities");
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
-  
-     $("#summary").css('display',"none");
     sendReqViewData();
 });
 
@@ -242,6 +242,7 @@ $("#summaryview").click(function(){
    $("#summary").html("Following  is the last 7 day total activities summary");
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
+
     // $("#table2").css('display', "inline-block");
     // $("#table1").css('display',"none");
     sendReqSummaryView();
@@ -284,14 +285,19 @@ function ViewSummaryDataRespon(){
     {
       console.log("Error: view data "+this.status);
     }
+
+    $("tr").css("color","black");
+     $("tr").css("text-decoration","none");
 }
 
 
 $("#allUserView").click(function(){
     $("#summary").css('display',"block");
-   $("#summary").html("In the last 7 day, user avg activities view blow:");
+   $("#summary").html("In the last 7 day, All user avg activities view blow:");
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
+
+
      sendReqAllUserView();
 });
 
@@ -308,10 +314,13 @@ function sendReqAllUserView(){
 }
 function ViewAllUserDataRespon(){
 
+
+   
+
     if(this.status === 200||this.status==201)
     {
   
-      var responseHTML=" <tr>  <td> UserName </td> <td> DeviceId </td>  <td> Avg  Duration:  </td>  <td>  Avg Calories Burned:  </td>  <td>  Avg  UV exposure:  </td> </tr>";
+      var responseHTML=" <tr>  <td> UserName </td> <td> DeviceId </td>  <td> Total Activities</td>  <td>Avg distancee</td> <td> Avg  Duration:  </td>  <td>  Avg Calories Burned:  </td>  <td>  Avg  UV exposure:  </td>  </tr>";
     //   responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
          // var data=this.response;
        for(var  data of this.response.user)
@@ -320,9 +329,11 @@ function ViewAllUserDataRespon(){
        //   responseHTML+="<td>"+data.date+"</td>";
           responseHTML+="<td>  "+data.userName+" </td>";
            responseHTML+="<td>  "+data.deviceId+" </td>";
-          responseHTML+="<td>  "+data.totalduration+" </td>";
-          responseHTML+="<td>"+data.totaluv+"</td>";
-          responseHTML+="<td>"+data.totalcalories+"</td>";
+          responseHTML+="<td>  "+data.totalactivities+" </td>";
+           responseHTML+="<td>  "+data.avgdistance+" </td>";
+          responseHTML+="<td>  "+data.avgduration+" </td>";
+          responseHTML+="<td>"+data.avgcalories+"</td>";
+          responseHTML+="<td>"+data.avguv+"</td>";
            responseHTML+="</tr>"
        }
      
@@ -334,6 +345,9 @@ function ViewAllUserDataRespon(){
     {
       console.log("Error: view data "+this.status);
     }
+
+    $("tr").css("color","black");
+     $("tr").css("text-decoration","none");
 }
 
 
