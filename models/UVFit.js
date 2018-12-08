@@ -7,8 +7,8 @@ var userSchema = new db.Schema({
   isVerified: { type: Boolean, default: false },
    passwordHash: String,
    lastAccess:   { type: Date, default: Date.now },
-  userDevices:  [ String ],
-  uvThreshold:  Number
+   userDevices:  [ String ],
+   uvThreshold:  Number
 });
 
 const User=db.model('User', userSchema);

@@ -10,9 +10,12 @@ var nodemailer = require('nodemailer');
 var crypto = require('crypto');
 var fs = require('fs');
 const router = express.Router();
+var mongoose = require('mongoose');
+var async=require('async');
+mongoose.Promise = global.Promise;
 
 var secret = fs.readFileSync(__dirname + '/../jwtkey').toString(); //this is now saved in a file
-//var secret1 ="klaglsfsfhjji34;wl5j35"; //this is to remain unused
+var secret1 ="klaglsfsfhjji34;wl5j35"; //this is to remain unused
 //Main page
 router.get("/", (req, res)=> {
     res.render("home");
@@ -45,10 +48,27 @@ function getNewApikey() {
     return newApikey;
 }
 
+function authenticateAuthToken(req) {
+    // Check for authentication token in x-auth header
+    if (!req.headers["x-auth"]) {
+        return null;
+    }
+   
+    var authToken = req.headers["x-auth"];
+   
+    try {
+        var decodedToken = jwt.decode(authToken, secret);
+        return decodedToken;
+    }
+    catch (ex) {
+        return null;
+    }
+}
+
 
 router.get("/account/user", (req, res)=> {
 
-    console.log("enter ajax accout get user infor");
+   
       // Check for authentication token in x-auth header
   if (!req.headers["x-auth"]) {
       return res.status(401).json({success: false, message: "No authentication token"});
@@ -58,6 +78,7 @@ router.get("/account/user", (req, res)=> {
    try {
       var decodedToken = jwt.decode(authToken, secret);
       var userStatus = {};
+       console.log("enter ajax accout get user infor "+decodedToken.email);
        User.findOne({email: decodedToken.email}, function(err, user) {
          if(err) {
             return res.status(200).json({success: false, message: "User does not exist."});
@@ -78,6 +99,7 @@ router.get("/account/user", (req, res)=> {
                        deviceId: device.deviceId,
                        apikey: device.apikey,
                  });
+                 console.log(device.deviceId);
                }
                userStatus['devices'] = deviceList;
             }
@@ -297,7 +319,7 @@ router.get("/test", (req, res,next)=> {
      duration:     3600,
      calories:     1200, 
      uvExposure:    500,
-     deviceId:      "11f4baaef3445ff"
+     deviceId:      "agagag"
     });
     newActivities.save( function(err, activities) {
            if (err) {
@@ -312,25 +334,25 @@ router.get("/test", (req, res,next)=> {
            }
       });
 
-    var newuser=new User({
+   //  var newuser=new User({
 
-     email:  "demo@email.com",
-     fullName:    "demo",
-     passwordHash: "123",
-     userDevices:  "11f4baaef3445ff",
-      uvThreshold:  12
-    });
-   newuser.save( function(err, user) {
-           if (err) {
-            //  console.error(err);
-               console.log("Fail store user data");      
+   //   email:  "demo@email.com",
+   //   fullName:    "demo",
+   //   passwordHash: "123",
+   //   userDevices:  "11f4baaef3445ff",
+   //    uvThreshold:  12
+   //  });
+   // newuser.save( function(err, user) {
+   //         if (err) {
+   //          //  console.error(err);
+   //             console.log("Fail store user data");      
                
-           }
-           else {
-              console.log("success store user data");
+   //         }
+   //         else {
+   //            console.log("success store user data");
             
-           }
-      });
+   //         }
+   //    });
     
 
 });
@@ -390,7 +412,7 @@ router.post("/devices/register", (req, res,next)=> {
       });
 
 
-})
+});
 
 // view data
 router.post("/activities/user", (req, res,next)=> {
@@ -458,7 +480,277 @@ router.post("/activities/user", (req, res,next)=> {
 
     });
    // res.render("profile");
-})
+});
+
+
+router.post("/activities/summary", (req, res)=> {
+
+        var responseJson = {
+        success: true,
+        message: ""
+         };
+    //     var decodedToken;
+    //     if (authenticateRecentEndpoint) {
+    //     decodedToken = authenticateAuthToken(req);
+    //     if (!decodedToken) {
+    //         responseJson.success = false;
+    //         responseJson.message = "Authentication failed";
+    //         return res.status(401).json(responseJson);
+    //     }
+    // }
+     var deviceId=req.body.deviceId;
+     console.log(deviceId);
+    // Find all potholes reported in the spcified number of days
+    var summaryActivities = Activities.find({
+        "deviceId":deviceId,
+        "timePublished": 
+        {
+            $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+        }
+    }).sort({ "date": -1 });
+
+    summaryActivities.exec({}, function(err, activities) {
+        if (err) {
+            responseJson.success = false;
+            responseJson.message = "Error accessing db.";
+            console.log("cannot find any data  summary view");
+            return res.status(400).send(JSON.stringify(responseJson));
+        }
+        else
+        {
+            var totalduration=0;
+            var totalcalories=0;
+            var totaluv=0;
+            for( var oneActivity of activities){
+                totalduration+=oneActivity.duration;
+                totalcalories+=oneActivity.calories;
+                totaluv+=oneActivity.uvExposure;
+            }
+            responseJson['totalduration']=totalduration;
+            responseJson['totalcalories']=totalcalories;
+            responseJson['totaluv']=totaluv;
+            responseJson.message = "In the past 7 days, user summary activities ";
+            return res.status(200).send(JSON.stringify(responseJson));
+        }
+   });
+     
+
+});
+
+router.get("/activities/all", (req, res)=> {
+
+
+        let responseJson = {
+        success: true,
+        user:[ {
+         userName:"",
+         deviceId:""
+         }
+         ],
+        message: ""
+         };
+     
+      let DeviceId=[{
+          userName:"",
+          deviceId:""
+      }];
+
+    var promise = new Promise(function (resolve, reject) {
+          User.find({},function(err, cursor){
+
+                if(err){
+                       responseJson.success = false;
+                       responseJson.message = "Error find user  on db.";
+                       console.log("Error: find all users on db");
+                     //  return res.status(400).send(JSON.stringify(responseJson));
+                 }
+                cursor.forEach( function(user) {
+                   console.log("user "+user.fullName+"  deviceId"+user.userDevices);
+                   if(user!=null){
+                       DeviceId.push({
+                          "userName": user.fullName,
+                          "deviceId": user.userDevices
+                       });
+                         user.userDevices.forEach(function(deviceId){
+                                  var userName=user.fullName;
+                                 var deviceId=deviceId; 
+                               console.log("for each  debug"+user.fullName+"  device ="+deviceId);
+                                     var summaryActivities =  Activities.find({
+                                            "deviceId":deviceId,
+                                             "timePublished": 
+                                          {
+                                              $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                                          }
+                                        }).sort({ "date": -1 });
+
+                                      summaryActivities.exec({}, function(err, activities) {
+                                                if (err) {
+                                                  responseJson.success = false;
+                                                  responseJson.message = "Error accessing db.";
+                                                  console.log("cannot find any data  avg view");
+                                                  res.status(400).send(JSON.stringify(responseJson));
+                                                 }
+                                               else{
+                                                  var totalduration=0;
+                                                  var totalcalories=0;
+                                                  var totaluv=0;
+                                                  var  count=0;
+                                                  var totaldistance=0;
+                                                  for( var oneActivity of activities){
+                                                      totalduration+=oneActivity.duration;
+                                                      totalcalories+=oneActivity.calories;
+                                                      totaluv+=oneActivity.uvExposure;
+                                                      count++;
+                                                  }
+                                                  responseJson.user.push({ 
+                                                          "userName": userName,
+                                                          "deviceId": deviceId,
+                                                          "avgduration": totalduration/count,
+                                                          "avgcalories":  totalcalories/count, 
+                                                          "avguv":  totaluv/count,
+                                                          "avgdistance": activities.avgSpeed*totalduration,
+                                                          "totalactivities": count
+                                                      });
+                                                  // console.log("iteration i="+i);
+                                                    // console.log(responseJson);
+                                                  // responseJson['totalduration']=totalduration/count;
+                                                  // responseJson['totalcalories']=totalcalories/count;
+                                                  // responseJson['totaluv']=totaluv/count;
+
+                                                 resolve(responseJson);
+
+                                              }
+                                        });
+
+                                     });
+
+                     // var  userDevices=user.userDevices;
+                     // processArray(userDevices,user.fullName,responseJson);
+                     //   console.log("inside debug"+JSON.stringify(responseJson));
+                    // // async(userDevices)=>{
+                    //     for(var j=0;j<userDevices.length;j++){
+                    //       console.log("user for loop"+user.fullName+"  deviceId"+userDevices[j]+"   j="+j);
+                    //       let result;
+                    //       if(userDevices[j]!=null) {
+                       
+                    //          result=await findAllUser(userDevices[j],user.fullName);
+                         
+                    //          responseJson.user.push(result);
+                    //        }
+                    //     }
+                    // }
+                  
+
+                   }
+
+                });
+                  // console.log(responseJson);
+                  // resolve(responseJson);
+
+          });
+    });
+
+    promise.then(  function (responseJson) { 
+          return new  Promise( async function (resolve, reject) {
+               await delay(responseJson);
+               // await delay1();
+            responseJson.message = "In the past 7 days, user avg  activities ";
+            console.log(responseJson);
+             res.status(200).send(JSON.stringify(responseJson));
+           });
+
+    }).catch(() => { assert.isNotOk(error,'Promise error'); });
+
+});
+function delay(result){
+   return new Promise(resolve=>setTimeout(()=>{
+       resolve(result);
+   },300));
+}
+async function delayedLog1(item,responseJson,result){
+    await delay(result);
+    responseJson.user.push(result);
+    console.log(item+" push json"+result);
+}
+async function delayedLog(item){
+    await delay(item);
+    console.log(item);
+   
+}
+async function processArray(array,userName,responseJson){
+        array.forEach(async (item)=>{
+           console.log("user for loop"+userName+"  deviceId"+item+"   j=");
+            let result;
+           if(item!=null) {
+                       
+            result=findAllUser(item,userName);
+            // await delay();  
+            // await delay();         
+            // responseJson.user.push(result);
+            console.log("item is not null");
+             await delayedLog1(item,responseJson,result);
+            }
+          await delayedLog(item);
+        });
+}
+async function   findAllUser(deviceId,userName){
+   // return new Promise((resolve, reject) => {
+   //  findAllUser(deviceId,userName,(result)=>{
+
+               var result;
+               var summaryActivities =  Activities.find({
+                    "deviceId":deviceId,
+                     "timePublished": 
+                   {
+                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                  }
+                  }).sort({ "date": -1 });
+
+                 summaryActivities.exec({}, function(err, activities) {
+                    if (err) {
+                      responseJson.success = false;
+                      responseJson.message = "Error accessing db.";
+                      console.log("cannot find any data  avg view");
+                      res.status(400).send(JSON.stringify(responseJson));
+                     }
+                   else{
+                      var totalduration=0;
+                      var totalcalories=0;
+                      var totaluv=0;
+                      var  count=0;
+                      for( var oneActivity of activities){
+                          totalduration+=oneActivity.duration;
+                          totalcalories+=oneActivity.calories;
+                          totaluv+=oneActivity.uvExposure;
+                          count++;
+                      }
+
+                      result={ 
+                              "userName": userName,
+                              "deviceId": deviceId,
+                              "totalduration": totalduration/count,
+                              "totalcalories":  totalcalories/count, 
+                              "totaluv":  totaluv/count,
+                              "totalactivities": count
+                          };
+                      // console.log("iteration i="+i);
+                      // console.log(responseJson);
+                      // responseJson['totalduration']=totalduration/count;
+                      // responseJson['totalcalories']=totalcalories/count;
+                      // responseJson['totaluv']=totaluv/count;
+
+                      // resolve(responseJson);
+                       // resolve(result);
+                       console.log(result);
+                     
+                 }
+              });
+
+        return  result;
+  //      })
+  // });
+};
+
 
 // Update Account
 router.post("/account/update", (req, res)=> {
