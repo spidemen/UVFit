@@ -140,13 +140,16 @@ $("#getForecast").click(function(){
                         });
                     }
                 }
-                for (uvInfo of data.uv) {
-                    console.log(uvInfo);
+                /* Insert UV index into correct day*/
+                for (uvInfo of data.uvFore) {
                     var date = new Date(uvInfo.date*1000);
                     var dd = date.getDate();
                     for (day of daysInfo) {
                         if (day.dd == dd) {
                             day.uvIndex = uvInfo.value;
+                        }
+                        else if (day.dd == new Date(data.uvCurr.date*1000).getDate()) {
+                            day.uvIndex = data.uvCurr.value;
                         }
                     }
                 }
