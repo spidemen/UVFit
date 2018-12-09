@@ -253,6 +253,7 @@ function DeviceChangeRespon(){
 
 /********************************************************************/
 /* single view ***********************************************************/
+
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
@@ -276,7 +277,6 @@ function onCellClick() {
 $("#storeData").click(function(){
    
        sendReqStore();
-
 });
 
 function sendReqStore()
@@ -295,6 +295,7 @@ function sendReqStore()
 /* -----------------------------------------*/
 
 /* register a device *****************************************************************/
+
 $("#submit").click(function(){
    
        sendReqRegister();
@@ -347,6 +348,7 @@ function RegisterRespon(){
 
 }
 /*------------------------------------------------------*/
+
 /*list view all the activities   **************************************************************/
 $("#listview").click(function(){
     $("#summary").css('display',"block");
@@ -398,7 +400,9 @@ function ViewDataRespon(){
 }
 /*****************************************************/
 
+
 /*summary view  *******************************************************/
+
 
 $("#summaryview").click(function(){
    $("#summary").css('display',"block");
@@ -609,6 +613,7 @@ function sort( user) {
    
 }
 
+/*------------------------------------------------------------*/
 
 /***********************************************************************************/
 
