@@ -80,6 +80,7 @@ router.get("/account/user", (req, res)=> {
       var userStatus = {};
        console.log("enter ajax accout get user infor "+decodedToken.email);
        User.findOne({email: decodedToken.email}, function(err, user) {
+		   
          if(err) {
             return res.status(200).json({success: false, message: "User does not exist."});
          }
@@ -256,6 +257,8 @@ router.post("/account/resend", (req, res)=> {
       });
 
 });
+
+
 router.post("/account/login", (req, res)=> {
     
   console.log(req.body.email+"   "+req.body.password);
@@ -288,7 +291,7 @@ router.post("/account/login", (req, res)=> {
                     }
                   }
                   else {
-                    console.log(req.body.password+" hash "+user.passwordHash);
+                    console.log(req.body.password+" hash "+user.passwordHash+" valid password "+ valid);
                     res.status(400).json({create:false,message:"The email or password provided was invalid."});
                   }
                }
@@ -475,6 +478,103 @@ router.post("/activities/single", (req, res,next)=> {
 
 });
 
+// register device
+router.post("/devices/change", (req, res,next)=> {
+
+        var newDeviceId=req.body.newdeviceId;
+        var email=req.body.email;
+        var oldDeviceId=req.body.olddeviceId;
+         console.log("success change deviceid "+oldDeviceId+"1-1");
+        User.update({email:email,userDevices:oldDeviceId},{$set:{"userDevices.$":newDeviceId}},function(err,user){
+              if(err){
+                    console.log(err);
+                    res.status(400).json( {registered: false, message: err+" db error "});
+              }
+                  else
+                  {
+                    console.log("success change user deviceid "+oldDeviceId+"-1");
+                                  Device.update({deviceId:oldDeviceId},{$set:{deviceId:newDeviceId}},function(err,user){
+                                        if(err){
+                                              console.log(err);
+                                              res.status(400).json( {registered: false, message: err+" db error "});
+                                        }
+                                            else
+                                            {
+                                              console.log("success change device  deviceid "+oldDeviceId+"-1");
+                                              res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
+                                            }
+                             });
+                    // res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
+                  }
+        });
+    
+
+
+});
+
+
+// change a deviceId
+router.post("/activities/change", (req, res,next)=> {
+
+         var deviceId=req.body.deviceId;
+         var date=req.body.date;
+         var type=req.body.type;
+
+          Activities.update({deviceId:deviceId,timePublished:date},{$set:{activityType:type}},function(err,activitiy){
+                if(err){
+                  console.log(err);
+                    res.status(400).json( {registered: false, message: err+" db error "});
+                }
+                  else
+                  {
+                    console.log("success change activities ");
+                    res.status(201).json( {registered: true, message: "Activities type change   to "+type}); 
+                  }
+          });
+
+});
+
+/*single activitiy view*/
+router.post("/activities/single", (req, res,next)=> {
+
+    var responseJson = { found:false,
+                        activities:{},
+                        message:""};
+    var deviceId=req.body.deviceId;
+    var date=req.body.date;
+    Activities.findOne({deviceId:deviceId,timePublished:date},function(err,activities){
+         if(err)
+            {
+                 res.status(400).json( {found: false, message: err+" db err"});
+            }
+            else{
+                    if(activities!=null){
+                     responseJson.message="Activities found.";
+                
+                    responseJson.activities={ 
+                      "type": activities.activityType,
+                      "date":activities.timePublished,
+                      "duration": activities.duration,
+                      "calories": activities.calories, 
+                      "uvExposure":  activities.uvExposure,
+                      "lats": activities.lats,
+                      "lons":  activities.lons,
+                       "speeds":activities.speeds,
+                       "uvs": activities.uvIndices,
+                        "times":timestamps
+                    };
+                    console.log(activities.speeds+" this is bug single view");
+                    console.log(responseJson)
+                    res.status(201).json(responseJson);
+                  }
+                  else{
+                      res.status(400).json( {found: false, message: err+" cannot find any record "});
+                  }
+            }
+
+      });
+
+});
 
 // view data
 router.post("/activities/list", (req, res,next)=> {
@@ -816,47 +916,65 @@ async function   findAllUser(deviceId,userName){
 
 // Update Account
 router.post("/account/update", (req, res)=> {
-	console.log("update account server side");
-	res.send("update account reached");
-	
-    //console.log(req.body.email+"   "+req.body.name+"  "+req.body.passwordHash);
-    //res.status(201).json({message:"reached update account"});
- /*    User.findOne({email:req.body.email},function(err,user) {
-		if (!req.headers["x-auth"]) {
-			return res.status(401).json({success: false, message: "No authentication token"});
+	console.log("inside account update server side");
+	if (!req.headers["x-auth"]) {
+      res.status(400).json({success: false, message: "No authentication token"});
+	}
+	var token;
+	var authToken = req.headers["x-auth"];
+	var decodedToken = jwt.decode(authToken, secret);
+	// query by email
+	User.findOne({email: decodedToken.email}, function(err, user) {
+		console.log("found user email "+user.email);
+		if(err) {
+			res.status(400).json({success: false, message: "User does not exist."});
 		}
-        else if(err) {
-            res.status(400).json({updated:false,message:err+" Invalid User Credentials. Account could not be updated."});
-        }
-        else { */
-			/* user.email: req.body.email;
-			user.name: req.body.name;
-			user.passwordHash: req.body.oldPasswordHash
-			newPasswordHash: req.body.newPasswordHash */
-		//	res.status(201).json({updated:true, message:"Account successfully updated."});
-           /* if(user==null) {
-                var newuser=new User({
-                    email: req.body.email,
-                    fullName:  req.body.fullname,
-                    passwordHash: req.body.password
-                });
-                newuser.save( function(err, user) {
-                    if (err) {
-                        console.error(err);
-                        console.log("Fail store create user  db error");   
-                        res.status(400).json({create:false,message:err+" db error"});  
-                    }
-                    else {
-                        console.log("success create a user");
-                        res.status(201).json({create:true,message:"Success create a user"});   
-                    }
-                }); 
-            }
-            else{
-                res.status(400).json({create:false,message:"User  already exit, please choose another email"});
-            } */
-       // }
-    //});
+		else {
+			// verify password
+			bcrypt.compare(req.body.password, user.passwordHash, function(err, valid) {
+				console.log("valid password? "+ valid);				
+				console.log("new name "+req.body.name);
+                if(err){					 
+                    res.status(400).json({create:false,message:"Error authenticating. Please contact support."}); 
+                }
+				// update email, name, and password
+				else {
+					if(valid){	
+						user.fullName = req.body.name;
+						user.save(function (err, user) {
+							console.log("updated name");
+						});
+						// use same email if it does not change
+						console.log("new email "+req.body.newemail+" server email "+user.email);
+						if (req.body.newemail != user.email){
+							user.email = req.body.newemail;
+							user.save(function (err, user) {
+								console.log("updated email");
+							});
+							// create new token
+							token = jwt.encode({email: req.body.email}, secret);
+						}
+						// hash new password
+						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
+							user.passwordHash = hash;
+							user.save(function (err, user) {
+									console.log("updated password");
+							});
+						});
+						// update token if new and old emails are different
+						if (req.body.newemail != user.email){
+							res.status(201).json({updated: true, message:"Account updated successfully.", token:token});
+						}
+						else {
+							res.status(201).json({updated: true, message:"Account updated successfully."});
+						}
+					}
+				}
+			});
+		}
+
+	});
 });
+
 
 module.exports = router;

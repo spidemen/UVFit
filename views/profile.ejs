@@ -9,10 +9,12 @@
         <p id="user"></p>
 		<input type="button" name="registerdevice" id="register" value="Register Device"> 
 		<br><br>
-		<input type="button" name="updateAccount" id="updateAccount" value="Update Account"> 
+		 <input type="button" name="updateAccount" id="updateAccount" value="Update Account"> 
 		<br><br>
         <input type="button" name="setUvThreshold" id="setUvThreshold" value="Set UV Threshold"> 
-		<br>
+	 	<br> <br>
+         <input type="button" name="replaceDevice" id="replaceDevice" value="Replace a device"> 
+
         <input type="submit" name="getForecast" id="getForecast" value="Weather Forecast"> 
 	
         <input type="submit" name="listview" id="listview" value="List view"> 
@@ -44,9 +46,11 @@
 		<div class="form">
 			<h1>Update Account</h1>
 			<label>Full Name</label>
-			<input type="text" id="fullName" value="m">
-			<label>Email</label>
-			<input type="text" id="email2" value="m">
+			<input type="text" id="fullName" value="">
+			<label>Old Email</label>
+			<input type="text" id="oldemail" value="">
+			<label>New Email</label>
+			<input type="text" id="newemail" value="">
 			<label>Old Password</label> 
 			<input type="password" name="" id="oldpassword"> 
 			<label>New Password</label>
@@ -116,6 +120,19 @@
             </div>
             <div id="forecastFormMessage"></div>
         </div>
+
+          <div  class="Replacedevice">
+                 <h1>Replace a device</h1>
+                   <label>Old device ID</label> 
+                   <br>
+                   <input type="text" name="oldDevice" id="oldDevice"> 
+                   <br>
+                   <label>New Device ID</label>
+                   <br>
+                   <input  type="text" name="newDevice" id="newDevice">  
+                   <br>  
+                   <input type="submit" name="Change" id="Change" value="Change"> 
+          </div>
     
       <div class="view">
         <div id="summary"> 

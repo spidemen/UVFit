@@ -47,6 +47,9 @@
  
 
 }
+.Replacedevice{
+	 display: none;
+}
 .viewData{
    display: inline-block;
    width: 150px;
@@ -188,4 +191,31 @@ input[type=text].error {
 #formErrors{ 
   	display: none; 
   	color:red;
+}
+/***  Responsive Design  ***/
+/*  Tablet  */
+@media only screen and (max-width: 800px) {
+  nav {
+     float: none;
+     width: auto;
+     line-height: 100px;
+  }   
+  #main {
+     width: 60%;
+  }   
+  aside {
+     width: 40%;
+  }
+}
+
+/*  Mobile  */
+@media only screen and (max-width: 600px) {
+  body {
+     margin: 0;
+     width: 100vw;
+  }
+  #main, aside {
+     float: none;
+     width: auto;
+  }
 }
