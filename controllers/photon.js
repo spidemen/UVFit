@@ -109,6 +109,26 @@ router.post('/activities/datapoints', function(req, res, next) {
                             
                             activity.publishing = false;
                             activity.duration = (activity.timestamps[activity.timestamps.length-1] - activity.timestamps[0])/1000 + 1;
+                            var avgSpeed = 0;
+                            var uvExposure = 0;
+                            for (i = 0; i < activity.timestamps.length; i++) {
+                                avgSpeed += activity.speeds[i];
+                                uvExposure += activity.uvIndices[i];
+                            }
+                            activity.avgSpeed = avgSpeed/activity.speeds.length;
+                            if (avgSpeed > 10) {
+                                activity.activityType = "bike";
+                                activity.calories = Math.max(0,(40*.074-150*.09036+140*.6309-55.0969)*activity.duration/60/4.184);
+                            }
+                            else if (avgSpeed > 5) {
+                                activity.activityType = "run";
+                                activity.calories = Math.max(0,(40*.074-150*.09036+120*.6309-55.0969)*activity.duration/60/4.184);
+                            }
+                            else {
+                                activity.activityType = "walk";
+                                activity.calories = Math.max(0,(40*.074-150*.09036+100*.6309-55.0969)*activity.duration/60/4.184);
+                            }
+                            activity.uvExposure = uvExposure;
                             
                             activity.save(function(err, activity) {
                                 if(err) {

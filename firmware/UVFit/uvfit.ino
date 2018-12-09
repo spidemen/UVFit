@@ -18,10 +18,11 @@ float gpsAccuracy;
 //-------------------------------------------------------------------
 
 #define SAMPLES_TO_FILTER 10
+#define INIT_THRES 50000
 
 AssetTracker gpsSensor = AssetTracker();
 Adafruit_VEML6070 uvSensor = Adafruit_VEML6070();
-ActivityCollector activityCollector(gpsSensor, uvSensor, SAMPLES_TO_FILTER);
+ActivityCollector activityCollector(gpsSensor, uvSensor, SAMPLES_TO_FILTER, INIT_THRES);
 ActivityPublisher activityPublisher(activityCollector);
 
 //-------------------------------------------------------------------
@@ -56,6 +57,25 @@ void datapointsHandler(const char *event, const char *data) {
 
 //-------------------------------------------------------------------
 
+int updateThresholdHandler(String data) {
+    int uvThres = atoi(data.c_str());
+    activityCollector.setUVThreshold(uvThres);
+    
+    Serial.println("Threshold: " + data);
+    
+    digitalWrite(D7, HIGH);
+    delay(200);
+    digitalWrite(D7, LOW);
+    delay(100);
+    digitalWrite(D7, HIGH);
+    delay(200);
+    digitalWrite(D7, LOW);
+    
+    return 0;
+}
+
+//-------------------------------------------------------------------
+
 //SYSTEM_MODE(SEMI_AUTOMATIC);
 SYSTEM_THREAD(ENABLED);
 
@@ -63,6 +83,8 @@ void setup() {
     Serial.begin(9600);
     
     System.on(button_status, button_handler);
+    
+    pinMode(D7, OUTPUT);
 
     // Initialize the gps and turn it on    
     gpsSensor.begin();
@@ -73,6 +95,8 @@ void setup() {
     
     // Handler for response from POSTing location to server
     Particle.subscribe("hook-response/datapoints", datapointsHandler, MY_DEVICES);
+    
+    Particle.function("updateThres", updateThresholdHandler);
     
     stateMachineTimer.start();
 }

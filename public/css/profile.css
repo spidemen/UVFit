@@ -8,7 +8,7 @@
 }
 .leftbar{
 
-	display: inline-block;
+	display: block;
 	width: 200px;
 	margin: 4px;
 	text-align: center;
@@ -39,10 +39,16 @@
 .thresholdForm {
     display: none;
 }
+.forecastForm {
+    display: none;
+}
 .view{
   display: none;
  
 
+}
+.Replacedevice{
+	 display: none;
 }
 .viewData{
    display: inline-block;

@@ -4,11 +4,11 @@ var db = require("../db");
 var userSchema = new db.Schema({
   email:        { type: String, required: true, unique: true },
   fullName:     { type: String, required: true },
-  isVerified: { type: Boolean, default: false },
+   isVerified: { type: Boolean, default: false },
    passwordHash: String,
    lastAccess:   { type: Date, default: Date.now },
-  userDevices:  [ String ],
-  uvThreshold:  Number
+   userDevices:  [ String ],
+   uvThreshold:  Number
 });
 
 const User=db.model('User', userSchema);
@@ -26,17 +26,18 @@ const Device=db.model('Device', deviceSchema);
 module.exports.Device = Device;
 
 var activitySchema =new db.Schema({
-    activityType: String,
+    activityType:   String,
     lats:         [ Number ],
     lons:         [ Number ],
     speeds:       [ Number ],
     uvIndices:    [ Number ],
     timestamps:   [ Date ],
-    duration:     Number,
-    calories:     Number, 
-    uvExposure:    Number,
-    deviceId:      String,
-    publishing:   Boolean,
+    duration:       Number,
+    calories:       Number, 
+    uvExposure:     Number,
+    avgSpeed:       Number,
+    deviceId:       String,
+    publishing:     Boolean,
     timePublished:{ type: Date, default: Date.now }
 });
 

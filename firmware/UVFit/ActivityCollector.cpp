@@ -4,21 +4,25 @@
 
 //-------------------------------------------------------------------
 
-
+#define ZEROTHRESH .75
 
 //-------------------------------------------------------------------
 
 ActivityCollector::ActivityCollector(AssetTracker &theTracker, 
                   Adafruit_VEML6070 &theVEML6070,
-                  int samples) : 
+                  int samples, int uvThreshold) : 
     gpsSensor(theTracker), uvSensor(theVEML6070), 
     speedSamples(samples), uvSamples(samples),
-    collectorStatus(RGB_COLOR_BLUE, LED_PATTERN_BLINK, LED_PRIORITY_NORMAL) {    
+    collectorStatus(RGB_COLOR_BLUE, LED_PATTERN_BLINK, LED_PRIORITY_CRITICAL) {    
         
     this->samples = samples;
+    this->uvThreshold = uvThreshold;
     sampleIndex = 0;
     avgSpeed = 0;
     avgUV = 0;
+    assignedSpeed = 0;
+    paused = false;
+    uvExposure = 0;
     buttonPressed = false;
     activityCollected = false;
     state = S_Wait;
@@ -32,8 +36,14 @@ void ActivityCollector::execute() {
     switch (state) {
         case ActivityCollector::S_Wait:
             sampleIndex = 0;
+            uvExposure = 0;
+            paused = false;
+            collectorStatus.setPattern(LED_PATTERN_BLINK);
+            collectorStatus.setSpeed(LED_SPEED_NORMAL);
+            digitalWrite(D7, LOW);
             
             if (buttonPressed) {
+                Particle.disconnect();
                 buttonPressed = false;
                 state = ActivityCollector::S_Sample;
                 Serial.println("Collecting Activity");
@@ -66,12 +76,23 @@ void ActivityCollector::execute() {
                 avgSpeed += speedSamples.at(i);
                 avgUV += static_cast<float>(uvSamples.at(i));
             }
+            avgSpeed /= samples;
+            avgUV /= samples;
             
-            latitudes.push_back(gpsSensor.readLatDeg());
-            longitudes.push_back(gpsSensor.readLonDeg());
-            speedData.push_back(avgSpeed / samples);
-            uvData.push_back(avgUV / samples);
-            timestamps.push_back(Time.now());
+            assignedSpeed = this->evaluateSpeed(avgSpeed);
+            this->evaluateAutoPause(assignedSpeed);
+            
+            if (!paused) {
+                latitudes.push_back(gpsSensor.readLatDeg());
+                longitudes.push_back(gpsSensor.readLonDeg());
+                speedData.push_back(assignedSpeed);
+                uvData.push_back(avgUV);
+                timestamps.push_back(Time.now());
+                
+                uvExposure += avgUV;
+            }
+            
+            evalUVExposure();
             
             state = ActivityCollector::S_WaitToSample;
             
@@ -89,31 +110,27 @@ void ActivityCollector::execute() {
                 tick = 0;
                 state = ActivityCollector::S_Sample;
                 
-                for (int i=0; i < latitudes.size(); i++) {
-                    Serial.print(latitudes.at(i));
-                    Serial.print(' ');
+                if (paused) {
+                    Serial.println("Paused");
                 }
-                Serial.println();
-                for (int i=0; i < longitudes.size(); i++) {
-                    Serial.print(longitudes.at(i));
+                else {
+                    Serial.print(latitudes.back());
                     Serial.print(' ');
-                }
-                Serial.println();
-                for (int i=0; i < speedData.size(); i++) {
-                    Serial.print(speedData.at(i));
+                    
+                    Serial.print(longitudes.back());
                     Serial.print(' ');
-                }
-                Serial.println();
-                for (int i=0; i < uvData.size(); i++) {
-                    Serial.print(uvData.at(i));
+                    
+                    Serial.print(speedData.back());
                     Serial.print(' ');
-                }
-                Serial.println();
-                for (int i=0; i < timestamps.size(); i++) {
-                    Serial.print(timestamps.at(i));
+                    
+                    Serial.print(uvData.back());
                     Serial.print(' ');
+                    
+                    Serial.print(timestamps.back());
+                    Serial.print(' ');
+                    
+                    Serial.println();
                 }
-                Serial.println();
             }
             else {
                 state = ActivityCollector::S_WaitToSample;
@@ -175,6 +192,55 @@ void ActivityCollector::readdTempData(float tempLon, float tempLat, float tempSp
     this->speedData.push_front(tempSpeed);
     this->uvData.push_front(tempUV);
     this->timestamps.push_front(tempTime);
+}
+
+//-------------------------------------------------------------------
+
+float ActivityCollector::evaluateSpeed(float sampSpeed){
+    if (sampSpeed < ZEROTHRESH) {
+        return 0;
+    }
+    else {
+        return sampSpeed;
+    }
+}
+
+//-------------------------------------------------------------------
+
+void ActivityCollector::evaluateAutoPause(float currSpeed){
+    int numSpeeds = speedData.size();
+    
+    if (numSpeeds < 2) {
+        return;
+    }
+    
+    float prevSpeed = speedData.at(numSpeeds-1);
+    float secondPrevSpeed = speedData.at(numSpeeds-2);
+    
+    if (prevSpeed == 0 && secondPrevSpeed == 0) {
+        paused = true;
+        collectorStatus.setPattern(LED_PATTERN_FADE);
+        collectorStatus.setSpeed(LED_SPEED_SLOW);
+    }
+    if (currSpeed > 0) {
+        paused = false;
+        collectorStatus.setPattern(LED_PATTERN_BLINK);
+        collectorStatus.setSpeed(LED_SPEED_NORMAL);
+    }
+}
+
+//-------------------------------------------------------------------
+
+void ActivityCollector::setUVThreshold(int uvThreshold) {
+    this->uvThreshold = uvThreshold;
+}
+
+//-------------------------------------------------------------------
+
+void ActivityCollector::evalUVExposure() {
+    if (this->uvExposure > this->uvThreshold) {
+        digitalWrite(D7, HIGH);
+    }
 }
 
 //-------------------------------------------------------------------

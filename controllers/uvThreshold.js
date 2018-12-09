@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 var fs = require('fs');
+var jwt = require("jwt-simple");
+var request = require("request");
 var User = require("../models/UVFit").User;
 
 var secret = fs.readFileSync(__dirname + '/../jwtkey').toString();
@@ -56,11 +58,11 @@ router.post('/uvThreshold', function(req, res, next) {
 */
     
     request({
-       method: "POST",
-       uri: "https://api.particle.io/v1/devices/" + req.body.deviceId + "/updateThres",
-       form: {
-	       access_token : particleAccessToken,
-	       args: "" + req.body.uvThreshold
+        method: "POST",
+        uri: "https://api.particle.io/v1/devices/" + req.body.deviceId + "/updateThres",
+        form: {
+            access_token : particleAccessToken,
+            args: "" + req.body.uvThreshold
         }
     });
     

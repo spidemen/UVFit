@@ -8,7 +8,7 @@
 
 ActivityPublisher::ActivityPublisher(ActivityCollector &theCollector) :
     activityCollector(theCollector), 
-    publisherStatus(RGB_COLOR_MAGENTA, LED_PATTERN_BLINK, LED_SPEED_FAST, LED_PRIORITY_NORMAL) {
+    publisherStatus(RGB_COLOR_ORANGE, LED_PATTERN_BLINK, LED_SPEED_FAST, LED_PRIORITY_IMPORTANT) {
     
     tick = 0;
     postData = "";
@@ -23,14 +23,17 @@ void ActivityPublisher::execute() {
     switch (state) {
         case ActivityPublisher::S_Wait:
             tick = 0;
-            if (activityCollector.isCollected() && WiFi.ready()) {
+            if (activityCollector.isCollected() && Particle.connected() && WiFi.ready()) {
                 Serial.println("Publishing");
-                publisherStatus.setColor(RGB_COLOR_MAGENTA);
+                publisherStatus.setColor(RGB_COLOR_ORANGE);
                 publisherStatus.setPattern(LED_PATTERN_BLINK);
                 publisherStatus.setActive(true);
                 postData = String("{\"t\":\"begin\"}");
                 Particle.publish("datapoints", postData);
                 state = ActivityPublisher::S_WaitForResponse;
+            }
+            else if(activityCollector.isCollected()) {
+                Particle.connect();
             }
             else {
                 state = ActivityPublisher::S_Wait;
@@ -39,7 +42,7 @@ void ActivityPublisher::execute() {
             
         case ActivityPublisher::S_Publish:
             tick = 0;
-            if (publishStatus == Success) {
+            if (publishStatus == Success && Particle.connected() && WiFi.ready()) {
                 postData = determinePublishString();
             }
             Serial.println(postData);
@@ -71,14 +74,14 @@ void ActivityPublisher::execute() {
             
         case ActivityPublisher::S_PublishDelay:
             ++tick;
-            if(activityCollector.getSizeDatapoints() == 0 && publishStatus == Success) {
+            if(activityCollector.getSizeDatapoints() == 0 && publishStatus == Success && tick > 100) {
                 tick = 0;
                 postData = String("{\"t\":\"end\"}");
                 Particle.publish("datapoints", postData);
                 
                 state = ActivityPublisher::S_Notify;
             }
-            else if(tick >= 100) {
+            else if(tick > 100) {
                 tick = 0;
                 state = ActivityPublisher::S_Publish;
             }

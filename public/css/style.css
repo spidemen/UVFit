@@ -54,6 +54,7 @@ input[type=verificate]:hover {
 input[type=text].error {
     border: 2px solid red;
 }
+
 .form{
 
 	 width: 670px;
@@ -72,3 +73,78 @@ input[type=text].error {
   	display: none; 
   	color:red;
 }
+.view{
+
+  margin-top: 100px;
+   
+   font: 10pt Arial;
+  background-color: #eee;
+
+}
+.type{
+
+  display: inline-block;
+ 
+ 
+  margin-left: 30px;
+  text-align: center;
+  border: 1px solid #cccccc;
+  border-radius: 1px;
+   box-shadow: 0px 2px 2px #dddddd, 0px 0px 5px #dddddd;
+}
+.graph{
+
+    display: inline-block;
+     margin-left: 30px;
+ 
+}
+#speeds{
+   display: inline-block;
+  
+}
+#uvs{
+   display: inline-block;
+   margin-left: 40px;
+}
+#map
+{
+     margin:auto;
+     height: 40%;
+     width:60%;
+}
+label{
+   display: inline-block;
+}
+select{
+   display: inline-block;
+    margin-left: 30px;
+    font-size: 30px;
+}
+td{ 
+   width: 150px;
+}
+
+table{
+  /*margin:auto; */
+ text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+/*  margin-left: 20px;*/
+ /*  display: block;*/
+ /*  float: left;*/
+}
+input[type=submit] {
+    margin-left: 50px;
+   background-color: #09f;
+   color: white;
+  
+   width: 140px;
+   float:right;
+ 
+}
+input[type=submit]:hover {
+   background-color: #07d;
+}
+
+
