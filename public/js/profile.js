@@ -217,7 +217,6 @@ function mode(array)
 }
 /************************************************************************/
 
-
 /***********Device replace***********************************************/
 
 $("#Change").click(function(){
@@ -252,7 +251,8 @@ function DeviceChangeRespon(){
 }
 
 /********************************************************************/
-/* single view */
+/* single view ***********************************************************/
+
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
@@ -271,6 +271,8 @@ function onCellClick() {
    window.open("singleview?id="+date+"&deviceid=agagag", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
    
 }
+
+/**********************************************************************/
 
 /*   This API Just for test      */
 $("#storeData").click(function(){
@@ -294,12 +296,15 @@ function sendReqStore()
 
 /* -----------------------------------------*/
 
-/* register a device */
+
+/* register a device *****************************************************************/
+
 $("#submit").click(function(){
    
        sendReqRegister();
 
 });
+
 
 function sendReqRegister() {
     var email = document.getElementById("email").value;
@@ -347,7 +352,9 @@ function RegisterRespon(){
 
 }
 /*------------------------------------------------------*/
-/*list view all the activities   */
+
+/*list view all the activities   **************************************************************/
+
 $("#listview").click(function(){
     $("#summary").css('display',"block");
    $("#summary").html("Following is the list view all the activities");
@@ -399,6 +406,8 @@ function ViewDataRespon(){
 /*****************************************************/
 
 /*summary view  */
+
+/*summary view  *******************************************************/
 
 $("#summaryview").click(function(){
    $("#summary").css('display',"block");
@@ -454,6 +463,10 @@ function ViewSummaryDataRespon(){
      $("tr").css("text-decoration","none");
 }
 
+/**************************************************************************************************/
+
+
+/*all user view ***************************************************************************************/
 
 /*all user view */
 $("#allUserView").click(function(){
@@ -461,7 +474,7 @@ $("#allUserView").click(function(){
     $("#summary").html("In the last 7 day, All user avg activities view blow:");
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
-
+      $("table").html("This would be very slow, please wait...............")
 
      sendReqAllUserView();
 });
@@ -487,6 +500,8 @@ function ViewAllUserDataRespon(){
          // var data=this.response;
        for(var  data of this.response.user)
        {
+           if(data.userName)
+           {
            responseHTML+="<tr> ";
        //   responseHTML+="<td>"+data.date+"</td>";
           responseHTML+="<td>  "+data.userName+" </td>";
@@ -496,7 +511,8 @@ function ViewAllUserDataRespon(){
           responseHTML+="<td>  "+data.avgduration+" </td>";
           responseHTML+="<td>"+data.avgcalories+"</td>";
           responseHTML+="<td>"+data.avguv+"</td>";
-           responseHTML+="</tr>"
+           responseHTML+="</tr>";
+         }
        }
      
       $("table").html(responseHTML)
@@ -514,6 +530,100 @@ function ViewAllUserDataRespon(){
 
 /*------------------------------------------------------------*/
 
+
+/****************************Local user view ****************************************/
+$("#localUserView").click(function(){
+    $("#summary").css('display',"block");
+    $("#summary").html("In the last 7 day,  geographically local  user avg activities view blow (Notice Group number means, they are local user on specific area:");
+    $(".rightbar > div").css('display', "none");
+    $(".view").css('display',"block");
+       $("table").html("This would be very slow, please wait...............")
+      sendReqLocalUserView();
+});
+function sendReqLocalUserView(){
+
+  var xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", ViewLocalUserDataRespon);
+  xhr.responseType = "json";
+  xhr.open("GET", '/activities/local');
+  xhr.setRequestHeader("Content-type", "application/json");
+  console.log("send all user view"+email);
+  xhr.send();
+     
+};
+function ViewLocalUserDataRespon(){
+
+    if(this.status === 200||this.status==201)
+    {
+  
+      var responseHTML=" <tr>  <td> Group </td> <td> UserName </td> <td> DeviceId </td>  <td> Total Activities</td>  <td>Avg distancee</td> <td> Avg  Duration:  </td>  <td>  Avg Calories Burned:  </td>  <td>  Avg  UV exposure:  </td>  </tr>";
+       //   responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+         // var data=this.response;
+         // this.response.user.sort(customfunction);
+         var test=this.response.user;
+         // test.sort(sort_by('group', true, parseInt));
+         sort(test);
+       for(var  i =0;i<test.length;i++)
+       {
+           data=test[i];  
+          if(data.userName){
+             responseHTML+="<tr> ";
+         //   responseHTML+="<td>"+data.date+"</td>";
+           responseHTML+="<td>  "+data.group+" </td>";
+            responseHTML+="<td>  "+data.userName+" </td>";
+             responseHTML+="<td>  "+data.deviceId+" </td>";
+            responseHTML+="<td>  "+data.totalactivities+" </td>";
+             responseHTML+="<td>  "+data.avgdistance+" </td>";
+            responseHTML+="<td>  "+data.avgduration+" </td>";
+            responseHTML+="<td>"+data.avgcalories+"</td>";
+            responseHTML+="<td>"+data.avguv+"</td>";
+             responseHTML+="</tr>";
+         }
+       }
+       console.log(test);
+     
+      $("table").html(responseHTML)
+      console.log(this.response.user);
+ 
+    }
+    else
+    {
+      console.log("Error: view data "+this.status);
+    }
+
+    $("tr").css("color","black");
+     $("tr").css("text-decoration","none");
+}
+var sort_by = function(field, reverse, primer){
+
+   var key = primer ? 
+       function(x) {return primer(x[field])} : 
+       function(x) {return x[field]};
+
+   reverse = !reverse ? 1 : -1;
+   return function (a, b) {
+       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+     } 
+}
+function sort( user) {
+
+     for(var i=0;i<user.length;i++){
+          var  temp=user[i];
+          var j=i-1;
+          while(j>=0&&parseInt(user[j].group)>parseInt(temp.group)) {
+            // console.log(parseInt(user[j].group)+".  "+parseInt(temp.group));
+               user[j+1]=user[j];
+               j--;
+          }
+          // console.log("i ="+i+"  j="+j);
+          user[j+1]=temp;
+     }
+   
+}
+
+/*------------------------------------------------------------*/
+
+/***********************************************************************************/
 
 // Update Account
 var checksumbit=document.getElementById("submitUpdate");
