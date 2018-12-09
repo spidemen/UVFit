@@ -389,8 +389,8 @@ function ViewDataRespon(){
              responseHTML+="<tr> ";
             responseHTML+="<td>"+data.date+"</td>";
             responseHTML+="<td>  "+data.duration+" </td>";
-            responseHTML+="<td>"+data.uvExposure+"</td>";
             responseHTML+="<td>"+data.calories+"</td>";
+             responseHTML+="<td>"+data.uvExposure+"</td>";
              responseHTML+="</tr>"
         }
        
