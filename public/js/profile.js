@@ -90,15 +90,14 @@ $("#getForecast").click(function(){
                 currDate = new Date();
                 var daysInfo = [];
                 for (weatherInfo of data.weather.list) {
-                    console.log(weatherInfo);
                     var date = new Date(weatherInfo.dt*1000);
-                    dd = date.getDate();
-                    mm = date.getMonth()+1;
-                    yyyy = date.getFullYear();
-                    minTemp = weatherInfo.main.temp_min;
-                    maxTemp = weatherInfo.main.temp_max;
-                    rain = parseFloat(weatherInfo.hasOwnProperty("rain") ? (weatherInfo.rain.hasOwnProperty("3h") ? weatherInfo.rain["3h"] : 0) : 0);
-                    snow = parseFloat(weatherInfo.hasOwnProperty("snow") ? (weatherInfo.snow.hasOwnProperty("3h") ? weatherInfo.snow["3h"] : 0) : 0);
+                    var dd = date.getDate();
+                    var mm = date.getMonth()+1;
+                    var yyyy = date.getFullYear();
+                    var minTemp = weatherInfo.main.temp_min;
+                    var maxTemp = weatherInfo.main.temp_max;
+                    var rain = parseFloat(weatherInfo.hasOwnProperty("rain") ? (weatherInfo.rain.hasOwnProperty("3h") ? weatherInfo.rain["3h"] : 0) : 0);
+                    var snow = parseFloat(weatherInfo.hasOwnProperty("snow") ? (weatherInfo.snow.hasOwnProperty("3h") ? weatherInfo.snow["3h"] : 0) : 0);
                     if(daysInfo.length == 0){
                         daysInfo.push({
                             "dd":dd, 
@@ -109,10 +108,11 @@ $("#getForecast").click(function(){
                             "descriptions":[],
                             "windSpeeds":[],
                             "rainVolume":0,
-                            "snowVolume":0
+                            "snowVolume":0,
+                            "uvIndex":0
                         });
                     }
-                    daysInfoBack = daysInfo[daysInfo.length-1];
+                    var daysInfoBack = daysInfo[daysInfo.length-1];
                     if (daysInfoBack.dd == dd) {
                         if(daysInfoBack.minTemp > minTemp) {
                             daysInfoBack.minTemp = minTemp;
@@ -135,8 +135,19 @@ $("#getForecast").click(function(){
                             "descriptions": [ weatherInfo.weather[0].description ],
                             "windSpeeds": [ weatherInfo.wind.speed ],
                             "rainVolume": rain,
-                            "snowVolume": snow
+                            "snowVolume": snow,
+                            "uvIndex":0
                         });
+                    }
+                }
+                for (uvInfo of data.uv) {
+                    console.log(uvInfo);
+                    var date = new Date(uvInfo.date*1000);
+                    var dd = date.getDate();
+                    for (day of daysInfo) {
+                        if (day.dd == dd) {
+                            day.uvIndex = uvInfo.value;
+                        }
                     }
                 }
                 for (day of daysInfo) {
@@ -151,13 +162,14 @@ $("#getForecast").click(function(){
                     daySel = "#day"+day;
                     $(daySel+"Date").html(daysInfo[day].mm + "/" + daysInfo[day].dd + "/" + daysInfo[day].yyyy);
                     $(daySel+"Description").html(daysInfo[day].description);
-                    $(daySel+"Temp").html(daysInfo[day].minTemp + " " + daysInfo[day].maxTemp);
+                    $(daySel+"Temp").html("Temp: " + daysInfo[day].minTemp + " - " + daysInfo[day].maxTemp);
                     if(daysInfo[day].rainVolume > 0) {
                         $(daySel+"Rain").html("Volume of Rain: " + daysInfo[day].rainVolume);
                     }
                     if(daysInfo[day].snowVolume > 0) {
                         $(daySel+"Snow").html("Volume of Snow: " + daysInfo[day].snowVolume);
                     }
+                    $(daySel+"UvIndex").html("UV Index: " + daysInfo[day].uvIndex);
                 }
                 
                 $("#forecastFormMessage").hide();
