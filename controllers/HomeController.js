@@ -556,7 +556,7 @@ router.post("/activities/single", (req, res,next)=> {
                       "lons":  activities.lons,
                        "speeds":activities.speeds,
                        "uvs": activities.uvIndices,
-                        "times":timestamps
+                        "times":activities.timestamps
                     };
                     console.log(activities.speeds+" this is bug single view");
                     console.log(responseJson)
