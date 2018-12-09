@@ -91,7 +91,10 @@ $("#getForecast").click(function(){
         responseType: 'json',
         success: function(data, textStatus, jqXHR){
             if(jqXHR.status == 200) {
+                console.log(data);
                 $("#forecastLatLon").html(data.lat + ", " + data.lon);
+                $("#forecastCityName").html(data.weather.city.name);
+                console.log(data.weather.city.name);
             }
             else {
                 $("#forecastFormMessage").html(jqXHR.responseJSON.message);

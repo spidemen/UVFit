@@ -58,11 +58,11 @@ router.post('/uvThreshold', function(req, res, next) {
 */
     
     request({
-       method: "POST",
-       uri: "https://api.particle.io/v1/devices/" + req.body.deviceId + "/updateThres",
-       form: {
-	       access_token : particleAccessToken,
-	       args: "" + req.body.uvThreshold
+        method: "POST",
+        uri: "https://api.particle.io/v1/devices/" + req.body.deviceId + "/updateThres",
+        form: {
+            access_token : particleAccessToken,
+            args: "" + req.body.uvThreshold
         }
     });
     

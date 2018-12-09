@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var jwt = require("jwt-simple");
+var request = require("request");
 var Activity = require("../models/UVFit").Activities;
 
 var secret = fs.readFileSync(__dirname + '/../jwtkey').toString();
@@ -14,7 +15,9 @@ router.get('/weather', function(req, res, next) {
        status : "",
        message : "",
        lat : "",
-       lon : ""
+       lon : "",
+       weather : "",
+       uv : ""
     };
     
     try {
@@ -42,15 +45,43 @@ router.get('/weather', function(req, res, next) {
                 }
             }
             lat = lastAct.lats[lastAct.lats.length-1];
-            lon = lastAct.lats[lastAct.lons.length-1];
+            lon = lastAct.lons[lastAct.lons.length-1];
             
             responseJson.lat = lat;
             responseJson.lon = lon;
-            return res.status(200).json(responseJson);
+
+            /* Get Weather for lat,lon */
+            request({
+                method: 'GET',
+                uri: "http://api.openweathermap.org/data/2.5/forecast",
+                qs: {
+                    appid: weatherApiKey,
+                    lat: lat,
+                    lon: lon
+                }
+            }, function(error, response, body) {
+                responseJson.weather = JSON.parse(body);
+
+                /* Get uv index for lat,lon */
+                request({
+                    method: 'GET',
+                    uri: "http://api.openweathermap.org/data/2.5/uvi/forecast",
+                    qs: {
+                        appid: weatherApiKey,
+                        lat: lat,
+                        lon: lon,
+                        cnt: 5
+                    }
+                }, function(error, response, body) {
+                    responseJson.uv = JSON.parse(body);
+                    
+                    return res.status(200).json(responseJson);
+                });
+            });
         }
         else {
             responseJson.message = "No location data for user"
-            return res.status(201).json(responseJson);
+            return res.status(204).json(responseJson);
         }
     });
 });
