@@ -477,7 +477,6 @@ router.post("/activities/single", (req, res,next)=> {
 
 });
 
-
 // register device
 router.post("/devices/change", (req, res,next)=> {
 
@@ -492,7 +491,7 @@ router.post("/devices/change", (req, res,next)=> {
               }
                   else
                   {
-                    console.log("success change deviceid "+olddeviceId+"-1");
+                    console.log("success change deviceid "+oldDeviceId+"-1");
                     // res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
                   }
         });
@@ -574,7 +573,6 @@ router.post("/activities/single", (req, res,next)=> {
       });
 
 });
-
 
 // view data
 router.post("/activities/list", (req, res,next)=> {

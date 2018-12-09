@@ -77,7 +77,6 @@ $("#submitThres").click(function(){
     });
 });
 /************************************************************************/
-
 /*************************** Weather Forecast ***************************/
 $("#getForecast").click(function(){
     $(".rightbar > div").css('display', "none");
