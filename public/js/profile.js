@@ -69,12 +69,10 @@ $("#submitThres").click(function(){
         data: {'deviceId':deviceId, 'uvThreshold':thresInput},
         responseType: 'json',
         success: function(data, textStatus, jqXHR){
-            var response = JSON.parse(jqXHR.responseText);
-            $("#thresholdFormMessage").html(response.message);
+            $("#thresholdFormMessage").html(jqXHR.responseJSON.message);
         },
         error: function(jqXHR, textStatus, errorThrown){
-            var response = JSON.parse(jqXHR.responseText);
-            $("#thresholdFormMessage").html("Error: " + response.message);
+            $("#thresholdFormMessage").html("Error: " + jqXHR.responseJSON.message);
         }
     });
 });
@@ -89,28 +87,23 @@ $("#getForecast").click(function(){
         url:'/weather',
         type:'GET',
         headers: { 'x-auth': window.localStorage.getItem("authToken") },
+        data: {'deviceId': deviceId},
         responseType: 'json',
         success: function(data, textStatus, jqXHR){
-            var response = JSON.parse(jqXHR.responseText);
-            $("#thresholdFormMessage").html(response.message);
+            if(jqXHR.status == 200) {
+                $("#forecastLatLon").html(data.lat + ", " + data.lon);
+            }
+            else {
+                $("#forecastFormMessage").html(jqXHR.responseJSON.message);
+            }
         },
         error: function(jqXHR, textStatus, errorThrown){
-            var response = JSON.parse(jqXHR.responseText);
-            $("#thresholdFormMessage").html("Error: " + response.message);
+            $("#forecastFormMessage").html("Error: " + jqXHR.responseJSON.message);
         }
     });
 
     $(".forecastForm").css('display',"block");
 });
-
-function userLatLonHandler(){
-    if (this.status === 201) {
-        var lat = this.response.activities.lat[this.response.activities.lat.length-1];
-        var lon = this.response.activities.lon[this.response.activities.lon.length-1];
-        
-        
-    }
-}
 /************************************************************************/
 
 $("table").on('click', 'tr', onCellClick);
