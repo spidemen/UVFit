@@ -1120,13 +1120,15 @@ router.post("/account/update", (req, res)=> {
 							// create new token
 							token = jwt.encode({email: req.body.email}, secret);
 						}
-						// hash new password
-						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
-							user.passwordHash = hash;
-							user.save(function (err, user) {
-									console.log("updated password");
-							});
-						});
+            if(req.body.newpassword!=null){ //not need to update password
+      						// hash new password
+      						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
+      							user.passwordHash = hash;
+      							user.save(function (err, user) {
+      									console.log("updated password");
+      							});
+      						});
+              }
 						// update token if new and old emails are different
 						if (req.body.newemail != user.email){
 							res.status(201).json({updated: true, message:"Account updated successfully.", token:token});

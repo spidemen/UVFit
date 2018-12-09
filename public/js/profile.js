@@ -268,7 +268,7 @@ function onCellClick() {
    console.log(date);
    $(".RowDate").html(date);
 
-   window.open("singleview?id="+date+"&deviceid=agagag", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+   window.open("singleview?id="+date+"&deviceid="+deviceId, 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
    
 }
 
@@ -723,9 +723,12 @@ function  CheckInput() {
 	else{
 		newpassword.classList.remove("error");
 	}
+
+
+
 		
     var confirm=document.getElementById("passwordConfirm").value;
-    if(confirm!=newpw){
+    if(confirm!=newpw&&oldpw!=null){
 		document.getElementById("passwordConfirm").classList.add("error");
 		savetable.style.display="block";
 		tableHTML+="<li>New password and confirmation password don't match.</li>";
@@ -734,7 +737,6 @@ function  CheckInput() {
         document.getElementById("passwordConfirm").classList.remove("error");
     }
 
-    savetable.innerHTML = tableHTML;
 	
 	if(!flag){
 		
