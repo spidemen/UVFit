@@ -256,6 +256,8 @@ router.post("/account/resend", (req, res)=> {
       });
 
 });
+
+
 router.post("/account/login", (req, res)=> {
     
   console.log(req.body.email+"   "+req.body.password);
@@ -415,6 +417,42 @@ router.post("/devices/register", (req, res,next)=> {
 
 
 });
+
+// register device
+router.post("/devices/change", (req, res,next)=> {
+
+        var newDeviceId=req.body.newdeviceId;
+        var email=req.body.email;
+        var oldDeviceId=req.body.olddeviceId;
+         console.log("success change deviceid "+oldDeviceId+"1-1");
+        User.update({email:email,userDevices:oldDeviceId},{$set:{"userDevices.$":newDeviceId}},function(err,user){
+              if(err){
+                    console.log(err);
+                    res.status(400).json( {registered: false, message: err+" db error "});
+              }
+                  else
+                  {
+                    console.log("success change deviceid "+olddeviceId+"-1");
+                    // res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
+                  }
+        });
+      Device.update({deviceId:oldDeviceId},{$set:{deviceId:newDeviceId}},function(err,user){
+              if(err){
+                    console.log(err);
+                    res.status(400).json( {registered: false, message: err+" db error "});
+              }
+                  else
+                  {
+                    console.log("success change deviceid "+olddeviceId+"-1");
+                    res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
+                  }
+      });
+
+
+});
+
+
+// change a deviceId
 router.post("/activities/change", (req, res,next)=> {
 
          var deviceId=req.body.deviceId;
@@ -422,8 +460,10 @@ router.post("/activities/change", (req, res,next)=> {
          var type=req.body.type;
 
           Activities.update({deviceId:deviceId,timePublished:date},{$set:{activityType:type}},function(err,activitiy){
-                if(err)
+                if(err){
                   console.log(err);
+                    res.status(400).json( {registered: false, message: err+" db error "});
+                }
                   else
                   {
                     console.log("success change activities ");

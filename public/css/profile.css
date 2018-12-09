@@ -47,6 +47,9 @@
  
 
 }
+.Replacedevice{
+	 display: none;
+}
 .viewData{
    display: inline-block;
    width: 150px;

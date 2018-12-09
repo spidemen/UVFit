@@ -39,6 +39,12 @@ $("#updateAccount").click(function(){
 	$(".updateAccountForm").css('display', "inline-block");
 });
 
+/*replace device*/
+$("#replaceDevice").click(function(){
+    $(".rightbar > div").css('display', "none");
+    $(".Replacedevice").css('display',"block");
+});
+
 /***************************** UV Threshold *****************************/
 $("#setUvThreshold").click(function(){
     $(".rightbar > div").css('display', "none");
@@ -99,6 +105,44 @@ $("#getForecast").click(function(){
     $(".forecastForm").css('display',"block");
 });
 /************************************************************************/
+
+/***********Device replace***********************************************/
+
+$("#Change").click(function(){
+
+    sendReqDeviceChange();
+});
+function sendReqDeviceChange(){
+ 
+  var olddeviceId=$("#oldDevice").val();
+  var newDeviceId=$("#newDevice").val();
+  var xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", DeviceChangeRespon);
+  xhr.responseType = "json";
+  xhr.open("POST", '/devices/change');
+  xhr.setRequestHeader("Content-type", "application/json");
+  console.log("send summary view"+olddeviceId+"  type= "+newDeviceId+"  email"+email);
+
+  xhr.send(JSON.stringify({email:email,newdeviceId:newDeviceId,olddeviceId:olddeviceId}));    
+}
+function DeviceChangeRespon(){
+
+     if(this.status === 200||this.status==201)
+    {
+      alert("Success Change type."+this.response.message);
+      
+    }
+    else
+    {
+         alert("Fail "+this.response.message);
+    }
+
+}
+
+/********************************************************************/
+
+
+
 
 /* single view */
 
@@ -260,6 +304,7 @@ $("#summaryview").click(function(){
     sendReqSummaryView();
 });
 
+
 function sendReqSummaryView(){
 
   var xhr = new XMLHttpRequest();
@@ -306,7 +351,7 @@ function ViewSummaryDataRespon(){
 /*all user view */
 $("#allUserView").click(function(){
     $("#summary").css('display',"block");
-   $("#summary").html("In the last 7 day, All user avg activities view blow:");
+    $("#summary").html("In the last 7 day, All user avg activities view blow:");
     $(".rightbar > div").css('display', "none");
     $(".view").css('display',"block");
 

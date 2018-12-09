@@ -4,7 +4,7 @@ var db = require("../db");
 var userSchema = new db.Schema({
   email:        { type: String, required: true, unique: true },
   fullName:     { type: String, required: true },
-  isVerified: { type: Boolean, default: false },
+   isVerified: { type: Boolean, default: false },
    passwordHash: String,
    lastAccess:   { type: Date, default: Date.now },
    userDevices:  [ String ],
