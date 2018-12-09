@@ -919,10 +919,10 @@ router.get("/activities/local", (req, res)=> {
 
     let responseJson = {
         success: true,
-        group:[],
-        activities:[ {
+        user:[ {
          userName:"",
-         deviceId:""
+         deviceId:"",
+         group: ""
          }
          ],
         message: ""
@@ -968,23 +968,79 @@ var promise = new Promise(function (resolve, reject) {
                         resolve(zipMap);
                     });
 
-              }
+              
              
           });
        });
   });
   promise.then(  function (zipMap) { 
-          return new  Promise( function (resolve, reject) {
+          return new  Promise( async function (resolve, reject) {
                await delay(zipMap);
-              zipMap.forEach((value,key) {
-                  responseJson.group.push(key);
+               zipMap.forEach(function (value,key) {
+                           
+                      User.find({email: value},function(err, user){
+                        if(err){
+                               responseJson.success = false;
+                               responseJson.message = "Error find user  on db.";
+                               console.log("Error: find all users on db");
+                             //  return res.status(400).send(JSON.stringify(responseJson));
+                         }
+                        console.log("user "+user.fullName+"  deviceId"+user.userDevices);
+                        if(user!=null){
+                              user.userDevices.forEach(function(deviceId){
+                                          var userName=user.fullName;
+                                         var deviceId=deviceId; 
+                                       console.log("for each  debug"+user.fullName+"  device ="+deviceId);
+                                             var summaryActivities =  Activities.find({
+                                                    "deviceId":deviceId,
+                                                     "timePublished": 
+                                                  {
+                                                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                                                  }
+                                                }).sort({ "date": -1 });
+
+                                              summaryActivities.exec({}, function(err, activities) {
+                                                        if (err) {
+                                                          responseJson.success = false;
+                                                          responseJson.message = "Error accessing db.";
+                                                          console.log("cannot find any data  avg view");
+                                                          res.status(400).send(JSON.stringify(responseJson));
+                                                         }
+                                                       else{
+                                                          var totalduration=0;
+                                                          var totalcalories=0;
+                                                          var totaluv=0;
+                                                          var  count=0;
+                                                          var totaldistance=0;
+                                                          for( var oneActivity of activities){
+                                                              totalduration+=oneActivity.duration;
+                                                              totalcalories+=oneActivity.calories;
+                                                              totaluv+=oneActivity.uvExposure;
+                                                              count++;
+                                                          }
+                                                          responseJson.user.push({ 
+                                                                  "userName": userName,
+                                                                  "deviceId": deviceId,
+                                                                  "avgduration": totalduration/count,
+                                                                  "avgcalories":  totalcalories/count, 
+                                                                  "avguv":  totaluv/count,
+                                                                  "avgdistance": activities.avgSpeed*totalduration,
+                                                                  "totalactivities": count
+                                                              });
+                                              
+                                                         resolve(responseJson);
+
+                                                      }
+                                                });
+
+                                             });
+                           
+                             }         
+                          // resolve(responseJson);
+                   });
                   
-
-
-              }
             });
-           });
-
+      });
     }).catch(() => { assert.isNotOk(error,'Promise error'); });
 
 
