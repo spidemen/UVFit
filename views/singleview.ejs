@@ -3,7 +3,41 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="/js/singleview.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <div class="form"> 
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   
+   
+    <div class="view"> 
+      <div id="basic">
+        <table>
+           <tr>
+            <td> Activity type: </td>
+             <td> Date: </td>
+             <td> Activity Duration:  </td>
+             <td>  Calories Burned:  </td>
+             <td>   UV exposure:   </td>
+           </tr>
+         </table>
+      </div>
+      <div  class="type"> 
+         <label for="typeChange"  >Want to change a type??</label>
+          <select id="typeSelect">
+             <option value="walk" selected> Walk </option>
+              <option value="running" selected> Running </option>
+              <option value="biking" selected> Biking </option>
+          </select>
+         <input type="submit" name="submit" id="submit" value="submit change"> 
+      </div>
+      <br>
+      <div  class="graph">
+          <div id="speeds">
+          </div>
+          <div id="uvs">
+          </div>
+      <script 
+     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEUrMudBp6oaC0ZbJgeXmNrKayVwr9WIM&callback=initMap">
+     </script>
+    <p> Find us</p>
+      <div id="map">our location:  </div>
 
     <div id="formErrors">
      test
