@@ -73,7 +73,6 @@ input[type=text].error {
   	display: none; 
   	color:red;
 }
-
 .view{
 
   margin-top: 100px;
@@ -148,7 +147,6 @@ input[type=submit]:hover {
    background-color: #07d;
 }
 
-
 .form #login, #submit{
 	display: block;
 	width: 600px;
@@ -159,4 +157,5 @@ input[type=submit]:hover {
 label.email{
 	display: block;
 }
+
 

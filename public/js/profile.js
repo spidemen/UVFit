@@ -217,7 +217,6 @@ function mode(array)
 }
 /************************************************************************/
 
-
 /***********Device replace***********************************************/
 
 $("#Change").click(function(){
@@ -272,11 +271,14 @@ function onCellClick() {
    window.open("singleview?id="+date+"&deviceid=agagag", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
    
 }
+
 /**********************************************************************/
+
 /*   This API Just for test      */
 $("#storeData").click(function(){
    
        sendReqStore();
+
 });
 
 function sendReqStore()
@@ -294,6 +296,7 @@ function sendReqStore()
 
 /* -----------------------------------------*/
 
+
 /* register a device *****************************************************************/
 
 $("#submit").click(function(){
@@ -301,6 +304,7 @@ $("#submit").click(function(){
        sendReqRegister();
 
 });
+
 
 function sendReqRegister() {
     var email = document.getElementById("email").value;
@@ -350,6 +354,7 @@ function RegisterRespon(){
 /*------------------------------------------------------*/
 
 /*list view all the activities   **************************************************************/
+
 $("#listview").click(function(){
     $("#summary").css('display',"block");
    $("#summary").html("Following is the list view all the activities");
@@ -400,9 +405,9 @@ function ViewDataRespon(){
 }
 /*****************************************************/
 
+/*summary view  */
 
 /*summary view  *******************************************************/
-
 
 $("#summaryview").click(function(){
    $("#summary").css('display',"block");
@@ -460,7 +465,10 @@ function ViewSummaryDataRespon(){
 
 /**************************************************************************************************/
 
+
 /*all user view ***************************************************************************************/
+
+/*all user view */
 $("#allUserView").click(function(){
     $("#summary").css('display',"block");
     $("#summary").html("In the last 7 day, All user avg activities view blow:");
@@ -521,6 +529,7 @@ function ViewAllUserDataRespon(){
 }
 
 /*------------------------------------------------------------*/
+
 
 /****************************Local user view ****************************************/
 $("#localUserView").click(function(){
@@ -592,7 +601,6 @@ var sort_by = function(field, reverse, primer){
        function(x) {return x[field]};
 
    reverse = !reverse ? 1 : -1;
-
    return function (a, b) {
        return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
      } 

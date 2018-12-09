@@ -454,7 +454,6 @@ router.get("/test", (req, res,next)=> {
 });
 
 
-
 // register device
 router.post("/devices/register", (req, res,next)=> {
 
@@ -571,7 +570,6 @@ router.post("/activities/single", (req, res,next)=> {
       });
 
 });
-
 
 // register device
 router.post("/devices/change", (req, res,next)=> {
