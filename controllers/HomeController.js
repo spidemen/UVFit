@@ -59,6 +59,7 @@ router.get("/account/user", (req, res)=> {
       var decodedToken = jwt.decode(authToken, secret);
       var userStatus = {};
        User.findOne({email: decodedToken.email}, function(err, user) {
+		   
          if(err) {
             return res.status(200).json({success: false, message: "User does not exist."});
          }
@@ -266,7 +267,7 @@ router.post("/account/login", (req, res)=> {
                     }
                   }
                   else {
-                    console.log(req.body.password+" hash "+user.passwordHash);
+                    console.log(req.body.password+" hash "+user.passwordHash+" valid password "+ valid);
                     res.status(400).json({create:false,message:"The email or password provided was invalid."});
                   }
                }
@@ -462,47 +463,65 @@ router.post("/activities/user", (req, res,next)=> {
 
 // Update Account
 router.post("/account/update", (req, res)=> {
-	console.log("update account server side");
-	res.send("update account reached");
-	
-    //console.log(req.body.email+"   "+req.body.name+"  "+req.body.passwordHash);
-    //res.status(201).json({message:"reached update account"});
- /*    User.findOne({email:req.body.email},function(err,user) {
-		if (!req.headers["x-auth"]) {
-			return res.status(401).json({success: false, message: "No authentication token"});
+	console.log("inside account update server side");
+	if (!req.headers["x-auth"]) {
+      res.status(400).json({success: false, message: "No authentication token"});
+	}
+	var token;
+	var authToken = req.headers["x-auth"];
+	var decodedToken = jwt.decode(authToken, secret);
+	// query by email
+	User.findOne({email: decodedToken.email}, function(err, user) {
+		console.log("found user email "+user.email);
+		if(err) {
+			res.status(400).json({success: false, message: "User does not exist."});
 		}
-        else if(err) {
-            res.status(400).json({updated:false,message:err+" Invalid User Credentials. Account could not be updated."});
-        }
-        else { */
-			/* user.email: req.body.email;
-			user.name: req.body.name;
-			user.passwordHash: req.body.oldPasswordHash
-			newPasswordHash: req.body.newPasswordHash */
-		//	res.status(201).json({updated:true, message:"Account successfully updated."});
-           /* if(user==null) {
-                var newuser=new User({
-                    email: req.body.email,
-                    fullName:  req.body.fullname,
-                    passwordHash: req.body.password
-                });
-                newuser.save( function(err, user) {
-                    if (err) {
-                        console.error(err);
-                        console.log("Fail store create user  db error");   
-                        res.status(400).json({create:false,message:err+" db error"});  
-                    }
-                    else {
-                        console.log("success create a user");
-                        res.status(201).json({create:true,message:"Success create a user"});   
-                    }
-                }); 
-            }
-            else{
-                res.status(400).json({create:false,message:"User  already exit, please choose another email"});
-            } */
-       // }
-    //});
+		else {
+			// verify password
+			bcrypt.compare(req.body.password, user.passwordHash, function(err, valid) {
+				console.log("valid password? "+ valid);				
+				console.log("new name "+req.body.name);
+                if(err){					 
+                    res.status(400).json({create:false,message:"Error authenticating. Please contact support."}); 
+                }
+				// update email, name, and password
+				else {
+					if(valid){	
+						user.fullName = req.body.name;
+						user.save(function (err, user) {
+							console.log("updated name");
+						});
+						// use same email if it does not change
+						console.log("new email "+req.body.newemail+" server email "+user.email);
+						if (req.body.newemail != user.email){
+							user.email = req.body.newemail;
+							user.save(function (err, user) {
+								console.log("updated email");
+							});
+							// create new token
+							token = jwt.encode({email: req.body.email}, secret);
+						}
+						// hash new password
+						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
+							user.passwordHash = hash;
+							user.save(function (err, user) {
+									console.log("updated password");
+							});
+						});
+						// update token if new and old emails are different
+						if (req.body.newemail != user.email){
+							res.status(201).json({updated: true, message:"Account updated successfully.", token:token});
+						}
+						else {
+							res.status(201).json({updated: true, message:"Account updated successfully."});
+						}
+					}
+				}
+			});
+		}
+
+	});
 });
+
 
 module.exports = router;

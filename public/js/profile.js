@@ -11,7 +11,7 @@ $(window).on("load", function () {
    success: function(data){
           username=data.fullName;
           email=data.email;
-		$("div.form #email2").attr("value",email); //to auto-fill update account form
+		$("div.form #oldemail").attr("value",email); //to auto-fill update account form
 		$("div.form #fullName").attr("value",username); //to auto-fill update account form
           deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
           apikey=data.devices[0].apikey;
@@ -291,7 +291,8 @@ var savetable=document.getElementById("formErrors");
 function  CheckInput() {
 
     var fullname=document.getElementById("fullName");
-    var email=document.getElementById("email2");
+    var oldemail=document.getElementById("oldemail");
+	var newemail=document.getElementById("newemail");
     var oldpassword=document.getElementById("oldpassword"); 
 	var newpassword=document.getElementById("newpassword");
    
@@ -310,14 +311,14 @@ function  CheckInput() {
     }
 	
     var re=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,5}$/;
-    if(!re.test(email.value)){ 
+    if(!re.test(newemail.value)){ 
        flag=1;
-       email.classList.add("error");
+       newemail.classList.add("error");
        savetable.style.display="block";
        tableHTML+="<li>Invalid or missing email address.</li>";
 	}
 	else{
-		email.classList.remove("error");
+		newemail.classList.remove("error");
 	}
 
 	var oldpw=oldpassword.value;
@@ -395,45 +396,41 @@ function  CheckInput() {
     savetable.innerHTML = tableHTML;
 	
 	if(!flag){
-
-		//var email = document.getElementById("email").value;
-		//var fullname = document.getElementById("fullName").value;
-		//var newpassword = document.getElementById("newpassword").value;
+		
 		var xhr = new XMLHttpRequest();
 		var token=window.localStorage.getItem("authToken");
 		xhr.addEventListener("load", UpdateAccountResponse);
 		xhr.responseType = "json";
 		xhr.open("POST", '/account/update');
 		xhr.setRequestHeader("Content-type", "application/json");
-		console.log(JSON.stringify({email:email.value, name:fullname.value, newPasswordHash:newpassword.value, passwordHash:oldpassword.value, token:token}));
-		xhr.send(JSON.stringify({email:email.value, name:fullname.value, newPasswordHash:newpassword.value, passwordHash:oldpassword.value, token:token}));
+		xhr.setRequestHeader('x-auth', token);
+		xhr.send(JSON.stringify({email:oldemail.value, newemail:newemail.value, name:fullname.value, newpassword:newpassword.value, password:oldpassword.value, token:token}));
 	}
-}
 
-function UpdateAccountResponse(){
-	console.log("update account response complete");
-	//console.log("status="+this.status);
-	// Decode a JWT
-	/* var decoded = jwt.decode(token, secret);, 
-	console.log("Decoded payload: " + decoded.username); */
+	function UpdateAccountResponse(){
+		//console.log("status="+this.status+" response " + this.res.message);
+		// Decode a JWT
+		/* var decoded = jwt.decode(token, secret);, 
+		console.log("Decoded payload: " + decoded.username); */
 
-/* 	if (this.status === 201){
-		alert("Success account updated");
-		window.location = "profile";
+		if (this.status === 201){
+			$("#formErrors").css('display',"block");
+			$("#formErrors").html(this.response.message);
+			$("div.form #oldemail").attr("value",oldemail.value); //to auto-fill update account form
+			$("div.form #newemail").attr("value",newemail.value); //to auto-fill update account form
+			$("div.form #fullName").attr("value",fullname.value); //to auto-fill update account form
+			$("div.form #oldpassword").attr("value"," ");
+			$("div.form #newpassword").attr("value"," ");
+			$("div.form #passwordConfirm").attr("value"," ");
+			if (newemail.value != email.value){
+				window.localStorage.setItem("authToken", this.response.token);
+			}
+		}
+		else if (this.status === 400){
+			$("#formErrors").css('display',"block");
+			$("#formErrors").html(this.response.message);
+		}
 	}
-	else{
-        //  savetable.style.display="block";
-        $("#formErrors").css('display',"block");
-        var tableHTML = "<p>"+this.response.message+"</p>";
-        savetable.innerHTML = tableHTML;
-        //$("#formErrors").html(tableHTML);
-        console.log(this.response.message); */
-        
-   // }  
 }
 
 checksumbit.addEventListener("click", CheckInput);
-
-
-
-
