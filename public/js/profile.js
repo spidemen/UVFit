@@ -132,7 +132,7 @@ function DeviceChangeRespon(){
 
      if(this.status === 200||this.status==201)
     {
-      alert("Success Change type."+this.response.message);
+           alert("Success Change type."+this.response.message);
       
     }
     else

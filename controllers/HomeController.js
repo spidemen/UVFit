@@ -491,21 +491,22 @@ router.post("/devices/change", (req, res,next)=> {
               }
                   else
                   {
-                    console.log("success change deviceid "+oldDeviceId+"-1");
+                    console.log("success change user deviceid "+oldDeviceId+"-1");
+                                  Device.update({deviceId:oldDeviceId},{$set:{deviceId:newDeviceId}},function(err,user){
+                                        if(err){
+                                              console.log(err);
+                                              res.status(400).json( {registered: false, message: err+" db error "});
+                                        }
+                                            else
+                                            {
+                                              console.log("success change device  deviceid "+oldDeviceId+"-1");
+                                              res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
+                                            }
+                             });
                     // res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
                   }
         });
-      Device.update({deviceId:oldDeviceId},{$set:{deviceId:newDeviceId}},function(err,user){
-              if(err){
-                    console.log(err);
-                    res.status(400).json( {registered: false, message: err+" db error "});
-              }
-                  else
-                  {
-                    console.log("success change deviceid "+olddeviceId+"-1");
-                    res.status(201).json( {registered: true, message: "Activities type change   to "+newDeviceId}); 
-                  }
-      });
+    
 
 
 });
