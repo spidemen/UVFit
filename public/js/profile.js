@@ -85,13 +85,85 @@ $("#getForecast").click(function(){
         responseType: 'json',
         success: function(data, textStatus, jqXHR){
             if(jqXHR.status == 200) {
-                console.log(data);
-                $("#forecastLatLon").html(data.lat + ", " + data.lon);
+                //console.log(data);
+                /*Parse returned data for different days' info*/
+                currDate = new Date();
+                var daysInfo = [];
+                for (weatherInfo of data.weather.list) {
+                    console.log(weatherInfo);
+                    var date = new Date(weatherInfo.dt*1000);
+                    dd = date.getDate();
+                    mm = date.getMonth()+1;
+                    yyyy = date.getFullYear();
+                    minTemp = weatherInfo.main.temp_min;
+                    maxTemp = weatherInfo.main.temp_max;
+                    rain = parseFloat(weatherInfo.hasOwnProperty("rain") ? (weatherInfo.rain.hasOwnProperty("3h") ? weatherInfo.rain["3h"] : 0) : 0);
+                    snow = parseFloat(weatherInfo.hasOwnProperty("snow") ? (weatherInfo.snow.hasOwnProperty("3h") ? weatherInfo.snow["3h"] : 0) : 0);
+                    if(daysInfo.length == 0){
+                        daysInfo.push({
+                            "dd":dd, 
+                            "mm":mm, 
+                            "yyyy":yyyy,
+                            "minTemp":minTemp,
+                            "maxTemp":maxTemp,
+                            "descriptions":[],
+                            "windSpeeds":[],
+                            "rainVolume":0,
+                            "snowVolume":0
+                        });
+                    }
+                    daysInfoBack = daysInfo[daysInfo.length-1];
+                    if (daysInfoBack.dd == dd) {
+                        if(daysInfoBack.minTemp > minTemp) {
+                            daysInfoBack.minTemp = minTemp;
+                        }
+                        if(daysInfoBack.maxTemp < maxTemp) {
+                            daysInfoBack.maxTemp = maxTemp;
+                        }
+                        daysInfoBack.descriptions.push(weatherInfo.weather[0].description);
+                        daysInfoBack.windSpeeds.push(weatherInfo.wind.speed);
+                        daysInfoBack.rainVolume += rain;
+                        daysInfoBack.snowVolume += snow;
+                    }
+                    else {
+                        daysInfo.push({
+                            "dd":dd, 
+                            "mm":mm, 
+                            "yyyy":yyyy,
+                            "minTemp":minTemp,
+                            "maxTemp":maxTemp,
+                            "descriptions": [ weatherInfo.weather[0].description ],
+                            "windSpeeds": [ weatherInfo.wind.speed ],
+                            "rainVolume": rain,
+                            "snowVolume": snow
+                        });
+                    }
+                }
+                for (day of daysInfo) {
+                    day.description = mode(day.descriptions);
+                }
+                console.log(daysInfo);
+                
+                /*Update HTML*/
                 $("#forecastCityName").html(data.weather.city.name);
-                console.log(data.weather.city.name);
+                $("#forecastLatLon").html(data.lat + ", " + data.lon);
+                for (day=0; day < 5; day++) {
+                    daySel = "#day"+day;
+                    $(daySel+"Date").html(daysInfo[day].mm + "/" + daysInfo[day].dd + "/" + daysInfo[day].yyyy);
+                    $(daySel+"Description").html(daysInfo[day].description);
+                    $(daySel+"Temp").html(daysInfo[day].minTemp + " " + daysInfo[day].maxTemp);
+                    if(daysInfo[day].rainVolume > 0) {
+                        $(daySel+"Rain").html("Volume of Rain: " + daysInfo[day].rainVolume);
+                    }
+                    if(daysInfo[day].snowVolume > 0) {
+                        $(daySel+"Snow").html("Volume of Snow: " + daysInfo[day].snowVolume);
+                    }
+                }
+                
+                $("#forecastFormMessage").hide();
             }
             else {
-                $("#forecastFormMessage").html(jqXHR.responseJSON.message);
+                $("#forecastFormMessage").html(jqXHR.responseJSON.message).show();
             }
         },
         error: function(jqXHR, textStatus, errorThrown){
@@ -101,6 +173,28 @@ $("#getForecast").click(function(){
 
     $(".forecastForm").css('display',"block");
 });
+
+function mode(array)
+{
+    if(array.length == 0)
+        return null;
+    var modeMap = {};
+    var maxEl = array[0], maxCount = 1;
+    for(var i = 0; i < array.length; i++)
+    {
+        var el = array[i];
+        if(modeMap[el] == null)
+            modeMap[el] = 1;
+        else
+            modeMap[el]++;  
+        if(modeMap[el] > maxCount)
+        {
+            maxEl = el;
+            maxCount = modeMap[el];
+        }
+    }
+    return maxEl;
+}
 /************************************************************************/
 
 /* single view */

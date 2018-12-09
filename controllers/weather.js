@@ -81,7 +81,7 @@ router.get('/weather', function(req, res, next) {
         }
         else {
             responseJson.message = "No location data for user"
-            return res.status(204).json(responseJson);
+            return res.status(201).json(responseJson);
         }
     });
 });
