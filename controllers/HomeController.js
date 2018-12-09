@@ -417,6 +417,66 @@ router.post("/devices/register", (req, res,next)=> {
 
 
 });
+router.post("/activities/change", (req, res,next)=> {
+
+         var deviceId=req.body.deviceId;
+         var date=req.body.date;
+         var type=req.body.type;
+
+          Activities.update({deviceId:deviceId,timePublished:date},{$set:{activityType:type}},function(err,activitiy){
+                if(err)
+                  console.log(err);
+                  else
+                  {
+                    console.log("success change activities ");
+                    res.status(201).json( {registered: true, message: "Activities type change   to "+type}); 
+                  }
+          });
+
+});
+
+/*single activitiy view*/
+router.post("/activities/single", (req, res,next)=> {
+
+    var responseJson = { found:false,
+                        activities:{},
+                        message:""};
+    var deviceId=req.body.deviceId;
+    var date=req.body.date;
+    Activities.findOne({deviceId:deviceId,timePublished:date},function(err,activities){
+         if(err)
+            {
+                 res.status(400).json( {found: false, message: err+" db err"});
+            }
+            else{
+                    if(activities!=null){
+                     responseJson.message="Activities found.";
+                
+                    responseJson.activities={ 
+                      "type": activities.activityType,
+                      "date":activities.timePublished,
+                      "duration": activities.duration,
+                      "calories": activities.calories, 
+                      "uvExposure":  activities.uvExposure,
+                      "lats": activities.lats,
+                      "lons":  activities.lons,
+                       "speeds":activities.speeds,
+                       "uvs": activities.uvIndices,
+                        "times":timestamps
+                    };
+                    console.log(activities.speeds+" this is bug single view");
+                    console.log(responseJson)
+                    res.status(201).json(responseJson);
+                  }
+                  else{
+                      res.status(400).json( {found: false, message: err+" cannot find any record "});
+                  }
+            }
+
+      });
+
+});
+
 
 // register device
 router.post("/devices/change", (req, res,next)=> {

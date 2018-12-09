@@ -109,6 +109,7 @@ $("#getForecast").click(function(){
 });
 /************************************************************************/
 
+
 /***********Device replace***********************************************/
 
 $("#Change").click(function(){
@@ -143,12 +144,7 @@ function DeviceChangeRespon(){
 }
 
 /********************************************************************/
-
-
-
-
 /* single view */
-
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
