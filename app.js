@@ -8,6 +8,14 @@ const photonRouter = require('./controllers/photon.js');
 const uvRouter = require('./controllers/uvThreshold.js');
 const weatherRouter = require('./controllers/weather.js');
 
+/* For HTTPS */
+const fs = require('fs');
+const https = require('https');
+const cred = {
+    cert: fs.readFileSync('fullchain.pem'),
+    key: fs.readFileSync('privkey.pem')
+};
+
 //DB
 //mongoose.connect("mongodb://localhost/UVFit");
 mongoose.connect("mongodb://localhost/UVFit");
@@ -50,3 +58,7 @@ app.use(weatherRouter);
 app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")
 })
+
+https.createServer(cred, app).listen(443, function() {
+    console.log("Setup for Https");
+});
