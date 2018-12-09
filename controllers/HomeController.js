@@ -778,8 +778,11 @@ router.post("/activities/summary", (req, res)=> {
             var totalcalories=0;
             var totaluv=0;
             for( var oneActivity of activities){
+                if(oneActivity.duration)
                 totalduration+=oneActivity.duration;
+               if(oneActivity.calories)
                 totalcalories+=oneActivity.calories;
+                if(oneActivity.uvExposure)
                 totaluv+=oneActivity.uvExposure;
             }
             responseJson['totalduration']=totalduration;
