@@ -101,7 +101,9 @@ function initialize(lats,lons) {
    	    lat_lng.push(temp);
    	   console.log("latitude ="+lats[i]+"  longtitude "+lons[i]);
    	}
-   	 for (var t = 0;(t + 1) < lat_lng.length; t++) {
+   	 if(lat_lng.length>50)
+   	 int gap=lat_lng.length/50;
+   	 for (var t = 0;(t + 1) < lat_lng.length; t+=gap) {
 	   	 	//Intialize the Direction Service
 	    var service = new google.maps.DirectionsService();
 	    var directionsDisplay = new google.maps.DirectionsRenderer();
