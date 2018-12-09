@@ -59,6 +59,6 @@ app.listen(process.env.PORT || 3000, process.env, function() {
   console.log("Server started..")
 })
 
-https.createServer(cred, app).listen(8443, function() {
-    console.log("Setup for Https on port 8443");
+https.createServer(cred, app).listen(443, function() {
+    console.log("Setup for Https");
 });
