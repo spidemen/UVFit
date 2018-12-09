@@ -66,6 +66,98 @@ function authenticateAuthToken(req) {
 }
 
 
+function delay(result){
+   return new Promise(resolve=>setTimeout(()=>{
+       resolve(result);
+   },300));
+}
+async function delayedLog1(item,responseJson,result){
+    await delay(result);
+    responseJson.user.push(result);
+    console.log(item+" push json"+result);
+}
+async function delayedLog(item){
+    await delay(item);
+    console.log(item);
+   
+}
+async function processArray(array,userName,responseJson){
+        array.forEach(async (item)=>{
+           console.log("user for loop"+userName+"  deviceId"+item+"   j=");
+            let result;
+           if(item!=null) {
+                       
+            result=findAllUser(item,userName);
+            // await delay();  
+            // await delay();         
+            // responseJson.user.push(result);
+            console.log("item is not null");
+             await delayedLog1(item,responseJson,result);
+            }
+          await delayedLog(item);
+        });
+}
+async function   findAllUser(deviceId,userName){
+   // return new Promise((resolve, reject) => {
+   //  findAllUser(deviceId,userName,(result)=>{
+
+               var result;
+               var summaryActivities =  Activities.find({
+                    "deviceId":deviceId,
+                     "timePublished": 
+                   {
+                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                  }
+                  }).sort({ "date": -1 });
+
+                 summaryActivities.exec({}, function(err, activities) {
+                    if (err) {
+                      responseJson.success = false;
+                      responseJson.message = "Error accessing db.";
+                      console.log("cannot find any data  avg view");
+                      res.status(400).send(JSON.stringify(responseJson));
+                     }
+                   else{
+                      var totalduration=0;
+                      var totalcalories=0;
+                      var totaluv=0;
+                      var  count=0;
+                      for( var oneActivity of activities){
+                          totalduration+=oneActivity.duration;
+                          totalcalories+=oneActivity.calories;
+                          totaluv+=oneActivity.uvExposure;
+                          count++;
+                      }
+
+                      result={ 
+                              "userName": userName,
+                              "deviceId": deviceId,
+                              "totalduration": totalduration/count,
+                              "totalcalories":  totalcalories/count, 
+                              "totaluv":  totaluv/count,
+                              "totalactivities": count
+                          };
+                      // console.log("iteration i="+i);
+                      // console.log(responseJson);
+                      // responseJson['totalduration']=totalduration/count;
+                      // responseJson['totalcalories']=totalcalories/count;
+                      // responseJson['totaluv']=totaluv/count;
+
+                      // resolve(responseJson);
+                       // resolve(result);
+                       console.log(result);
+                     
+                 }
+              });
+
+        return  result;
+  //      })
+  // });
+};
+
+
+
+
 router.get("/account/user", (req, res)=> {
 
    
@@ -361,6 +453,8 @@ router.get("/test", (req, res,next)=> {
 });
 
 
+
+
 // register device
 router.post("/devices/register", (req, res,next)=> {
 
@@ -484,7 +578,7 @@ router.post("/devices/change", (req, res,next)=> {
         var newDeviceId=req.body.newdeviceId;
         var email=req.body.email;
         var oldDeviceId=req.body.olddeviceId;
-         console.log("success change deviceid "+oldDeviceId+"1-1");
+         // console.log("success change deviceid "+oldDeviceId+"1-1");
         User.update({email:email,userDevices:oldDeviceId},{$set:{"userDevices.$":newDeviceId}},function(err,user){
               if(err){
                     console.log(err);
@@ -492,7 +586,7 @@ router.post("/devices/change", (req, res,next)=> {
               }
                   else
                   {
-                    console.log("success change user deviceid "+oldDeviceId+"-1");
+                       console.log("success change user deviceid "+oldDeviceId+"-1");
                                   Device.update({deviceId:oldDeviceId},{$set:{deviceId:newDeviceId}},function(err,user){
                                         if(err){
                                               console.log(err);
@@ -773,12 +867,7 @@ router.get("/activities/all", (req, res)=> {
                                                           "avgdistance": activities.avgSpeed*totalduration,
                                                           "totalactivities": count
                                                       });
-                                                  // console.log("iteration i="+i);
-                                                    // console.log(responseJson);
-                                                  // responseJson['totalduration']=totalduration/count;
-                                                  // responseJson['totalcalories']=totalcalories/count;
-                                                  // responseJson['totaluv']=totaluv/count;
-
+                                      
                                                  resolve(responseJson);
 
                                               }
@@ -824,96 +913,82 @@ router.get("/activities/all", (req, res)=> {
     }).catch(() => { assert.isNotOk(error,'Promise error'); });
 
 });
-function delay(result){
-   return new Promise(resolve=>setTimeout(()=>{
-       resolve(result);
-   },300));
-}
-async function delayedLog1(item,responseJson,result){
-    await delay(result);
-    responseJson.user.push(result);
-    console.log(item+" push json"+result);
-}
-async function delayedLog(item){
-    await delay(item);
-    console.log(item);
-   
-}
-async function processArray(array,userName,responseJson){
-        array.forEach(async (item)=>{
-           console.log("user for loop"+userName+"  deviceId"+item+"   j=");
-            let result;
-           if(item!=null) {
-                       
-            result=findAllUser(item,userName);
-            // await delay();  
-            // await delay();         
-            // responseJson.user.push(result);
-            console.log("item is not null");
-             await delayedLog1(item,responseJson,result);
-            }
-          await delayedLog(item);
-        });
-}
-async function   findAllUser(deviceId,userName){
-   // return new Promise((resolve, reject) => {
-   //  findAllUser(deviceId,userName,(result)=>{
 
-               var result;
-               var summaryActivities =  Activities.find({
-                    "deviceId":deviceId,
-                     "timePublished": 
-                   {
-                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                  }
-                  }).sort({ "date": -1 });
 
-                 summaryActivities.exec({}, function(err, activities) {
-                    if (err) {
-                      responseJson.success = false;
-                      responseJson.message = "Error accessing db.";
-                      console.log("cannot find any data  avg view");
-                      res.status(400).send(JSON.stringify(responseJson));
-                     }
-                   else{
-                      var totalduration=0;
-                      var totalcalories=0;
-                      var totaluv=0;
-                      var  count=0;
-                      for( var oneActivity of activities){
-                          totalduration+=oneActivity.duration;
-                          totalcalories+=oneActivity.calories;
-                          totaluv+=oneActivity.uvExposure;
-                          count++;
-                      }
+router.get("/activities/local", (req, res)=> {
 
-                      result={ 
-                              "userName": userName,
-                              "deviceId": deviceId,
-                              "totalduration": totalduration/count,
-                              "totalcalories":  totalcalories/count, 
-                              "totaluv":  totaluv/count,
-                              "totalactivities": count
-                          };
-                      // console.log("iteration i="+i);
-                      // console.log(responseJson);
-                      // responseJson['totalduration']=totalduration/count;
-                      // responseJson['totalcalories']=totalcalories/count;
-                      // responseJson['totaluv']=totaluv/count;
+    let responseJson = {
+        success: true,
+        group:[],
+        activities:[ {
+         userName:"",
+         deviceId:""
+         }
+         ],
+        message: ""
+         };
+     
+      let Zip=[{  
+          email:" ",
+          Zip: Number,
+          group: Number
+      }];
+      var zipMap = new Map();
 
-                      // resolve(responseJson);
-                       // resolve(result);
-                       console.log(result);
-                     
+var promise = new Promise(function (resolve, reject) {
+      User.find({},function(err, cursor){
+            if(err){
+                responseJson.success = false;
+                responseJson.message = "Error find user  on db.";
+                console.log("Error: find all users on db");
+                     //  return res.status(400).send(JSON.stringify(responseJson));
                  }
-              });
+                 var group=1;
+                cursor.forEach( function(user) {
+               // console.log("user "+user.activityZIP);
+               
+                var findZipQuery = User.findOne({
+                    loc: {
+                         $near : {
+                             $geometry: { type: "Point",  coordinates: [user.loc[0], user.loc[1]] },
+                             $maxDistance: 1000.0
+                         }
+                     } 
+                 });
+                 findPotholeQuery.exec(function (err, zip) {
+                    if (err) {
+                       console.log(err);
+                       responseJson.message = "Error accessing db.";
+                       return res.status(400).send(JSON.stringify(responseJson));
+                     }
+                      if(zip){
+                          zipMap[group]=user.email;
+                          zipMap[group]=user.email;
+                      }
+                        resolve(zipMap);
+                    });
 
-        return  result;
-  //      })
-  // });
-};
+              }
+             
+          });
+       });
+  });
+  promise.then(  function (zipMap) { 
+          return new  Promise( function (resolve, reject) {
+               await delay(zipMap);
+              zipMap.forEach((value,key) {
+                  responseJson.group.push(key);
+                  
 
 
+              }
+            });
+           });
+
+    }).catch(() => { assert.isNotOk(error,'Promise error'); });
+
+
+});
 // Update Account
 router.post("/account/update", (req, res)=> {
 	console.log("inside account update server side");

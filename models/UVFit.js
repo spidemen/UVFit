@@ -2,13 +2,14 @@
 var db = require("../db");
 
 var userSchema = new db.Schema({
-  email:        { type: String, required: true, unique: true },
-  fullName:     { type: String, required: true },
+    email:        { type: String, required: true, unique: true },
+    fullName:     { type: String, required: true },
    isVerified: { type: Boolean, default: false },
    passwordHash: String,
    lastAccess:   { type: Date, default: Date.now },
    userDevices:  [ String ],
-   uvThreshold:  Number
+   uvThreshold:  Number,
+   loc: { type: [Number], index: '2dsphere'}
 });
 
 const User=db.model('User', userSchema);
