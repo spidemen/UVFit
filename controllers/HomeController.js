@@ -856,8 +856,11 @@ router.get("/activities/all", (req, res)=> {
                                                   var  count=0;
                                                   var totaldistance=0;
                                                   for( var oneActivity of activities){
+                                                     if(oneActivity.duration)
                                                       totalduration+=oneActivity.duration;
+                                                      if(oneActivity.calories)
                                                       totalcalories+=oneActivity.calories;
+                                                     if(oneActivity.uvExposure)
                                                       totaluv+=oneActivity.uvExposure;
                                                       count++;
                                                   }
@@ -1043,8 +1046,11 @@ var promise = new Promise(function (resolve, reject) {
                                                           var  count=0;
                                                           var totaldistance=0;
                                                           for( var oneActivity of activities){
+                                                              if(oneActivity.duration)
                                                               totalduration+=oneActivity.duration;
+                                                               if(oneActivity.calories)
                                                               totalcalories+=oneActivity.calories;
+                                                               if(oneActivity.uvExposure)
                                                               totaluv+=oneActivity.uvExposure;
                                                               count++;
                                                           }
