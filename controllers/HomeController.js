@@ -414,7 +414,7 @@ router.get("/test", (req, res,next)=> {
      duration:     3600,
      calories:     1200, 
      uvExposure:    500,
-     deviceId:      "agagag"
+     deviceId:      "UVFit2"
     });
     newActivities.save( function(err, activities) {
            if (err) {
@@ -428,18 +428,19 @@ router.get("/test", (req, res,next)=> {
             
            }
       });
-
    //  var newuser=new User({
 
-   //   email:  "demo@email.com",
-   //   fullName:    "demo",
+   //   email:  "UVFit1@gmail.com",
+   //   fullName:    "UVFIt",
    //   passwordHash: "123",
-   //   userDevices:  "11f4baaef3445ff",
-   //    uvThreshold:  12
+   //   userDevices:  ["UVFit2","UVFit3"],
+   //    uvThreshold:  12,
+   //     loc:[-100.958063,20.240501],
+
    //  });
    // newuser.save( function(err, user) {
    //         if (err) {
-   //          //  console.error(err);
+   //            console.error(err);
    //             console.log("Fail store user data");      
                
    //         }
@@ -928,12 +929,8 @@ router.get("/activities/local", (req, res)=> {
         message: ""
          };
      
-      let Zip=[{  
-          email:" ",
-          Zip: Number,
-          group: Number
-      }];
-      var zipMap = new Map();
+      let Zip=[{}];
+      let zipMap = new Map();
 
 var promise = new Promise(function (resolve, reject) {
       User.find({},function(err, cursor){
@@ -945,9 +942,10 @@ var promise = new Promise(function (resolve, reject) {
                  }
                  var group=1;
                 cursor.forEach( function(user) {
-               // console.log("user "+user.activityZIP);
-               
-                var findZipQuery = User.findOne({
+                   console.log(user.email+"test debug curosr loop");
+               if(typeof(user.loc)!="undefined"&&typeof(user.loc)!="undefined"){
+                  
+                var findZipQuery = User.find({
                     loc: {
                          $near : {
                              $geometry: { type: "Point",  coordinates: [user.loc[0], user.loc[1]] },
@@ -955,42 +953,72 @@ var promise = new Promise(function (resolve, reject) {
                          }
                      } 
                  });
-                 findPotholeQuery.exec(function (err, zip) {
+                 findZipQuery.exec(function (err, ZipUser) {
                     if (err) {
                        console.log(err);
                        responseJson.message = "Error accessing db.";
                        return res.status(400).send(JSON.stringify(responseJson));
                      }
-                      if(zip){
-                          zipMap[group]=user.email;
-                          zipMap[group]=user.email;
-                      }
-                        resolve(zipMap);
+                        ZipUser.forEach( function(zip) {
+                              if(zip&&user.email!=zip.email){
+                                  Zip.push({
+                                      'email':user.email,
+                                       'group':group
+                                  });
+                                  Zip.push({
+                                    'email':zip.email,
+                                     'group': group
+                                  });
+
+                                   // zipMap[group]=user.email;
+                                   // zipMap[group]=zip.email;         
+                              }
+                              else{
+                                 Zip.push({
+                                      'email':user.email,
+                                       'group':group
+                                  });
+                              }
+                              console.log("user longtitude"+user.loc[0]+"  map "+user.email+"   "+zip.email);
+                       
+                                resolve(Zip);
+                         });
+                           group=group+1;
                     });
 
+                
+                 
+                }
               
              
           });
        });
   });
-  promise.then(  function (zipMap) { 
+  promise.then(  function (Zip) { 
           return new  Promise( async function (resolve, reject) {
-               await delay(zipMap);
-               zipMap.forEach(function (value,key) {
-                           
-                      User.find({email: value},function(err, user){
+                await delay(Zip);
+               console.log("iterator map ");
+               // var Zip =JSON.parse(JSON.stringify(Zip));
+               Zip.forEach(function (item) {
+                            if(item.email==null||item.group==null)  return ;
+                           // console.log("group "+key+"  email"+value);
+                             console.log("group "+item.email+"  key "+item.group);
+                           var key=item.group;
+                           var value=item.email;
+                      User.findOne({email: value},function(err, user){
                         if(err){
                                responseJson.success = false;
                                responseJson.message = "Error find user  on db.";
                                console.log("Error: find all users on db");
-                             //  return res.status(400).send(JSON.stringify(responseJson));
+                               return res.status(400).send(JSON.stringify(responseJson));
                          }
-                        console.log("user "+user.fullName+"  deviceId"+user.userDevices);
-                        if(user!=null){
+                        // console.log("user "+user.fullName+"  deviceId"+user.userDevices);
+                          if(user!=null){
+                               console.log("user "+user.fullName+"  deviceId"+user.userDevices);
                               user.userDevices.forEach(function(deviceId){
                                           var userName=user.fullName;
                                          var deviceId=deviceId; 
-                                       console.log("for each  debug"+user.fullName+"  device ="+deviceId);
+                                          console.log("for each  debug local view "+user.fullName+"  device ="+deviceId);
                                              var summaryActivities =  Activities.find({
                                                     "deviceId":deviceId,
                                                      "timePublished": 
@@ -1025,7 +1053,8 @@ var promise = new Promise(function (resolve, reject) {
                                                                   "avgcalories":  totalcalories/count, 
                                                                   "avguv":  totaluv/count,
                                                                   "avgdistance": activities.avgSpeed*totalduration,
-                                                                  "totalactivities": count
+                                                                  "totalactivities": count,
+                                                                   "group": key
                                                               });
                                               
                                                          resolve(responseJson);
@@ -1041,8 +1070,15 @@ var promise = new Promise(function (resolve, reject) {
                   
             });
       });
-    }).catch(() => { assert.isNotOk(error,'Promise error'); });
+    }).then(function (responseJson) { 
+           return new  Promise( async function (resolve, reject) {
+               await delay(responseJson);
+              responseJson.message = "In the past 7 days,   geographically local  user avg  activities ";
+              console.log(responseJson);
+              res.status(200).send(JSON.stringify(responseJson));
+          });
 
+    }).catch(() => { assert.isNotOk(error,'Promise error'); });
 
 });
 // Update Account
