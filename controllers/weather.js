@@ -17,7 +17,8 @@ router.get('/weather', function(req, res, next) {
        lat : "",
        lon : "",
        weather : "",
-       uv : ""
+       uvFore : "",
+       uvCurr : ""
     };
     
     try {
@@ -73,15 +74,28 @@ router.get('/weather', function(req, res, next) {
                         cnt: 5
                     }
                 }, function(error, response, body) {
-                    responseJson.uv = JSON.parse(body);
+                    responseJson.uvFore = JSON.parse(body);
                     
-                    return res.status(200).json(responseJson);
+                    /* Get uv index for lat,lon */
+                    request({
+                        method: 'GET',
+                        uri: "http://api.openweathermap.org/data/2.5/uvi",
+                        qs: {
+                            appid: weatherApiKey,
+                            lat: lat,
+                            lon: lon
+                        }
+                    }, function(error, response, body) {
+                        responseJson.uvCurr = JSON.parse(body);
+                        
+                        return res.status(200).json(responseJson);
+                    });
                 });
             });
         }
         else {
             responseJson.message = "No location data for user"
-            return res.status(204).json(responseJson);
+            return res.status(201).json(responseJson);
         }
     });
 });

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var User = require("../models/UVFit").User;
 var Device = require("../models/UVFit").Device;
 var Activity = require("../models/UVFit").Activities;
 
@@ -137,6 +138,24 @@ router.post('/activities/datapoints', function(req, res, next) {
                                     return res.status(201).send(JSON.stringify(responseJson));
                                 }
                                 else {
+                                    User.findOneAndUpdate(
+                                        {
+                                            userDevices: req.body.deviceId
+                                        }, 
+                                        {
+                                            $push: {
+                                                loc: [activity.lons[0], activity.lats[0]]
+                                            }
+                                        },
+                                        function(err, user) {
+                                            if (err) {
+                                                console.log("Error Updating User Loc");
+                                                console.log(user);
+                                                console.log(err);
+                                            }
+                                        }
+                                    );
+                                    
                                     responseJson.status = "OK";
                                     responseJson.message = "Completed Activity with ID: " + activity._id;
                                     return res.status(201).send(JSON.stringify(responseJson));

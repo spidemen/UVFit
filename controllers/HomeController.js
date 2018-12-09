@@ -66,6 +66,98 @@ function authenticateAuthToken(req) {
 }
 
 
+function delay(result){
+   return new Promise(resolve=>setTimeout(()=>{
+       resolve(result);
+   },300));
+}
+async function delayedLog1(item,responseJson,result){
+    await delay(result);
+    responseJson.user.push(result);
+    console.log(item+" push json"+result);
+}
+async function delayedLog(item){
+    await delay(item);
+    console.log(item);
+   
+}
+async function processArray(array,userName,responseJson){
+        array.forEach(async (item)=>{
+           console.log("user for loop"+userName+"  deviceId"+item+"   j=");
+            let result;
+           if(item!=null) {
+                       
+            result=findAllUser(item,userName);
+            // await delay();  
+            // await delay();         
+            // responseJson.user.push(result);
+            console.log("item is not null");
+             await delayedLog1(item,responseJson,result);
+            }
+          await delayedLog(item);
+        });
+}
+async function   findAllUser(deviceId,userName){
+   // return new Promise((resolve, reject) => {
+   //  findAllUser(deviceId,userName,(result)=>{
+
+               var result;
+               var summaryActivities =  Activities.find({
+                    "deviceId":deviceId,
+                     "timePublished": 
+                   {
+                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                  }
+                  }).sort({ "date": -1 });
+
+                 summaryActivities.exec({}, function(err, activities) {
+                    if (err) {
+                      responseJson.success = false;
+                      responseJson.message = "Error accessing db.";
+                      console.log("cannot find any data  avg view");
+                      res.status(400).send(JSON.stringify(responseJson));
+                     }
+                   else{
+                      var totalduration=0;
+                      var totalcalories=0;
+                      var totaluv=0;
+                      var  count=0;
+                      for( var oneActivity of activities){
+                          totalduration+=oneActivity.duration;
+                          totalcalories+=oneActivity.calories;
+                          totaluv+=oneActivity.uvExposure;
+                          count++;
+                      }
+
+                      result={ 
+                              "userName": userName,
+                              "deviceId": deviceId,
+                              "totalduration": totalduration/count,
+                              "totalcalories":  totalcalories/count, 
+                              "totaluv":  totaluv/count,
+                              "totalactivities": count
+                          };
+                      // console.log("iteration i="+i);
+                      // console.log(responseJson);
+                      // responseJson['totalduration']=totalduration/count;
+                      // responseJson['totalcalories']=totalcalories/count;
+                      // responseJson['totaluv']=totaluv/count;
+
+                      // resolve(responseJson);
+                       // resolve(result);
+                       console.log(result);
+                     
+                 }
+              });
+
+        return  result;
+  //      })
+  // });
+};
+
+
+
+
 router.get("/account/user", (req, res)=> {
 
    
@@ -322,7 +414,7 @@ router.get("/test", (req, res,next)=> {
      duration:     3600,
      calories:     1200, 
      uvExposure:    500,
-     deviceId:      "agagag"
+     deviceId:      "UVFit2"
     });
     newActivities.save( function(err, activities) {
            if (err) {
@@ -336,18 +428,19 @@ router.get("/test", (req, res,next)=> {
             
            }
       });
-
    //  var newuser=new User({
 
-   //   email:  "demo@email.com",
-   //   fullName:    "demo",
+   //   email:  "UVFit1@gmail.com",
+   //   fullName:    "UVFIt",
    //   passwordHash: "123",
-   //   userDevices:  "11f4baaef3445ff",
-   //    uvThreshold:  12
+   //   userDevices:  ["UVFit2","UVFit3"],
+   //    uvThreshold:  12,
+   //     loc:[-100.958063,20.240501],
+
    //  });
    // newuser.save( function(err, user) {
    //         if (err) {
-   //          //  console.error(err);
+   //            console.error(err);
    //             console.log("Fail store user data");      
                
    //         }
@@ -484,7 +577,7 @@ router.post("/devices/change", (req, res,next)=> {
         var newDeviceId=req.body.newdeviceId;
         var email=req.body.email;
         var oldDeviceId=req.body.olddeviceId;
-         console.log("success change deviceid "+oldDeviceId+"1-1");
+         // console.log("success change deviceid "+oldDeviceId+"1-1");
         User.update({email:email,userDevices:oldDeviceId},{$set:{"userDevices.$":newDeviceId}},function(err,user){
               if(err){
                     console.log(err);
@@ -492,7 +585,7 @@ router.post("/devices/change", (req, res,next)=> {
               }
                   else
                   {
-                    console.log("success change user deviceid "+oldDeviceId+"-1");
+                       console.log("success change user deviceid "+oldDeviceId+"-1");
                                   Device.update({deviceId:oldDeviceId},{$set:{deviceId:newDeviceId}},function(err,user){
                                         if(err){
                                               console.log(err);
@@ -575,6 +668,7 @@ router.post("/activities/single", (req, res,next)=> {
       });
 
 });
+
 
 // view data
 router.post("/activities/list", (req, res,next)=> {
@@ -773,12 +867,7 @@ router.get("/activities/all", (req, res)=> {
                                                           "avgdistance": activities.avgSpeed*totalduration,
                                                           "totalactivities": count
                                                       });
-                                                  // console.log("iteration i="+i);
-                                                    // console.log(responseJson);
-                                                  // responseJson['totalduration']=totalduration/count;
-                                                  // responseJson['totalcalories']=totalcalories/count;
-                                                  // responseJson['totaluv']=totaluv/count;
-
+                                      
                                                  resolve(responseJson);
 
                                               }
@@ -824,96 +913,173 @@ router.get("/activities/all", (req, res)=> {
     }).catch(() => { assert.isNotOk(error,'Promise error'); });
 
 });
-function delay(result){
-   return new Promise(resolve=>setTimeout(()=>{
-       resolve(result);
-   },300));
-}
-async function delayedLog1(item,responseJson,result){
-    await delay(result);
-    responseJson.user.push(result);
-    console.log(item+" push json"+result);
-}
-async function delayedLog(item){
-    await delay(item);
-    console.log(item);
-   
-}
-async function processArray(array,userName,responseJson){
-        array.forEach(async (item)=>{
-           console.log("user for loop"+userName+"  deviceId"+item+"   j=");
-            let result;
-           if(item!=null) {
-                       
-            result=findAllUser(item,userName);
-            // await delay();  
-            // await delay();         
-            // responseJson.user.push(result);
-            console.log("item is not null");
-             await delayedLog1(item,responseJson,result);
-            }
-          await delayedLog(item);
-        });
-}
-async function   findAllUser(deviceId,userName){
-   // return new Promise((resolve, reject) => {
-   //  findAllUser(deviceId,userName,(result)=>{
 
-               var result;
-               var summaryActivities =  Activities.find({
-                    "deviceId":deviceId,
-                     "timePublished": 
-                   {
-                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
-                  }
-                  }).sort({ "date": -1 });
 
-                 summaryActivities.exec({}, function(err, activities) {
-                    if (err) {
-                      responseJson.success = false;
-                      responseJson.message = "Error accessing db.";
-                      console.log("cannot find any data  avg view");
-                      res.status(400).send(JSON.stringify(responseJson));
-                     }
-                   else{
-                      var totalduration=0;
-                      var totalcalories=0;
-                      var totaluv=0;
-                      var  count=0;
-                      for( var oneActivity of activities){
-                          totalduration+=oneActivity.duration;
-                          totalcalories+=oneActivity.calories;
-                          totaluv+=oneActivity.uvExposure;
-                          count++;
-                      }
+router.get("/activities/local", (req, res)=> {
 
-                      result={ 
-                              "userName": userName,
-                              "deviceId": deviceId,
-                              "totalduration": totalduration/count,
-                              "totalcalories":  totalcalories/count, 
-                              "totaluv":  totaluv/count,
-                              "totalactivities": count
-                          };
-                      // console.log("iteration i="+i);
-                      // console.log(responseJson);
-                      // responseJson['totalduration']=totalduration/count;
-                      // responseJson['totalcalories']=totalcalories/count;
-                      // responseJson['totaluv']=totaluv/count;
+    let responseJson = {
+        success: true,
+        user:[ {
+         userName:"",
+         deviceId:"",
+         group: ""
+         }
+         ],
+        message: ""
+         };
+     
+      let Zip=[{}];
+      let zipMap = new Map();
 
-                      // resolve(responseJson);
-                       // resolve(result);
-                       console.log(result);
-                     
+var promise = new Promise(function (resolve, reject) {
+      User.find({},function(err, cursor){
+            if(err){
+                responseJson.success = false;
+                responseJson.message = "Error find user  on db.";
+                console.log("Error: find all users on db");
+                     //  return res.status(400).send(JSON.stringify(responseJson));
                  }
-              });
+                 var group=1;
+                cursor.forEach( function(user) {
+                   console.log(user.email+"test debug curosr loop");
+               if(typeof(user.loc)!="undefined"&&typeof(user.loc)!="undefined"){
+                  
+                var findZipQuery = User.find({
+                    loc: {
+                         $near : {
+                             $geometry: { type: "Point",  coordinates: [user.loc[0], user.loc[1]] },
+                             $maxDistance: 1000.0
+                         }
+                     } 
+                 });
+                 findZipQuery.exec(function (err, ZipUser) {
+                    if (err) {
+                       console.log(err);
+                       responseJson.message = "Error accessing db.";
+                       return res.status(400).send(JSON.stringify(responseJson));
+                     }
+                        ZipUser.forEach( function(zip) {
+                              if(zip&&user.email!=zip.email){
+                                  Zip.push({
+                                      'email':user.email,
+                                       'group':group
+                                  });
+                                  Zip.push({
+                                    'email':zip.email,
+                                     'group': group
+                                  });
 
-        return  result;
-  //      })
-  // });
-};
+                                   // zipMap[group]=user.email;
+                                   // zipMap[group]=zip.email;         
+                              }
+                              else{
+                                 Zip.push({
+                                      'email':user.email,
+                                       'group':group
+                                  });
+                              }
+                              console.log("user longtitude"+user.loc[0]+"  map "+user.email+"   "+zip.email);
+                       
+                                resolve(Zip);
+                         });
+                           group=group+1;
+                    });
 
+                
+                 
+                }
+              
+             
+          });
+       });
+  });
+  promise.then(  function (Zip) { 
+          return new  Promise( async function (resolve, reject) {
+                await delay(Zip);
+               console.log("iterator map ");
+               // var Zip =JSON.parse(JSON.stringify(Zip));
+               Zip.forEach(function (item) {
+                            if(item.email==null||item.group==null)  return ;
+                           // console.log("group "+key+"  email"+value);
+                             console.log("group "+item.email+"  key "+item.group);
+                           var key=item.group;
+                           var value=item.email;
+                      User.findOne({email: value},function(err, user){
+                        if(err){
+                               responseJson.success = false;
+                               responseJson.message = "Error find user  on db.";
+                               console.log("Error: find all users on db");
+                               return res.status(400).send(JSON.stringify(responseJson));
+                         }
+                        // console.log("user "+user.fullName+"  deviceId"+user.userDevices);
+                          if(user!=null){
+                               console.log("user "+user.fullName+"  deviceId"+user.userDevices);
+                              user.userDevices.forEach(function(deviceId){
+                                          var userName=user.fullName;
+                                         var deviceId=deviceId; 
+                                          console.log("for each  debug local view "+user.fullName+"  device ="+deviceId);
+                                             var summaryActivities =  Activities.find({
+                                                    "deviceId":deviceId,
+                                                     "timePublished": 
+                                                  {
+                                                      $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                                                  }
+                                                }).sort({ "date": -1 });
 
+                                              summaryActivities.exec({}, function(err, activities) {
+                                                        if (err) {
+                                                          responseJson.success = false;
+                                                          responseJson.message = "Error accessing db.";
+                                                          console.log("cannot find any data  avg view");
+                                                          res.status(400).send(JSON.stringify(responseJson));
+                                                         }
+                                                       else{
+                                                          var totalduration=0;
+                                                          var totalcalories=0;
+                                                          var totaluv=0;
+                                                          var  count=0;
+                                                          var totaldistance=0;
+                                                          for( var oneActivity of activities){
+                                                              totalduration+=oneActivity.duration;
+                                                              totalcalories+=oneActivity.calories;
+                                                              totaluv+=oneActivity.uvExposure;
+                                                              count++;
+                                                          }
+                                                          responseJson.user.push({ 
+                                                                  "userName": userName,
+                                                                  "deviceId": deviceId,
+                                                                  "avgduration": totalduration/count,
+                                                                  "avgcalories":  totalcalories/count, 
+                                                                  "avguv":  totaluv/count,
+                                                                  "avgdistance": activities.avgSpeed*totalduration,
+                                                                  "totalactivities": count,
+                                                                   "group": key
+                                                              });
+                                              
+                                                         resolve(responseJson);
+
+                                                      }
+                                                });
+
+                                             });
+                           
+                             }         
+                          // resolve(responseJson);
+                   });
+                  
+            });
+      });
+    }).then(function (responseJson) { 
+           return new  Promise( async function (resolve, reject) {
+               await delay(responseJson);
+              responseJson.message = "In the past 7 days,   geographically local  user avg  activities ";
+              console.log(responseJson);
+              res.status(200).send(JSON.stringify(responseJson));
+          });
+
+    }).catch(() => { assert.isNotOk(error,'Promise error'); });
+
+});
 // Update Account
 router.post("/account/update", (req, res)=> {
 	console.log("inside account update server side");
@@ -954,13 +1120,15 @@ router.post("/account/update", (req, res)=> {
 							// create new token
 							token = jwt.encode({email: req.body.email}, secret);
 						}
-						// hash new password
-						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
-							user.passwordHash = hash;
-							user.save(function (err, user) {
-									console.log("updated password");
-							});
-						});
+            if(req.body.newpassword!=null){ //not need to update password
+      						// hash new password
+      						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
+      							user.passwordHash = hash;
+      							user.save(function (err, user) {
+      									console.log("updated password");
+      							});
+      						});
+              }
 						// update token if new and old emails are different
 						if (req.body.newemail != user.email){
 							res.status(201).json({updated: true, message:"Account updated successfully.", token:token});
