@@ -33,12 +33,6 @@ $("#register").click(function(){
     $(".registerbox").css('display',"block");
 });
 
-// $("#viewData").click(function(){
-//      console.log("click button update ");
-//       $(".view").css('display',"block");
-//       $(".registerbox").css('display',"none");
-
-// });
 
 $("#updateAccount").click(function(){
 	$(".rightbar > div").css('display', "none");
@@ -106,6 +100,8 @@ $("#getForecast").click(function(){
 });
 /************************************************************************/
 
+/* single view */
+
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
@@ -121,10 +117,16 @@ function onCellClick() {
    console.log(date);
    $(".RowDate").html(date);
 
-   window.open("singleview?id="+date+"&deviceid=11f4baaef3445ff", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+   window.open("singleview?id="+date+"&deviceid=agagag", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
    
 }
 
+/*   This API Just for test      */
+$("#storeData").click(function(){
+   
+       sendReqStore();
+
+});
 
 function sendReqStore()
 {
@@ -132,20 +134,21 @@ function sendReqStore()
   var xhr = new XMLHttpRequest();
   xhr.addEventListener("load", RegisterRespon);
   xhr.responseType = "json";
-  xhr.open("POST", '/test');
+  xhr.open("GET", '/test');
   xhr.setRequestHeader("Content-type", "application/json");
   console.log("store testing data");
   xhr.send();
 
 }
 
-$("#storeData").click(function(){
+/* -----------------------------------------*/
+
+/* register a device */
+$("#submit").click(function(){
    
-       sendReqStore();
+       sendReqRegister();
 
 });
-
-
 
 function sendReqRegister() {
     var email = document.getElementById("email").value;
@@ -161,7 +164,6 @@ function sendReqRegister() {
   xhr.send(JSON.stringify({email:email,deviceId:deviceId, deviceName:deviceName}));
 
 }
-
 function RegisterRespon(){
 
 	var responseHTML="";
@@ -193,28 +195,8 @@ function RegisterRespon(){
    $(".error").css('display',"block");
 
 }
-
-$("#submit").click(function(){
-	 
-       sendReqRegister();
-
-});
-
-
-
-function  sendReqViewData(){
-
- // var email = "demo@email.com";
- //  var deviceId = "11f4baaef3445ff";
-  var xhr = new XMLHttpRequest();
-  xhr.addEventListener("load", ViewDataRespon);
-  xhr.responseType = "json";
-  xhr.open("POST", '/activities/user');
-  xhr.setRequestHeader("Content-type", "application/json");
-  console.log("send "+email);
-  xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
-
-};
+/*------------------------------------------------------*/
+/*list view all the activities   */
 $("#listview").click(function(){
     $("#summary").css('display',"block");
    $("#summary").html("Following is the list view all the activities");
@@ -222,38 +204,40 @@ $("#listview").click(function(){
     $(".view").css('display',"block");
     sendReqViewData();
 });
+function  sendReqViewData(){
+
+ // var email = "demo@email.com";
+ //  var deviceId = "11f4baaef3445ff";
+  var xhr = new XMLHttpRequest();
+  xhr.addEventListener("load", ViewDataRespon);
+  xhr.responseType = "json";
+  xhr.open("POST", '/activities/list');
+  xhr.setRequestHeader("Content-type", "application/json");
+  console.log("send "+email);
+  xhr.send(JSON.stringify({email:email,deviceId:deviceId}));
+
+};
 
 function ViewDataRespon(){
     
     if(this.status === 200||this.status==201)
     {
-  //      var responseHTMLType="Activies Type:";
-      // var responseHTMLDate="";
-      // var responseHTMDuration="Activity Duration:";
-      // var responseHTMLUV="UV Exposure:";
-      // var responseHTMLCalories=" Calories Burned:";
-        var responseHTML="";
-       // responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
-        responseHTML+="<tr> <td> Date: </td>  <td> Activity Duration:  </td>  <td>  Calories Burned:  </td>  <td>   UV exposure:   </td>  </tr>";
-      for(var  data of this.response.activities)
-      {
-           responseHTML+="<tr> ";
-          responseHTML+="<td>"+data.date+"</td>";
-          responseHTML+="<td>  "+data.duration+" </td>";
-          responseHTML+="<td>"+data.uvExposure+"</td>";
-          responseHTML+="<td>"+data.calories+"</td>";
-           responseHTML+="</tr>"
-      }
-     
-      // console.log(this.response.activities);
-      $("table").html(responseHTML)
-   // //   $("#type").html(responseHTMLType);
-   //    $("#Date1").html(responseHTMLDate);
-   //    $("#GPS").html(responseHTMDuration);
-   //    $("#UV").html(responseHTMLUV);
-   //    $("#speed").html(responseHTMLCalories);
-      // console.log(responseHTML);
-
+  
+          var responseHTML="";
+         // responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+          responseHTML+="<tr> <td> Date: </td>  <td> Activity Duration:  </td>  <td>  Calories Burned:  </td>  <td>   UV exposure:   </td>  </tr>";
+        for(var  data of this.response.activities)
+        {
+             responseHTML+="<tr> ";
+            responseHTML+="<td>"+data.date+"</td>";
+            responseHTML+="<td>  "+data.duration+" </td>";
+            responseHTML+="<td>"+data.uvExposure+"</td>";
+            responseHTML+="<td>"+data.calories+"</td>";
+             responseHTML+="</tr>"
+        }
+       
+        // console.log(this.response.activities);
+        $("table").html(responseHTML)
     }
     else
     {
@@ -261,7 +245,9 @@ function ViewDataRespon(){
     }
 
 }
+/*****************************************************/
 
+/*summary view  */
 
 $("#summaryview").click(function(){
    $("#summary").css('display',"block");
@@ -317,6 +303,7 @@ function ViewSummaryDataRespon(){
 }
 
 
+/*all user view */
 $("#allUserView").click(function(){
     $("#summary").css('display',"block");
    $("#summary").html("In the last 7 day, All user avg activities view blow:");
@@ -340,14 +327,11 @@ function sendReqAllUserView(){
 }
 function ViewAllUserDataRespon(){
 
-
-   
-
     if(this.status === 200||this.status==201)
     {
   
       var responseHTML=" <tr>  <td> UserName </td> <td> DeviceId </td>  <td> Total Activities</td>  <td>Avg distancee</td> <td> Avg  Duration:  </td>  <td>  Avg Calories Burned:  </td>  <td>  Avg  UV exposure:  </td>  </tr>";
-    //   responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
+       //   responseHTML+="<tr>"+$("tr:first").html()+"</tr>";
          // var data=this.response;
        for(var  data of this.response.user)
        {
@@ -376,7 +360,7 @@ function ViewAllUserDataRespon(){
      $("tr").css("text-decoration","none");
 }
 
-
+/*------------------------------------------------------------*/
 
 
 // Update Account
