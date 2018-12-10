@@ -924,8 +924,8 @@ router.get("/activities/all", (req, res)=> {
 router.get("/activities/local", (req, res)=> {
 
 
-     // var email=req.param('id');
-     var email="UVFit@gmail.com"
+      var email=req.param('id');
+     // var email="UVFit@gmail.com"
        console.log("para email "+email);
     let responseJson = {
         success: true,
