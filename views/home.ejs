@@ -1,26 +1,15 @@
 <% include partials/header %>
 
 <link rel="stylesheet" href="/css/home.css">
- <script src="/js/googlemap.js" defer></script>
+
 <div class="jumbotron">
- <h1 class="display-4" id="headline">UVFit</h1>
+    <div class="container">
+        <h1 class="display-4 col-6 col-sm-4 text-white text-center bg-dark rounded">Get fit.</h1>
+        <a href="login">
+            <button type="button" class="btn btn-dark col-sm-2 col-3">Login</button>
+        </a>
+        <a href="create">
+            <button type="button" class="btn btn-dark col-sm-2 col-3">Sign Me Up!</button>
+        </a>
+    </div>
 </div>
-
-<div class="container">
-   <ul>
-   <a id="OldUser"><a href="login" class="nav-link"> Login</a>
-   <a id="newUSer"><a href="create" class="nav-link">Create Account</a>
-   <a id="OldUser"><a href="profile" class="nav-link"> Register Device</a>
-   </ul>
-    <script 
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEUrMudBp6oaC0ZbJgeXmNrKayVwr9WIM&callback=initMap">
-    </script>
-    <p> Find us</p>
-   <div id="map">our location:  </div>
-   <h5 style="font-size:13px">UVFit Corporation © 2018</h5>
-
-</div>
-
- 
-
-<% include partials/footer %>
