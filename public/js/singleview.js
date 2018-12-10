@@ -102,7 +102,7 @@ function initialize(lats,lons) {
    	    lat_lng.push(temp);
    	   console.log("latitude ="+lats[i]+"  longtitude "+lons[i]);
    	}
-      	int gap;
+      var gap;
    	  if(lat_lng.length>50)
    	  gap=lat_lng.length/50;
   	 for (var t = 0;(t + 1) < lat_lng.length; t++) {
