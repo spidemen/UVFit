@@ -307,7 +307,7 @@ $("#submit").click(function(){
 
 
 function sendReqRegister() {
-    var email = document.getElementById("email").value;
+    // var email = document.getElementById("email").value;
     var deviceId = document.getElementById("DeviceId").value;
     var deviceName = document.getElementById("DeviceName").value;
 
