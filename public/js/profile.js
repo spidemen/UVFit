@@ -19,7 +19,8 @@ $(window).on("load", function () {
         },
         error: function(jqXHR, textStatus, errorThrown){
             var response = JSON.parse(jqXHR.responseText);
-            console.log("Fail get data "+response.message);
+             alert("Fail get data "+response.message+" check expire login"); 
+	   console.log("Fail get data "+response.message);
         }
    });
 });
