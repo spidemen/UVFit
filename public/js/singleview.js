@@ -77,6 +77,7 @@ function SingleViewRespon(){
      // test data  
      // var lats=[ 32.242995,  32.242550,32.240501];
      // var lons=[ -110.959071,-110.958063,-110.953782];
+
      var lats=this.response.activities.lats;
      var lons=this.response.activities.lons;
 	 initialize(lats,lons);
@@ -104,7 +105,8 @@ function initialize(lats,lons) {
       	int gap;
    	  if(lat_lng.length>50)
    	  gap=lat_lng.length/50;
-   	 for (var t = 0;(t + 1) < lat_lng.length; t+=gap) {
+  	 for (var t = 0;(t + 1) < lat_lng.length; t++) {
+
 	   	 	//Intialize the Direction Service
 	    var service = new google.maps.DirectionsService();
 	    var directionsDisplay = new google.maps.DirectionsRenderer();

@@ -253,6 +253,7 @@ function DeviceChangeRespon(){
 /********************************************************************/
 /* single view ***********************************************************/
 
+/* single view */
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
@@ -271,8 +272,6 @@ function onCellClick() {
    window.open("singleview?id="+date+"&deviceid="+deviceId, 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
    
 }
-
-/**********************************************************************/
 
 /*   This API Just for test      */
 $("#storeData").click(function(){
@@ -386,11 +385,13 @@ function ViewDataRespon(){
           responseHTML+="<tr> <td> Date: </td>  <td> Activity Duration:  </td>  <td>  Calories Burned:  </td>  <td>   UV exposure:   </td>  </tr>";
         for(var  data of this.response.activities)
         {
+
             responseHTML+="<tr> ";
             responseHTML+="<td>"+data.date+"</td>";
             responseHTML+="<td>  "+data.duration+" </td>";
             responseHTML+="<td>"+data.calories+"</td>";
              responseHTML+="<td>"+data.uvExposure+"</td>";
+         
              responseHTML+="</tr>"
         }
        
@@ -405,7 +406,7 @@ function ViewDataRespon(){
 }
 /*****************************************************/
 
-/*summary view  */
+
 
 /*summary view  *******************************************************/
 
@@ -530,7 +531,6 @@ function ViewAllUserDataRespon(){
 }
 
 /*------------------------------------------------------------*/
-
 
 /****************************Local user view ****************************************/
 $("#localUserView").click(function(){
