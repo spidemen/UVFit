@@ -148,8 +148,10 @@ function initialize(lats,lons) {
        //   alert("Directions Service failed:" + status);
        // });
    	 }
-       sendRequest(lat_lng[0],lat_lng[lat_lng.length-1],map);
    }
+      
+
+   	     sendRequest(lat_lng[0],lat_lng[lat_lng.length-1],map);
 
 };
 
