@@ -77,6 +77,8 @@ function SingleViewRespon(){
      // test data  
      // var lats=[ 32.242995,  32.242550,32.240501];
      // var lons=[ -110.959071,-110.958063,-110.953782];
+     var lats=this.response.activities.lats;
+     var lons=this.response.activities.lons;
 	 initialize(lats,lons);
 
 	console.log(this.response.activities.uvs+"    speeds"+this.response.activities.speeds);
@@ -99,7 +101,9 @@ function initialize(lats,lons) {
    	    lat_lng.push(temp);
    	   console.log("latitude ="+lats[i]+"  longtitude "+lons[i]);
    	}
-   	 for (var t = 0;(t + 1) < lat_lng.length; t++) {
+   	 if(lat_lng.length>50)
+   	 int gap=lat_lng.length/50;
+   	 for (var t = 0;(t + 1) < lat_lng.length; t+=gap) {
 	   	 	//Intialize the Direction Service
 	    var service = new google.maps.DirectionsService();
 	    var directionsDisplay = new google.maps.DirectionsRenderer();

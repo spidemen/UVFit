@@ -386,7 +386,7 @@ function ViewDataRespon(){
           responseHTML+="<tr> <td> Date: </td>  <td> Activity Duration:  </td>  <td>  Calories Burned:  </td>  <td>   UV exposure:   </td>  </tr>";
         for(var  data of this.response.activities)
         {
-             responseHTML+="<tr> ";
+            responseHTML+="<tr> ";
             responseHTML+="<td>"+data.date+"</td>";
             responseHTML+="<td>  "+data.duration+" </td>";
             responseHTML+="<td>"+data.calories+"</td>";
@@ -446,8 +446,9 @@ function ViewSummaryDataRespon(){
            responseHTML+="<tr> ";
        //   responseHTML+="<td>"+data.date+"</td>";
           responseHTML+="<td>  "+data.totalduration+" </td>";
-          responseHTML+="<td>"+data.totaluv+"</td>";
+        
           responseHTML+="<td>"+data.totalcalories+"</td>";
+            responseHTML+="<td>"+data.totaluv+"</td>";
            responseHTML+="</tr>"
       // }
      
