@@ -353,7 +353,7 @@ router.post("/account/resend", (req, res)=> {
 router.post("/account/login", (req, res)=> {
  //     if(!req.body.email)   
    //   res.status(400).json({create:false,message:"invalid email adress,please check your input"});
-  console.log(req.body.email+"   "+req.body.password);
+    // console.log(req.body.email+"   "+req.body.password);
     User.findOne({email:req.body.email},function(err,user)
       {
           if(err)

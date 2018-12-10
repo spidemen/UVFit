@@ -18,8 +18,10 @@ $(window).on("load", function () {
             email=data.email;
             $("div.form #oldemail").attr("value",email); //to auto-fill update account form
             $("div.form #fullName").attr("value",username); //to auto-fill update account form
-            deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
-            apikey=data.devices[0].apikey;
+            if(data.devices[0]&&data.devices[0].deviceId)
+             deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
+            if(data.devices[0]&&data.devices[0].apikey)
+             apikey=data.devices[0].apikey;
             console.log("userName+"+username);
             $("#user").html(username);
         },
