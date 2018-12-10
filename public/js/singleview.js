@@ -75,11 +75,11 @@ function SingleViewRespon(){
 	  Plotly.newPlot('uvs', data2,layout2);
 
      // test data  
-     // var lats=[ 32.242995,  32.242550,32.240501];
-     // var lons=[ -110.959071,-110.958063,-110.953782];
+     var lats=[ 32.242995,  32.242550,32.240501];
+     var lons=[ -110.959071,-110.958063,-110.953782];
 
-     var lats=this.response.activities.lats;
-     var lons=this.response.activities.lons;
+     // var lats=this.response.activities.lats;
+     // var lons=this.response.activities.lons;
 	 initialize(lats,lons);
 
 	console.log(this.response.activities.uvs+"    speeds"+this.response.activities.speeds);
