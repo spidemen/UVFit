@@ -327,8 +327,9 @@ function RegisterRespon(){
       responseHTML = "<span>";
       responseHTML += "Success register:  "+ this.response.message;
       responseHTML += "</span>"	;
+
       responseHTML = "<span>";
-       responseHTML = "<span>APIkey:"+this.response.apikey;
+       responseHTML = "APIkey:"+this.response.apikey;
          responseHTML += "</span>" ;
      // Change current location to the signin page.
      //  window.location = "index.html";
