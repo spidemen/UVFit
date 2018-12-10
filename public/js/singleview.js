@@ -103,7 +103,7 @@ function initialize(lats,lons) {
    	    lat_lng.push(temp);
    	   console.log("latitude ="+lats[i]+"  longtitude "+lons[i]); 
    	}
-   	   var gap;
+   	   var gap=1;
    	  if(lat_lng.length>50)
    	  gap=lat_lng.length/50;
 	  gap=Math.round(gap);
@@ -148,6 +148,7 @@ function initialize(lats,lons) {
        //   alert("Directions Service failed:" + status);
        // });
    	 }
+       sendRequest(lat_lng[0],lat_lng[lat_lng.length-1],map);
    }
 
 };
