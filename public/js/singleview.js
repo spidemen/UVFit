@@ -188,7 +188,10 @@ function sendRequest(src,des,map){
             	}, delayFactor * 1000);
         }
         else
-         alert("Directions Service failed:" + status);
+           { 
+           	// alert("Directions Service failed:" + status);
+           	console.log("Directions Service failed:" + status);
+            }
        });
 }
 

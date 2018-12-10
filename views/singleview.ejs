@@ -1,6 +1,6 @@
 <% include partials/header %>
       
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/singleview.css">
     <script src="/js/singleview.js" defer></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -25,7 +25,7 @@
               <option value="running" selected> Running </option>
               <option value="biking" selected> Biking </option>
           </select>
-         <input type="submit" name="submit" id="submit" value="submit change"> 
+         <input  class="change" type="submit" name="submit" id="submit" value="submit change"> 
       </div>
       <br>
       <div  class="graph">
@@ -36,7 +36,7 @@
       <script 
      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEUrMudBp6oaC0ZbJgeXmNrKayVwr9WIM&callback=initMap">
      </script>
-    <p> Find us</p>
+   
       <div id="map">our location:  </div>
 
     <div id="formErrors">
