@@ -49,7 +49,7 @@ module.exports.Activities= Activities;
 var tokenSchema = new db.Schema({
     _userId: { type: db.Schema.Types.ObjectId, required: true, ref: 'User' },
     token: { type: String, required: true },
-    createdAt: { type: Date, required: true, default: Date.now, expires: 120 }
+    createdAt: { type: Date, required: true, default: Date.now, expires: 3600 }
 });
 const token=db.model('token', tokenSchema);
 module.exports.token= token;
