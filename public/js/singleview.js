@@ -100,13 +100,16 @@ function initialize(lats,lons) {
    for (var i=0;i<lats.length;i++) {
    	    var temp=new google.maps.LatLng(lats[i], lons[i]);
    	    lat_lng.push(temp);
-   	   console.log("latitude ="+lats[i]+"  longtitude "+lons[i]);
+   	   console.log("latitude ="+lats[i]+"  longtitude "+lons[i]); 
    	}
-      var gap;
+   	   var gap;
    	  if(lat_lng.length>50)
    	  gap=lat_lng.length/50;
+	  gap=Math.round(gap);
+	  console.log("gap="+gap);
   	 for (var t = 0;(t + 1) < lat_lng.length; t+=gap) {
-
+             var delayFactor=0;
+   	   console.log("map t="+t+"  latitude ="+lats[t]+"  longtitude "+lons[t]+" length"+lat_lng.length+"   latlen"+lats.length);
 	   	 	//Intialize the Direction Service
 	    var service = new google.maps.DirectionsService();
 	    var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -139,7 +142,13 @@ function initialize(lats,lons) {
 		            bounds.extend(result.routes[0].overview_path[k]);
 		            map.fitBounds(bounds);
 		          }
-        } else
+        } else if (status === google.maps.DirectionsStatus.OVER_QUERY_LIMIT) {
+            delayFactor++;
+            setTimeout(function () {
+                m_get_directions_route(request);
+            }, delayFactor * 1000);
+        }
+	else
          alert("Directions Service failed:" + status);
        });
    	 }
