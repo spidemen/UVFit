@@ -99,8 +99,8 @@ $("#getForecast").click(function(){
                     var dd = date.getDate();
                     var mm = date.getMonth()+1;
                     var yyyy = date.getFullYear();
-                    var minTemp = weatherInfo.main.temp_min;
-                    var maxTemp = weatherInfo.main.temp_max;
+                    var minTemp = ((weatherInfo.main.temp_min - 273.15)*9/5)+32; //(0K − 273.15) × 9/5 + 32
+                    var maxTemp = ((weatherInfo.main.temp_max - 273.15)*9/5)+32;
                     var rain = parseFloat(weatherInfo.hasOwnProperty("rain") ? (weatherInfo.rain.hasOwnProperty("3h") ? weatherInfo.rain["3h"] : 0) : 0);
                     var snow = parseFloat(weatherInfo.hasOwnProperty("snow") ? (weatherInfo.snow.hasOwnProperty("3h") ? weatherInfo.snow["3h"] : 0) : 0);
                     if(daysInfo.length == 0){
@@ -170,7 +170,7 @@ $("#getForecast").click(function(){
                     daySel = "#day"+day;
                     $(daySel+"Date").html(daysInfo[day].mm + "/" + daysInfo[day].dd + "/" + daysInfo[day].yyyy);
                     $(daySel+"Description").html(daysInfo[day].description);
-                    $(daySel+"Temp").html("Temp: " + daysInfo[day].minTemp + " - " + daysInfo[day].maxTemp);
+                    $(daySel+"Temp").html("Temp: " + daysInfo[day].minTemp.toFixed(1) + "&deg;F - " + daysInfo[day].maxTemp.toFixed(1) + "&deg;F");
                     if(daysInfo[day].rainVolume > 0) {
                         $(daySel+"Rain").html("Volume of Rain: " + daysInfo[day].rainVolume);
                     }
