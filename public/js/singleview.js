@@ -82,7 +82,7 @@ function SingleViewRespon(){
      var lons=this.response.activities.lons;
 	 initialize(lats,lons);
 
-	console.log(this.response.activities.uvs+"    speeds"+this.response.activities.speeds);
+	// console.log(this.response.activities.uvs+"    speeds"+this.response.activities.speeds);
       
 }
 
@@ -113,8 +113,12 @@ function initialize(lats,lons) {
 	     var bounds = new google.maps.LatLngBounds();
 	     var bounds = new google.maps.LatLngBounds();
 		    if ((t + 1) < lat_lng.length) {
+		    	var des;
 		      var src = lat_lng[t];
-		      var des = lat_lng[t + 1];
+		      if(t+gap+1>lat_lng.length)
+		      	des=lat_lng[lat_lng.length-1];
+		      else
+		         des = lat_lng[t + 1];
 		      service.route({
 		        origin: src,
 		        destination: des,
