@@ -351,13 +351,14 @@ router.post("/account/resend", (req, res)=> {
 
 
 router.post("/account/login", (req, res)=> {
-    
+ //     if(!req.body.email)   
+   //   res.status(400).json({create:false,message:"invalid email adress,please check your input"});
   console.log(req.body.email+"   "+req.body.password);
     User.findOne({email:req.body.email},function(err,user)
       {
           if(err)
           {   
-            res.status(400).json({create:false,message:err+" db error"});
+         return   res.status(400).json({create:false,message:err+" db error"});
           }
           else
           {
@@ -369,27 +370,27 @@ router.post("/account/login", (req, res)=> {
               bcrypt.compare(req.body.password, user.passwordHash, function(err, valid) {
                 if(err){
 					 
-                    res.status(400).json({create:false,message:"Error authenticating. Please contact support.mmmmmm"}); 
+               return     res.status(400).json({create:false,message:"Error authenticating. Please contact support.mmmmmm"}); 
                 }
                else{
                   if(valid){
 
-                    if(!user.isVerified)  res.status(401).send({ type: 'not-verified', message: 'Your account has not been verified.' }); 
+                    if(!user.isVerified)  return  res.status(401).send({ type: 'not-verified', message: 'Your account has not been verified.' }); 
                     else{
                     var token = jwt.encode({email: req.body.email}, secret);
                     console.log("Success find user");
-                    res.status(201).json({create:true,message:"sucess find",token:token});
+                 return   res.status(201).json({create:true,message:"sucess find",token:token});
                     }
                   }
                   else {
                     console.log(req.body.password+" hash "+user.passwordHash+" valid password "+ valid);
-                    res.status(400).json({create:false,message:"The email or password provided was invalid."});
+                 return   res.status(400).json({create:false,message:"The email or password provided was invalid."});
                   }
                }
              });
             }
           else{
-              res.status(400).json({create:false,message:"No any record find, please do create."});
+           return    res.status(400).json({create:false,message:"No any record find, please do create."});
           }
         }
 

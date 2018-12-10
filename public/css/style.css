@@ -106,13 +106,28 @@ label.email{
 	margin-top: 35px;
 }
 
-.form #login, #submit, #email, #password{
+.form  #submit, #email, #password{
 	display: block;
 	width: 60%;
 	margin: 4px;
 	float: none;
 	line-height: normal;
 	
+}
+#login{
+    display: block;
+        width: 60%;
+        margin: 4px;
+        float: none;
+        line-height: normal;
+}
+#verificate{
+	  display: none;
+        width: 60%;
+        margin: 4px;
+        float: none;
+        line-height: normal;
+
 }
 
 	

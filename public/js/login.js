@@ -1,7 +1,11 @@
 function sendReqLogin() {
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
-   
+    if(!email)
+     {
+     alert("Invalid email address"); 
+     // return ;  
+      }
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", RegisterResLogin);
     xhr.responseType = "json";
@@ -13,7 +17,7 @@ function sendReqLogin() {
  function RegisterResLogin(){
  	
     console.log("status="+this.status);
-    if (this.status === 201) {
+    if (this.status == 201) {
         window.localStorage.setItem("authToken", this.response.token);
         // console.log("toke "+this.response.token);
         window.location = "profile";
@@ -22,6 +26,8 @@ function sendReqLogin() {
      	if(this.status==401) {
      		$("#login").css('display',"none");
      		$("#verificate").css('display',"block");
+		$('#login').hide();
+		 $('#verificate').show();
      	}
      	console.log(this.response.message);
         alert("Fail "+this.response.message);
@@ -49,6 +55,8 @@ function VeriftyRes(){
 		alert("Success send your email, please verifty");
 	   $("#login").css('display',"block");
        $("#verificate").css('display',"none");
+		 $('#login').show()
+		 $('#verificate').hide()
 	}
 	else{
 	   alert("Fail "+this.response.message);
