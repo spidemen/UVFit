@@ -6,6 +6,7 @@ function sendReqLogin() {
      alert("Invalid email address"); 
      // return ;  
       }
+         console.log("test 0");
     var xhr = new XMLHttpRequest();
     xhr.addEventListener("load", RegisterResLogin);
     xhr.responseType = "json";
@@ -15,7 +16,7 @@ function sendReqLogin() {
 };
 
  function RegisterResLogin(){
- 	
+ 	   console.log("test 1");
     console.log("status="+this.status);
     if (this.status == 201) {
         window.localStorage.setItem("authToken", this.response.token);
@@ -24,17 +25,27 @@ function sendReqLogin() {
     }
      else {
      	if(this.status==401) {
-     		$("#login").css('display',"none");
+     	// 	$("#login").css('display',"none");
+     	// 	$("#verificate").css('display',"block");
+		    // $("#login").hidden();
+		    // $("#verificate").show();
+		    // $("#login").removeClass('btn btn-dark col-4');
+		    // console.log("test 2");
+		     $("#login").css('display',"none");
      		$("#verificate").css('display',"block");
-		$('#login').hide();
-		 $('#verificate').show();
      	}
+     		
+		    // $("#login").removeClass('btn btn-dark col-4');
+		    console.log("test 2");
+
      	console.log(this.response.message);
         alert("Fail "+this.response.message);
     }
  };
 
 $("#login").click(function(){
+	 $("#login").css('display',"none");
+     $("#verificate").css('display',"block");
        sendReqLogin();
 
 });
@@ -54,7 +65,7 @@ function VeriftyRes(){
 	if(this.status==200){
 		alert("Success send your email, please verifty");
 	   $("#login").css('display',"block");
-       $("#verificate").css('display',"none");
+        $("#verificate").css('display',"none");
 		 $('#login').show()
 		 $('#verificate').hide()
 	}

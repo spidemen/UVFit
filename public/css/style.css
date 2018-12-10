@@ -36,7 +36,7 @@ input[type=submit] {
 input[type=submit]:hover {
    background-color: #07d;
 }
-input[type=verificate] {
+/*input[type=verificate] {
    
     display: none;
    background-color: #09f;
@@ -49,7 +49,7 @@ input[type=verificate] {
 }
 input[type=verificate]:hover {
    background-color: #07d;
-}
+}*/
 input[type=text].error {
     border: 2px solid red;
 }
@@ -106,7 +106,7 @@ label.email{
 	margin-top: 35px;
 }
 
-.form  #submit, #email, #password{
+.form  #email, #password{
 	display: block;
 	width: 60%;
 	margin: 4px;
@@ -115,20 +115,33 @@ label.email{
 	
 }
 #login{
-    display: block;
+       display: block;
         width: 60%;
         margin: 4px;
         float: none;
         line-height: normal;
 }
 #verificate{
-	  display: none;
+	     display: none;
         width: 60%;
         margin: 4px;
         float: none;
         line-height: normal;
 
 }
+
+
+.show {
+  display: block !important;
+}
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+.invisible {
+  visibility: hidden;
+}
+
 
 	
 /*  Tablet  */
