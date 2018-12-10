@@ -855,6 +855,7 @@ router.get("/activities/all", (req, res)=> {
                                                   var totaluv=0;
                                                   var  count=0;
                                                   var totaldistance=0;
+                                                  var speeds=0;
                                                   for( var oneActivity of activities){
                                                      if(oneActivity.duration)
                                                       totalduration+=oneActivity.duration;
@@ -863,6 +864,8 @@ router.get("/activities/all", (req, res)=> {
                                                      if(oneActivity.uvExposure)
                                                       totaluv+=oneActivity.uvExposure;
                                                       count++;
+                                                      if(oneActivity.duration&&oneActivity.avgSpeed)
+                                                        speeds+=(oneActivity.avgSpeed*oneActivity.duration);
                                                   }
                                                   responseJson.user.push({ 
                                                           "userName": userName,
@@ -870,10 +873,10 @@ router.get("/activities/all", (req, res)=> {
                                                           "avgduration": totalduration/count,
                                                           "avgcalories":  totalcalories/count, 
                                                           "avguv":  totaluv/count,
-                                                          "avgdistance": activities.avgSpeed*totalduration,
+                                                          "avgdistance": speeds/count,
                                                           "totalactivities": count
                                                       });
-                                      
+                                                    
                                                  resolve(responseJson);
 
                                               }
@@ -1049,6 +1052,7 @@ var promise = new Promise(function (resolve, reject) {
                                                           var totaluv=0;
                                                           var  count=0;
                                                           var totaldistance=0;
+                                                          var  speeds=0;
                                                           for( var oneActivity of activities){
                                                               if(oneActivity.duration)
                                                               totalduration+=oneActivity.duration;
@@ -1057,14 +1061,17 @@ var promise = new Promise(function (resolve, reject) {
                                                                if(oneActivity.uvExposure)
                                                               totaluv+=oneActivity.uvExposure;
                                                               count++;
+                                                               if(oneActivity.duration&&oneActivity.avgSpeed)
+                                                               speeds+=(oneActivity.avgSpeed*oneActivity.duration);
                                                           }
+
                                                           responseJson.user.push({ 
                                                                   "userName": userName,
                                                                   "deviceId": deviceId,
                                                                   "avgduration": totalduration/count,
                                                                   "avgcalories":  totalcalories/count, 
                                                                   "avguv":  totaluv/count,
-                                                                  "avgdistance": activities.avgSpeed*totalduration,
+                                                                  "avgdistance": speeds/count,
                                                                   "totalactivities": count,
                                                                    "group": key
                                                               });
