@@ -2,13 +2,13 @@
 .profile
 {
 	margin-top: 100px;
-	margin-left: 150px;
+	margin-left: 100px;
 	margin-bottom: 400px;
 	float: none;
 }
 .leftbar{
 
-	display: block;
+	display: inline-block;
 	width: 200px;
 	margin: 4px;
 	text-align: center;
@@ -29,7 +29,7 @@
 	border: 1px solid #cccccc;
 	border-radius: 1px;
     box-shadow: 0px 2px 2px #dddddd, 0px 0px 5px #dddddd;
- 
+
 
 }
 .registerbox{
@@ -124,7 +124,7 @@ input[type=text].error {
 
 .form{
 	width: 670px;
-	margin-top: 0;
+	margin-top: 10;
 	margin-left:0; 
 	font: 10pt Arial;
 	background-color: #eee;
@@ -193,29 +193,83 @@ input[type=text].error {
   	color:red;
 }
 /***  Responsive Design  ***/
+/*  Desk top */
+@media only screen and (min-width: 800px) {
+.profile{
+	margin-top: 50px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	float: none;
+}
+.rightbar{
+	display: inline-block;
+	width: 750px;
+	margin: 4px;
+	float: left;
+	line-height: normal;
+}
+
+.leftbar {
+	display: inline-block;
+	float: left;
+	line-height: normal;
+	position: relative;	
+	margin: 4px;
+}
+
+}
+	
 /*  Tablet  */
 @media only screen and (max-width: 800px) {
-  nav {
-     float: none;
-     width: auto;
-     line-height: 100px;
-  }   
-  #main {
-     width: 60%;
-  }   
-  aside {
-     width: 40%;
-  }
+	
+.profile{
+	margin-top: 30px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	float: none;
+}
+.leftbar {
+	display: inline-block;
+	float: left;
+	line-height: normal;
+	position: relative;	
+	margin: 4px;
+}
+.rightbar{
+	display: inline-block;
+	float: left;
+    width: auto;
+    line-height: normal;
+	margin: 4px;
+}
+.form{
+	width:500;
+	margin-top: 0px;
+}
+
+.form input[type=submit],
+.form input[type=password],
+.form input[type=text]{
+	width: 470px;
+}
 }
 
 /*  Mobile  */
 @media only screen and (max-width: 600px) {
-  body {
-     margin: 0;
-     width: 100vw;
-  }
-  #main, aside {
-     float: none;
-     width: auto;
-  }
+.leftbar{
+	display: block;
+	float: left;
+	line-height: normal;
+	position: relative;	
+	width: 100px;
+}
+.leftbar input{
+	line-height: normal;
+	font-size: small;
+	padding: 0px;
+	vertical-align: text-top;
+	width: 90px;
+}
+
+
 }

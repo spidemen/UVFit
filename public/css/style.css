@@ -158,4 +158,76 @@ label.email{
 	display: block;
 }
 
+/***  Responsive Design  ***/
+/*  Desk top */
+@media only screen and (min-width: 800px) {
+div{
+	display:flex;    
+    align-items:center;
+}
+.form {
+	display: block;
+	width: 750px;
+	margin: 4px;
+	float: none;
+	line-height: normal;
+	margin-top: 35px;
+}
+
+.form #login, #submit, #email, #password{
+	display: block;
+	width: 710px;
+	margin: 4px;
+	float: none;
+	line-height: normal;
+	
+}
+
+}
+	
+/*  Tablet  */
+@media only screen and (max-width: 800px) {
+	
+.profile{
+	margin-top: 30px;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	float: none;
+}
+.leftbar {
+	display: inline-block;
+	float: left;
+	line-height: normal;
+	position: relative;	
+	margin: 4px;
+}
+.rightbar{
+	display: inline-block;
+	float: left;
+    width: auto;
+    line-height: normal;
+	margin: 4px;
+}
+
+}
+
+
+}
+
+/*  Mobile  */
+@media only screen and (max-width: 600px) {
+.leftbar{
+	display: block;
+	float: left;
+	line-height: normal;
+	position: relative;	
+	width: 100px;
+}
+.leftbar input{
+	line-height: normal;
+	font-size: small;
+	padding: 0px;
+	vertical-align: text-top;
+	width: 90px;
+}
 
