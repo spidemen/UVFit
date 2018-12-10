@@ -143,7 +143,7 @@ router.post('/activities/datapoints', function(req, res, next) {
                                             userDevices: req.body.deviceId
                                         }, 
                                         {
-                                            $push: {
+                                            $set: {
                                                 loc: [activity.lons[0], activity.lats[0]]
                                             }
                                         },
