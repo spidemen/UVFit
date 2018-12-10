@@ -250,7 +250,7 @@ router.post("/account/create", (req, res)=> {
                       var mailOptions = { from: 'uvfit2018@gmail.com', to: req.body.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + "/confirmation?id=" +tokeninput};
                       transporter.sendMail(mailOptions, function (err) {
                       if (err) {    console.log(err);  return res.status(400).json({create:false,message:"Error: send user email"});; }
-                      res.status(200).json({create:false,message:'Success create a user , A verification email has been sent to ' + user.email + '. please do email verification within one hours'});
+                      res.status(201).json({create:false,message:'Success create a user , A verification email has been sent to ' + user.email + '. please do email verification within one hours'});
                       });    
                       //   res.status(201).json({create:true,message:"Success create a user"});   
                   }); 
@@ -260,7 +260,7 @@ router.post("/account/create", (req, res)=> {
                }
              else{
                       
-                  res.status(400).json({create:false,message:"User  already exit, please choose another email"});
+                  res.status(400).json({create:false,message:"Email already exists."});
             }
 
         } 

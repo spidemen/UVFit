@@ -1,6 +1,4 @@
-
-
-   function sendReqLogin() {
+function sendReqLogin() {
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
    
@@ -10,27 +8,24 @@
     xhr.open("POST", '/account/login');
     xhr.setRequestHeader("Content-type", "application/json");
     xhr.send(JSON.stringify({email:email, password:password}));
-   };
+};
 
  function RegisterResLogin(){
  	
-     console.log("status="+this.status);
-     if (this.status === 201) 
-     {
-     	alert("Success login");
-       window.localStorage.setItem("authToken", this.response.token);
-      // console.log("toke "+this.response.token);
+    console.log("status="+this.status);
+    if (this.status === 201) {
+        window.localStorage.setItem("authToken", this.response.token);
+        // console.log("toke "+this.response.token);
         window.location = "profile";
-     }
-     else
-     {
-     	if(this.status==401){
+    }
+     else {
+     	if(this.status==401) {
      		$("#login").css('display',"none");
      		$("#verificate").css('display',"block");
      	}
      	console.log(this.response.message);
         alert("Fail "+this.response.message);
-     }
+    }
  };
 
 $("#login").click(function(){
