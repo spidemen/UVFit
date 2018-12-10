@@ -495,7 +495,7 @@ router.post("/devices/register", (req, res,next)=> {
                             else
                             {
                               console.log("success update user ");
-                               res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered."}) 
+                               res.status(201).json( {registered: true, message: "Device ID:"+req.body.deviceId + " was registered.",apikey:deviceApikey}) 
                             }
                          });
                }
