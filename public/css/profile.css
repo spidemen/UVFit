@@ -189,6 +189,7 @@ input[type=text].error {
 	margin-left: 10px;
 	margin-bottom: 10px;
 	float: none;
+	text-align: center;	
 }
 .rightbar{
 	display: inline-block;
@@ -196,6 +197,7 @@ input[type=text].error {
 	margin: 4px;
 	float: left;
 	line-height: normal;
+	text-align: center;
 }
 
 .leftbar {
@@ -204,6 +206,7 @@ input[type=text].error {
 	line-height: normal;
 	position: relative;	
 	margin: 4px;
+	text-align: center;
 }
 
 }
@@ -223,6 +226,7 @@ input[type=text].error {
 	line-height: normal;
 	position: relative;	
 	margin: 4px;
+	text-align: center;
 }
 .rightbar{
 	display: inline-block;
@@ -230,6 +234,7 @@ input[type=text].error {
     width: auto;
     line-height: normal;
 	margin: 4px;
+	text-align: center;
 }
 .form{
 	width:500;
@@ -251,6 +256,7 @@ input[type=text].error {
 	line-height: normal;
 	position: relative;	
 	width: 100px;
+	text-align: center;
 }
 .leftbar input{
 	line-height: normal;
@@ -258,8 +264,8 @@ input[type=text].error {
 	padding: 0px;
 	vertical-align: text-top;
 	width: 90px;
+	text-align: center;
 }
 
 }
 
-*/

@@ -251,7 +251,7 @@ function DeviceChangeRespon(){
 /* single view ***********************************************************/
 
 /* single view */
-$("table").on('click', 'tr', onCellClick);
+// $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
 
@@ -361,6 +361,7 @@ $("#listview").click(function(){
    $("#summary").html("Following is the list view all the activities");
     $("#main > div").css('display', "none");
     $(".view").css('display',"block");
+    $("table").on('click', 'tr', onCellClick);
     sendReqViewData();
 });
 function  sendReqViewData(){
@@ -404,6 +405,9 @@ function ViewDataRespon(){
     {
       console.log("Error: view data "+this.status);
     }
+	
+    $("tr").css("color","blue");
+     $("tr").css("text-decoration","underline");
 
 }
 /*****************************************************/
@@ -418,6 +422,7 @@ $("#summaryview").click(function(){
     $("#main > div").css('display', "none");
     $(".view").css('display',"block");
 
+    $("table").unbind('click');
     // $("#table2").css('display', "inline-block");
     // $("#table1").css('display',"none");
     sendReqSummaryView();
@@ -480,7 +485,9 @@ $("#allUserView").click(function(){
     $(".view").css('display',"block");
       $("table").html("This would be very slow, please wait...............")
 
-     sendReqAllUserView();
+    $("table").unbind('click');
+    
+      sendReqAllUserView();
 });
 
 function sendReqAllUserView(){
@@ -541,7 +548,9 @@ $("#localUserView").click(function(){
     $(".main > div").css('display', "none");
     $(".view").css('display',"block");
        $("table").html("This would be very slow, please wait...............")
-      sendReqLocalUserView();
+      
+    $("table").unbind('click');
+	sendReqLocalUserView();
 });
 function sendReqLocalUserView(){
 
