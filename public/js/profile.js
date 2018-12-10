@@ -546,7 +546,7 @@ function sendReqLocalUserView(){
   var xhr = new XMLHttpRequest();
   xhr.addEventListener("load", ViewLocalUserDataRespon);
   xhr.responseType = "json";
-  xhr.open("GET", '/activities/local');
+  xhr.open("GET", '/activities/local?id='+email);
   xhr.setRequestHeader("Content-type", "application/json");
   console.log("send all user view"+email);
   xhr.send();

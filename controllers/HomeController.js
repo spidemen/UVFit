@@ -923,6 +923,10 @@ router.get("/activities/all", (req, res)=> {
 
 router.get("/activities/local", (req, res)=> {
 
+
+      var email=req.param('id');
+     // var email="UVFit@gmail.com"
+       console.log("para email "+email);
     let responseJson = {
         success: true,
         user:[ {
@@ -938,7 +942,7 @@ router.get("/activities/local", (req, res)=> {
       let zipMap = new Map();
 
 var promise = new Promise(function (resolve, reject) {
-      User.find({},function(err, cursor){
+      User.findOne({email:email},function(err, user){
             if(err){
                 responseJson.success = false;
                 responseJson.message = "Error find user  on db.";
@@ -946,8 +950,8 @@ var promise = new Promise(function (resolve, reject) {
                      //  return res.status(400).send(JSON.stringify(responseJson));
                  }
                  var group=1;
-                cursor.forEach( function(user) {
-                   console.log(user.email+"test debug curosr loop");
+                // cursor.forEach( function(user) {
+                  console.log(user.email+".  test debug curosr loop");
                if(typeof(user.loc)!="undefined"&&typeof(user.loc)!="undefined"){
                   
                 var findZipQuery = User.find({
@@ -966,10 +970,10 @@ var promise = new Promise(function (resolve, reject) {
                      }
                         ZipUser.forEach( function(zip) {
                               if(zip&&user.email!=zip.email){
-                                  Zip.push({
-                                      'email':user.email,
-                                       'group':group
-                                  });
+                                  // Zip.push({
+                                  //     'email':user.email,
+                                  //      'group':group
+                                  // });
                                   Zip.push({
                                     'email':zip.email,
                                      'group': group
@@ -996,7 +1000,7 @@ var promise = new Promise(function (resolve, reject) {
                 }
               
              
-          });
+          // });
        });
   });
   promise.then(  function (Zip) { 
