@@ -24,10 +24,6 @@ router.get("/create", (req, res)=> {
     res.render("register");
 })
 router.get("/profile", (req, res)=> {
-       if (!req.headers["x-auth"]) {
-       res.render("login");
-      // return res.status(401).json({success: false, message: "No authentication token"});
-   }else
     res.render("profile");  
 })
 router.get("/login", (req, res)=> {
