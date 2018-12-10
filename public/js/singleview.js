@@ -89,6 +89,7 @@ function SingleViewRespon(){
 /*  ------------------------google map------------------------------------------------*/
 var map;
 var geocoder;
+var delayFactor=0;
 function initialize(lats,lons) {
   var map = new google.maps.Map(
     document.getElementById("map"), {
@@ -111,7 +112,7 @@ function initialize(lats,lons) {
 	    var service = new google.maps.DirectionsService();
 	    var directionsDisplay = new google.maps.DirectionsRenderer();
 	     var bounds = new google.maps.LatLngBounds();
-	     var bounds = new google.maps.LatLngBounds();
+	     // var bounds = new google.maps.LatLngBounds();
 		    if ((t + 1) < lat_lng.length) {
 		    	var des;
 		      var src = lat_lng[t];
@@ -119,7 +120,40 @@ function initialize(lats,lons) {
 		      	des=lat_lng[lat_lng.length-1];
 		      else
 		         des = lat_lng[t + 1];
-		      service.route({
+		     sendRequest(service,src,dec,directionsDisplay);
+		     //  service.route({
+		     //    origin: src,
+		     //    destination: des,
+		     //    travelMode: google.maps.DirectionsTravelMode.DRIVING
+		     //  }, function(result, status) {
+		     //    if (status == google.maps.DirectionsStatus.OK) {
+		     //      // new path for the next result
+		     //      var path = new google.maps.MVCArray();
+		     //      //Set the Path Stroke Color
+		     //      // new polyline for the next result
+		     //      var poly = new google.maps.Polyline({
+		     //        map: map,
+		     //        strokeColor: '#4986E7'
+		     //      });
+		     //   	   poly.setPath(path);
+				   //  for (var k = 0, len = result.routes[0].overview_path.length; k < len; k++) {
+		     //        path.push(result.routes[0].overview_path[k]);
+		     //        bounds.extend(result.routes[0].overview_path[k]);
+		     //        map.fitBounds(bounds);
+		     //      }
+       //  } else
+       //   alert("Directions Service failed:" + status);
+       // });
+   	 }
+   }
+
+};
+
+google.maps.event.addDomListener(window, "load", initialize);
+
+function sendRequest(service,src,dec,directionsDisplay){
+
+  		service.route({
 		        origin: src,
 		        destination: des,
 		        travelMode: google.maps.DirectionsTravelMode.DRIVING
@@ -139,15 +173,18 @@ function initialize(lats,lons) {
 		            bounds.extend(result.routes[0].overview_path[k]);
 		            map.fitBounds(bounds);
 		          }
-        } else
+        } 
+         else if (status === google.maps.DirectionsStatus.OVER_QUERY_LIMIT) {
+            delayFactor++;
+            setTimeout(function () {
+               sendRequest(service,src,dec,directionsDisplay)
+            }, delayFactor * 1000);
+        }
+        else
          alert("Directions Service failed:" + status);
        });
-   	 }
-   }
+}
 
-};
-
-google.maps.event.addDomListener(window, "load", initialize);
 
 $("#submit").click(function(){
 
