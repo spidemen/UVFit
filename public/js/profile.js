@@ -2,6 +2,11 @@ var username;
 var email;
 var deviceId;
 var apikey;
+
+$("#logout").click(function(){
+        console.log("remove iterm storage");
+        window.localStorage.removeItem("authToken");
+  });
 $(window).on("load", function () {
     $.ajax({
         url:'/account/user',
@@ -15,13 +20,14 @@ $(window).on("load", function () {
             $("div.form #fullName").attr("value",username); //to auto-fill update account form
             deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
             apikey=data.devices[0].apikey;
+            console.log("userName+"+username);
             $("#user").html(username);
         },
         error: function(jqXHR, textStatus, errorThrown){
             var response = JSON.parse(jqXHR.responseText);
              alert("Fail get data "+response.message+" check expire login");
             window.location = "login"; 
-	   console.log("Fail get data "+response.message);
+	         console.log("Fail get data "+response.message);
         }
    });
 });

@@ -1,3 +1,9 @@
+
+$("#logout").click(function(){
+        console.log("remove iterm storage");
+        window.localStorage.removeItem("authToken");
+  });
+
 var date,deviceId;
 $(window).on("load", function () {
   $.ajax({

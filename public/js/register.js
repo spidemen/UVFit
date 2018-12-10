@@ -1,3 +1,8 @@
+
+$("#logout").click(function(){
+        console.log("remove iterm storage");
+        window.localStorage.removeItem("authToken");
+  });
 var checksumbit=document.getElementById("submit");
 var savetable=document.getElementById("formErrors");
 function  CheckInput() {

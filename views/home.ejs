@@ -13,8 +13,11 @@
         </a>
     </div>
 </div>
-<script 
-    $("#logout").click(function(){
-    window.localStorage.removeItem("authToken");
-    });
+<script>
+   $(window).on("load", function () {
+      $("#logout").click(function(){
+        console.log("remove iterm storage");
+        window.localStorage.removeItem("authToken");
+      });
+   });
 </script>

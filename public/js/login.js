@@ -1,3 +1,7 @@
+$("#logout").click(function(){
+        console.log("remove iterm storage");
+        window.localStorage.removeItem("authToken");
+  });
 function sendReqLogin() {
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
