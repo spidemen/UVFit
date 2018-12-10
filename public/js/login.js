@@ -40,7 +40,7 @@ function sendReqLogin() {
      	}
      		
 		    // $("#login").removeClass('btn btn-dark col-4');
-		    console.log("test 2");
+		    
 
      	console.log(this.response.message);
         alert("Fail "+this.response.message);
@@ -48,8 +48,7 @@ function sendReqLogin() {
  };
 
 $("#login").click(function(){
-	 $("#login").css('display',"none");
-     $("#verificate").css('display',"block");
+	  //    $("#verificate").css('display',"block");
        sendReqLogin();
 
 });
