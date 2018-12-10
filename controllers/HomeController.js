@@ -556,7 +556,7 @@ router.post("/activities/single", (req, res,next)=> {
                       "lons":  activities.lons,
                        "speeds":activities.speeds,
                        "uvs": activities.uvIndices,
-                        "times":timestamps
+                        "times":activities.timestamps
                     };
                     console.log(activities.speeds+" this is bug single view");
                     console.log(responseJson)
@@ -778,8 +778,11 @@ router.post("/activities/summary", (req, res)=> {
             var totalcalories=0;
             var totaluv=0;
             for( var oneActivity of activities){
+                if(oneActivity.duration)
                 totalduration+=oneActivity.duration;
+               if(oneActivity.calories)
                 totalcalories+=oneActivity.calories;
+                if(oneActivity.uvExposure)
                 totaluv+=oneActivity.uvExposure;
             }
             responseJson['totalduration']=totalduration;
@@ -853,8 +856,11 @@ router.get("/activities/all", (req, res)=> {
                                                   var  count=0;
                                                   var totaldistance=0;
                                                   for( var oneActivity of activities){
+                                                     if(oneActivity.duration)
                                                       totalduration+=oneActivity.duration;
+                                                      if(oneActivity.calories)
                                                       totalcalories+=oneActivity.calories;
+                                                     if(oneActivity.uvExposure)
                                                       totaluv+=oneActivity.uvExposure;
                                                       count++;
                                                   }
@@ -917,6 +923,10 @@ router.get("/activities/all", (req, res)=> {
 
 router.get("/activities/local", (req, res)=> {
 
+
+      var email=req.param('id');
+     // var email="UVFit@gmail.com"
+       console.log("para email "+email);
     let responseJson = {
         success: true,
         user:[ {
@@ -932,7 +942,7 @@ router.get("/activities/local", (req, res)=> {
       let zipMap = new Map();
 
 var promise = new Promise(function (resolve, reject) {
-      User.find({},function(err, cursor){
+      User.findOne({email:email},function(err, user){
             if(err){
                 responseJson.success = false;
                 responseJson.message = "Error find user  on db.";
@@ -940,8 +950,8 @@ var promise = new Promise(function (resolve, reject) {
                      //  return res.status(400).send(JSON.stringify(responseJson));
                  }
                  var group=1;
-                cursor.forEach( function(user) {
-                   console.log(user.email+"test debug curosr loop");
+                // cursor.forEach( function(user) {
+                  console.log(user.email+".  test debug curosr loop");
                if(typeof(user.loc)!="undefined"&&typeof(user.loc)!="undefined"){
                   
                 var findZipQuery = User.find({
@@ -960,10 +970,10 @@ var promise = new Promise(function (resolve, reject) {
                      }
                         ZipUser.forEach( function(zip) {
                               if(zip&&user.email!=zip.email){
-                                  Zip.push({
-                                      'email':user.email,
-                                       'group':group
-                                  });
+                                  // Zip.push({
+                                  //     'email':user.email,
+                                  //      'group':group
+                                  // });
                                   Zip.push({
                                     'email':zip.email,
                                      'group': group
@@ -990,7 +1000,7 @@ var promise = new Promise(function (resolve, reject) {
                 }
               
              
-          });
+          // });
        });
   });
   promise.then(  function (Zip) { 
@@ -1040,8 +1050,11 @@ var promise = new Promise(function (resolve, reject) {
                                                           var  count=0;
                                                           var totaldistance=0;
                                                           for( var oneActivity of activities){
+                                                              if(oneActivity.duration)
                                                               totalduration+=oneActivity.duration;
+                                                               if(oneActivity.calories)
                                                               totalcalories+=oneActivity.calories;
+                                                               if(oneActivity.uvExposure)
                                                               totaluv+=oneActivity.uvExposure;
                                                               count++;
                                                           }
@@ -1120,13 +1133,15 @@ router.post("/account/update", (req, res)=> {
 							// create new token
 							token = jwt.encode({email: req.body.email}, secret);
 						}
-						// hash new password
-						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
-							user.passwordHash = hash;
-							user.save(function (err, user) {
-									console.log("updated password");
-							});
-						});
+            if(req.body.newpassword!=null){ //not need to update password
+      						// hash new password
+      						bcrypt.hash(req.body.newpassword, null, null, function(err, hash) {
+      							user.passwordHash = hash;
+      							user.save(function (err, user) {
+      									console.log("updated password");
+      							});
+      						});
+              }
 						// update token if new and old emails are different
 						if (req.body.newemail != user.email){
 							res.status(201).json({updated: true, message:"Account updated successfully.", token:token});

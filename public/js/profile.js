@@ -253,6 +253,7 @@ function DeviceChangeRespon(){
 /********************************************************************/
 /* single view ***********************************************************/
 
+/* single view */
 $("table").on('click', 'tr', onCellClick);
 
 function onCellClick() {
@@ -268,11 +269,9 @@ function onCellClick() {
    console.log(date);
    $(".RowDate").html(date);
 
-   window.open("singleview?id="+date+"&deviceid=agagag", 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
+   window.open("singleview?id="+date+"&deviceid="+deviceId, 'newwindow', "height=600, width=800, top=30%,left=30%, toolbar=no, menubar=no, scrollbars=no, resizable=no,location=no, status=no");
    
 }
-
-/**********************************************************************/
 
 /*   This API Just for test      */
 $("#storeData").click(function(){
@@ -307,7 +306,7 @@ $("#submit").click(function(){
 
 
 function sendReqRegister() {
-    var email = document.getElementById("email").value;
+    // var email = document.getElementById("email").value;
     var deviceId = document.getElementById("DeviceId").value;
     var deviceName = document.getElementById("DeviceName").value;
 
@@ -386,11 +385,13 @@ function ViewDataRespon(){
           responseHTML+="<tr> <td> Date: </td>  <td> Activity Duration:  </td>  <td>  Calories Burned:  </td>  <td>   UV exposure:   </td>  </tr>";
         for(var  data of this.response.activities)
         {
-             responseHTML+="<tr> ";
+
+            responseHTML+="<tr> ";
             responseHTML+="<td>"+data.date+"</td>";
             responseHTML+="<td>  "+data.duration+" </td>";
-            responseHTML+="<td>"+data.uvExposure+"</td>";
             responseHTML+="<td>"+data.calories+"</td>";
+             responseHTML+="<td>"+data.uvExposure+"</td>";
+         
              responseHTML+="</tr>"
         }
        
@@ -405,7 +406,7 @@ function ViewDataRespon(){
 }
 /*****************************************************/
 
-/*summary view  */
+
 
 /*summary view  *******************************************************/
 
@@ -446,8 +447,9 @@ function ViewSummaryDataRespon(){
            responseHTML+="<tr> ";
        //   responseHTML+="<td>"+data.date+"</td>";
           responseHTML+="<td>  "+data.totalduration+" </td>";
-          responseHTML+="<td>"+data.totaluv+"</td>";
+        
           responseHTML+="<td>"+data.totalcalories+"</td>";
+            responseHTML+="<td>"+data.totaluv+"</td>";
            responseHTML+="</tr>"
       // }
      
@@ -530,7 +532,6 @@ function ViewAllUserDataRespon(){
 
 /*------------------------------------------------------------*/
 
-
 /****************************Local user view ****************************************/
 $("#localUserView").click(function(){
     $("#summary").css('display',"block");
@@ -545,7 +546,7 @@ function sendReqLocalUserView(){
   var xhr = new XMLHttpRequest();
   xhr.addEventListener("load", ViewLocalUserDataRespon);
   xhr.responseType = "json";
-  xhr.open("GET", '/activities/local');
+  xhr.open("GET", '/activities/local?id='+email);
   xhr.setRequestHeader("Content-type", "application/json");
   console.log("send all user view"+email);
   xhr.send();
@@ -723,9 +724,12 @@ function  CheckInput() {
 	else{
 		newpassword.classList.remove("error");
 	}
+
+
+
 		
     var confirm=document.getElementById("passwordConfirm").value;
-    if(confirm!=newpw){
+    if(confirm!=newpw&&oldpw!=null){
 		document.getElementById("passwordConfirm").classList.add("error");
 		savetable.style.display="block";
 		tableHTML+="<li>New password and confirmation password don't match.</li>";
@@ -734,7 +738,6 @@ function  CheckInput() {
         document.getElementById("passwordConfirm").classList.remove("error");
     }
 
-    savetable.innerHTML = tableHTML;
 	
 	if(!flag){
 		
