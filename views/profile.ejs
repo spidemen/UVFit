@@ -1,166 +1,191 @@
 <% include partials/header %>
-  <link rel="stylesheet" href="/css/profile.css">
-  <script src="/js/profile.js" defer></script>
- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <div class="profile">
-    <div class="leftbar">
-		<br>	
-        <p id="user"></p>
-		<input type="button" name="registerdevice" id="register" value="Register Device"> 
-		<br><br>
-		 <input type="button" name="updateAccount" id="updateAccount" value="Update Account"> 
-		<br><br>
-        <input type="button" name="setUvThreshold" id="setUvThreshold" value="Set UV Threshold"> 
-	 	<br> <br>
-         <input type="button" name="replaceDevice" id="replaceDevice" value="Replace a device"> 
+<link rel="stylesheet" href="/css/profile.css">
+<script src="/js/profile.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
-        <input type="submit" name="getForecast" id="getForecast" value="Weather Forecast"> 
-	
-        <input type="submit" name="listview" id="listview" value="List view"> 
-		
-        <input type="submit" name="summaryview" id="summaryview" value="summary view"> 
-   
-        <input type="submit" name="localUserView" id="localUserView" value="local User view"> 
-         <input type="submit" name="allUserView" id="allUserView" value="all user view"> 
+<div class="container">
+    <div id="sidebar" class="col-md-4 col-xl-3">
+        <h1 id="user" class="text-center"></h1>
+        <div class="btn-group-vertical col-sm-12">
+            <button type="button" name="registerdevice" id="register" class="btn">Register Device</button>
+            <button type="button" name="updateAccount" id="updateAccount" class="btn">Update Account Info</button>
+            <button type="button" name="setUvThreshold" id="setUvThreshold" class="btn">Set UV Threshold</button>
+            <button type="button" name="replaceDevice" id="replaceDevice" class="btn">Replace My Device</button>
+            <button type="submit" name="getForecast" id="getForecast" class="btn">See Weather Forecast</button>
+            <button type="submit" name="summaryview" id="summaryview" class="btn">My 7 Day Summary</button>
+            <button type="submit" name="listview" id="listview" class="btn">List All My Activities</button>
+            <button type="submit" name="localUserView" id="localUserView" class="btn">Local Users Activities</button>
+            <button type="submit" name="allUserView" id="allUserView" class="btn">All Users Activities</button>
+        </div>
     </div>
 	
-    <div class="rightbar">
-      <div class="registerbox">
-      <!--
-       <label>Email address</label> 
-       <br>
-       <input type="text" name="email" id="email"> 
-       -->
-       <br>
-       <label>Device ID</label>
-       <br>
-       <input  type="text" id="DeviceId">  
-       <br>
-       <label>Device Name</label> 
-       <br>
-       <input type="text" name="DeviceName" id="DeviceName"> 
-       <br>  
-       <input type="submit" name="submit" id="submit" value="Register"> 
-	</div>
+    <div id="main" class="col-md-8 col-xl-9">
+        <div class="registerbox">
+            <div class="form-group">
+                <h1>Register Device</h1>
+            </div>
+            <div class="form-group">
+                <label for="DeviceId">Device ID</label>
+                <input type="text" id="DeviceId" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Device Name</label>
+                <input type="text" id="DeviceName" class="form-control">
+            </div>
+            <input type="submit" name="submit" id="submit" value="Register"> 
+        </div>
 	  
-	<div class="updateAccountForm">
-		<div class="form">
-			<h1>Update Account</h1>
-			<label>Full Name</label>
-			<input type="text" id="fullName" value="">
-			<label>Old Email</label>
-			<input type="text" id="oldemail" value="">
-			<label>New Email</label>
-			<input type="text" id="newemail" value="">
-			<label>Old Password</label> 
-			<input type="password" name="" id="oldpassword"> 
-			<label>New Password</label>
-			<input type="password" name="" id="newpassword"> 
-			<label>Confirm Password</label> 
-			<input type="password" name="" id="passwordConfirm"> 
-			
-			<div id="formErrors"></div>
-			
-			<input type="submit" name="submit" id="submitUpdate" value="Submit"> 
-		</div>
-	</div>
+        <div class="updateAccountForm">
+            <div class="form-group">
+                <h1>Update Account</h1>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="fullName" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Old Email</label>
+                <input type="text" id="oldemail" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>New Email</label>
+                <input type="text" id="newemail" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Old Password</label> 
+                <input type="password" id="oldpassword" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="newpassword" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Confirm Password</label> 
+                <input type="password" id="passwordConfirm" class="form-control">
+            </div>
+            
+            <div id="formErrors" class="form-group"></div>
+            
+            <input type="submit" name="submit" id="submitUpdate" value="Submit">
+        </div>
 
         <div class="thresholdForm">
-            <label>UV Exposure Threshold</label>
-            <br>
-            <input type="text" id="uvThres">
-            <br>
-            <div id="thresholdFormMessage"></div>
+            <div class="form-group">
+                <label>UV Exposure Threshold</label>
+                <input type="text" id="uvThres" class="form-control">
+            </div>
+            <div class="form-group">
+                <div id="thresholdFormMessage"></div>
+            </div>
             <input type="submit" name="submitThres" id="submitThres" value="Submit">
         </div>
-        
-        <div class="forecastForm">
-            <h1>Weather Forecast</h1>
-            <p>Based on most recent lat/lon</p>
-            <p id="forecastCityName"></p>
-            <p id="forecastLatLon"></p>
-            <div id="day0">
-                <p id="day0Date"></p>
-                <p id="day0Description"></p>
-                <p id="day0Temp"></p>
-                <p id="day0Rain"></p>
-                <p id="day0Snow"></p>
-                <p id="day0UvIndex"></p>
-            </div>
-            <div id="day1">
-                <p id="day1Date"></p>
-                <p id="day1Description"></p>
-                <p id="day1Temp"></p>
-                <p id="day1Rain"></p>
-                <p id="day1Snow"></p>
-                <p id="day1UvIndex"></p>
-            </div>
-            <div id="day2">
-                <p id="day2Date"></p>
-                <p id="day2Description"></p>
-                <p id="day2Temp"></p>
-                <p id="day2Rain"></p>
-                <p id="day1Snow"></p>
-                <p id="day2UvIndex"></p>
-            </div>
-            <div id="day3">
-                <p id="day3Date"></p>
-                <p id="day3Description"></p>
-                <p id="day3Temp"></p>
-                <p id="day3Rain"></p>
-                <p id="daySnow"></p>
-                <p id="day3UvIndex"></p>
-            </div>
-            <div id="day4">
-                <p id="day4Date"></p>
-                <p id="day4Description"></p>
-                <p id="day4Temp"></p>
-                <p id="day4Rain"></p>
-                <p id="day4Snow"></p>
-                <p id="day4UvIndex"></p>
+            
+        <div class="forecastForm text-center">
+            <h1 class="">Weather Forecast</h1>
+            <p class="">Based on most recent lat/lon</p>
+            <h2 class="" id="forecastCityName"></h2>
+            <p class="" id="forecastLatLon"></p>
+            <div id="#forecastCards" class="container" hidden>
+                <div id="day0" class="card mx-auto m-1" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 id="day0Date" class="card-title"></h5>
+                        <p id="day0Description" class="card-text text-capitalize">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li id="day0Temp" class="list-group-item"></li>
+                        <li id="day0UvIndex" class="list-group-item"></li>
+                        <li id="day0Rain" class="list-group-item" hidden></li>
+                        <li id="day0Snow" class="list-group-item" hidden></li>
+                    </ul>
+                </div>
+                <div id="day1" class="card mx-auto m-1" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 id="day1Date" class="card-title"></h5>
+                        <p id="day1Description" class="card-text text-capitalize">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li id="day1Temp" class="list-group-item"></li>
+                        <li id="day1UvIndex" class="list-group-item"></li>
+                        <li id="day1Rain" class="list-group-item" hidden></li>
+                        <li id="day1Snow" class="list-group-item" hidden></li>
+                    </ul>
+                </div>
+                <div id="day2" class="card mx-auto m-1" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 id="day2Date" class="card-title"></h5>
+                        <p id="day2Description" class="card-text text-capitalize">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li id="day2Temp" class="list-group-item"></li>
+                        <li id="day2UvIndex" class="list-group-item"></li>
+                        <li id="day2Rain" class="list-group-item" hidden></li>
+                        <li id="day2Snow" class="list-group-item" hidden></li>
+                    </ul>
+                </div>
+                <div id="day3" class="card mx-auto m-1" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 id="day3Date" class="card-title"></h5>
+                        <p id="day3Description" class="card-text text-capitalize">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li id="day3Temp" class="list-group-item"></li>
+                        <li id="day3UvIndex" class="list-group-item"></li>
+                        <li id="day3Rain" class="list-group-item" hidden></li>
+                        <li id="day3Snow" class="list-group-item" hidden></li>
+                    </ul>
+                </div>
+                <div id="day1" class="card mx-auto m-1" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 id="day4Date" class="card-title"></h5>
+                        <p id="day4Description" class="card-text text-capitalize">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li id="day4Temp" class="list-group-item"></li>
+                        <li id="day4UvIndex" class="list-group-item"></li>
+                        <li id="day4Rain" class="list-group-item" hidden></li>
+                        <li id="day4Snow" class="list-group-item" hidden></li>
+                    </ul>
+                </div>
             </div>
             <div id="forecastFormMessage"></div>
         </div>
 
-          <div  class="Replacedevice">
-                 <h1>Replace a device</h1>
-                   <label>Old device ID</label> 
-                   <br>
-                   <input type="text" name="oldDevice" id="oldDevice"> 
-                   <br>
-                   <label>New Device ID</label>
-                   <br>
-                   <input  type="text" name="newDevice" id="newDevice">  
-                   <br>  
-                   <input type="submit" name="Change" id="Change" value="Change"> 
-          </div>
-    
-      <div class="view">
-        <div id="summary"> 
-          Following  is the last 7 day total activities summary
+        <div class="Replacedevice">
+            <div class="form-group">
+                <h1>Replace a device</h1>
+            </div>
+            <div class="form-group">
+                <label>Old device ID</label>
+                <input type="text" name="oldDevice" id="oldDevice" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>New Device ID</label>
+                <input  type="text" name="newDevice" id="newDevice"class="form-control">
+            </div>
+                <input type="submit" name="Change" id="Change" value="Change"> 
         </div>
+        
+        <div class="view">
+            <div id="summary"> 
+                Following  is the last 7 day total activities summary
+            </div>
 
-         <table>
-           <tr>
-             <td> Date: </td>
-             <td> Activity Duration:  </td>
-             <td>  Calories Burned:  </td>
-             <td>   UV exposure:   </td>
-           </tr>
-         </table>
-         <div class="RowDate">
-         </div>
-       <!--   <input type="submit" name="viewbutton" id="viewbutton" value="List view"> 
-         <input type="submit" name="summaryview" id="summaryview" value="summary view">  -->
-      </div>
-      <div class="error">
-       test error
-      </div>
-
-  </div>
-
+            <table>
+                <tr>
+                    <td> Date: </td>
+                    <td> Activity Duration:  </td>
+                    <td>  Calories Burned:  </td>
+                    <td>   UV exposure:   </td>
+                </tr>
+            </table>
+            <div class="RowDate"></div>
+            <!--
+                <input type="submit" name="viewbutton" id="viewbutton" value="List view"> 
+                <input type="submit" name="summaryview" id="summaryview" value="summary view">  
+            -->
+        </div>
+        <div class="error"></div>
+    </div>
 </div>
-
-  <br>
 </body>
 </html>

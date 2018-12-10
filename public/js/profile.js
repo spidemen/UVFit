@@ -3,51 +3,47 @@ var email;
 var deviceId;
 var apikey;
 $(window).on("load", function () {
-  $.ajax({
-   url:'/account/user',
-   type:'GET',
-   headers: { 'x-auth': window.localStorage.getItem("authToken") },
-   responseType: 'json',
-   success: function(data){
-          username=data.fullName;
-          email=data.email;
-		$("div.form #oldemail").attr("value",email); //to auto-fill update account form
-		$("div.form #fullName").attr("value",username); //to auto-fill update account form
-          deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
-          apikey=data.devices[0].apikey;
-        $("#user").html(username);
-		console.log("get date from page profile date="+data.email);
-		
-
-        console.log("get date from page profile deviceid="+deviceId+"  apikey="+apikey);
-      },
-    error: function(jqXHR, textStatus, errorThrown){
-        var response = JSON.parse(jqXHR.responseText);
-       console.log("Fail get data "+response.message);
-    }
+    $.ajax({
+        url:'/account/user',
+        type:'GET',
+        headers: { 'x-auth': window.localStorage.getItem("authToken") },
+        responseType: 'json',
+        success: function(data){
+            username=data.fullName;
+            email=data.email;
+            $("div.form #oldemail").attr("value",email); //to auto-fill update account form
+            $("div.form #fullName").attr("value",username); //to auto-fill update account form
+            deviceId=data.devices[0].deviceId; // if place before lines 14 & 15, prevented update account form auto-fill
+            apikey=data.devices[0].apikey;
+            $("#user").html(username);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            var response = JSON.parse(jqXHR.responseText);
+            console.log("Fail get data "+response.message);
+        }
    });
 });
 
 $("#register").click(function(){
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     $(".registerbox").css('display',"block");
 });
 
 
 $("#updateAccount").click(function(){
-	$(".rightbar > div").css('display', "none");
-	$(".updateAccountForm").css('display', "inline-block");
+	$("#main > div").css('display', "none");
+	$(".updateAccountForm").css('display', "block");
 });
 
 /*replace device*/
 $("#replaceDevice").click(function(){
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     $(".Replacedevice").css('display',"block");
 });
 
 /***************************** UV Threshold *****************************/
 $("#setUvThreshold").click(function(){
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     $(".thresholdForm").css('display',"block");
 });
 
@@ -79,7 +75,7 @@ $("#submitThres").click(function(){
 /************************************************************************/
 /*************************** Weather Forecast ***************************/
 $("#getForecast").click(function(){
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     
     /*GET: User's lat/lon*/
     $.ajax({
@@ -181,8 +177,11 @@ $("#getForecast").click(function(){
                 }
                 
                 $("#forecastFormMessage").hide();
+                $(".forecastForm > div").removeAttr("hidden");
+                $(".forecastForm").css('display',"block");
             }
             else {
+                $(".forecastForm").css('display',"block");
                 $("#forecastFormMessage").html(jqXHR.responseJSON.message).show();
             }
         },
@@ -190,8 +189,6 @@ $("#getForecast").click(function(){
             $("#forecastFormMessage").html("Error: " + jqXHR.responseJSON.message);
         }
     });
-
-    $(".forecastForm").css('display',"block");
 });
 
 function mode(array)
@@ -362,7 +359,7 @@ function RegisterRespon(){
 $("#listview").click(function(){
     $("#summary").css('display',"block");
    $("#summary").html("Following is the list view all the activities");
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     $(".view").css('display',"block");
     sendReqViewData();
 });
@@ -418,7 +415,7 @@ function ViewDataRespon(){
 $("#summaryview").click(function(){
    $("#summary").css('display',"block");
    $("#summary").html("Following  is the last 7 day total activities summary");
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     $(".view").css('display',"block");
 
     // $("#table2").css('display', "inline-block");
@@ -479,7 +476,7 @@ function ViewSummaryDataRespon(){
 $("#allUserView").click(function(){
     $("#summary").css('display',"block");
     $("#summary").html("In the last 7 day, All user avg activities view blow:");
-    $(".rightbar > div").css('display', "none");
+    $("#main > div").css('display', "none");
     $(".view").css('display',"block");
       $("table").html("This would be very slow, please wait...............")
 
@@ -541,7 +538,7 @@ function ViewAllUserDataRespon(){
 $("#localUserView").click(function(){
     $("#summary").css('display',"block");
     $("#summary").html("In the last 7 day,  geographically local  user avg activities view blow (Notice Group number means, they are local user on specific area:");
-    $(".rightbar > div").css('display', "none");
+    $(".main > div").css('display', "none");
     $(".view").css('display',"block");
        $("table").html("This would be very slow, please wait...............")
       sendReqLocalUserView();

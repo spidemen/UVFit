@@ -1,4 +1,13 @@
+.container {
+    display: flex;
+    flex-flow: row wrap;
+}
 
+#main > div {
+    display: none;
+}
+
+/*
 .profile
 {
 	margin-top: 100px;
@@ -32,24 +41,8 @@
 
 
 }
-.registerbox{
-	display: none;
 
-}
-.thresholdForm {
-    display: none;
-}
-.forecastForm {
-    display: none;
-}
-.view{
-  display: none;
- 
 
-}
-.Replacedevice{
-	 display: none;
-}
 .viewData{
    display: inline-block;
    width: 150px;
@@ -116,10 +109,6 @@ input[type=submit]:hover {
 }
 input[type=text].error {
     border: 2px solid red;
-}
-
-.updateAccountForm{
-	display: none;
 }
 
 .form{
@@ -271,5 +260,6 @@ input[type=text].error {
 	width: 90px;
 }
 
-
 }
+
+*/
